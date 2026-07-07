@@ -28,6 +28,8 @@ body.dark .v-runner{border-color:#4A3F22}
 body.dark .v-kill{border-color:#4A2E2A}
 
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;overflow-anchor:none}
+button:focus{outline:none}
+button:focus-visible{outline:2px solid var(--linkc);outline-offset:2px}
 a{color:var(--linkc)}
 mark{background:var(--hlwash);padding:0 3px;border-radius:2px;font-weight:600;color:inherit}
 .wrap{max-width:900px;margin:0 auto;padding:16px 16px 90px}
@@ -87,7 +89,28 @@ header h1 em{font-style:normal;background:var(--hlwash);padding:0 6px;border-rad
 .utilnote{color:var(--dim);font-size:12.5px}
 
 /* drill view */
-.toolbar{position:sticky;top:52px;background:var(--paper);z-index:8;padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.toolbar{position:sticky;top:52px;background:var(--paper);z-index:8;padding:8px 0 10px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;column-gap:26px;row-gap:10px}
+.cluster{display:flex;flex-direction:column;gap:5px}
+.cluslab{font-family:var(--disp);font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+.cluslab i{font-style:normal;letter-spacing:.3px;text-transform:none;opacity:.8}
+.clusrow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.fbtn.on::before{content:'✓ '}
+.fbtn.foc::before{content:'+ ';opacity:.6}
+.fbtn.foc.on{background:var(--run);border-color:var(--run);color:var(--btnfg)}
+.fbtn.foc.on::before{content:'✓ ';opacity:1}
+.showing{font-size:12px;color:var(--dim);margin-left:6px;font-family:var(--disp);letter-spacing:.5px}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden}
+.segbtn{border:0;background:none;color:var(--ink);font-family:var(--disp);font-size:12.5px;letter-spacing:.4px;text-transform:uppercase;padding:4px 13px;cursor:pointer}
+.segbtn.on{background:var(--ink);color:var(--paper)}
+.segbtn + .segbtn{border-left:1.5px solid var(--ink)}
+.switch{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:var(--card);color:var(--dim);border-radius:999px;padding:4px 13px;font-family:var(--disp);font-size:12.5px;letter-spacing:.4px;text-transform:uppercase;cursor:pointer}
+.switch .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.switch.on{color:var(--ink)}
+.switch.on .dot{background:var(--pick)}
+.vdiv{width:1px;height:22px;background:var(--line)}
+.ghost{border:1px dashed var(--dim);background:none;color:var(--dim);border-radius:999px;padding:4px 13px;font-family:var(--disp);font-size:12.5px;letter-spacing:.4px;text-transform:uppercase;cursor:pointer}
+.ghost:hover{color:var(--ink);border-color:var(--ink)}
+.asslab{font-family:var(--disp);font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin:2px 0 4px}
 .fbtn{font-family:var(--disp);font-size:12.5px;letter-spacing:.4px;text-transform:uppercase;border:1.5px solid var(--sc,#666);color:var(--sc,#333);background:var(--card);border-radius:999px;padding:3px 10px;cursor:pointer}
 .fbtn b{opacity:.6} .fbtn.on{background:var(--sc,#333);color:var(--btnfg)}
 .fbtn.dark{--sc:var(--ink);--scd:var(--ink)}
@@ -152,25 +175,24 @@ header h1 em{font-style:normal;background:var(--hlwash);padding:0 6px;border-rad
 button.kexplink{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;margin-top:6px}
 .hintrow{margin:2px 0 10px;display:flex;gap:6px;flex-wrap:wrap}
 .hintbtn{flex:1 1 0;min-width:118px;height:30px;font-family:var(--disp);font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;border:1.5px dashed var(--dim);color:var(--dim);background:none;border-radius:8px;padding:0 8px;cursor:pointer;white-space:nowrap}
-.card.revealed .hintbox{display:block}
-.card.revealed .hintbtn.assist, .card.revealed .plainbtn{pointer-events:none;opacity:.45;border-style:solid}
-.hintbox{display:none;border:1px dashed var(--line);border-radius:9px;background:var(--soft);padding:9px 11px;margin:0 0 12px}
-.card.hinted .hintbox{display:block}
+.card.revealed .plainbtn{pointer-events:none;opacity:.45;border-style:solid}
+.hintbox{border:1px dashed var(--line);border-radius:9px;background:var(--soft);padding:9px 11px;max-height:0;opacity:0;overflow:hidden;margin:0;padding-top:0;padding-bottom:0;border-top-width:0;border-bottom-width:0;transition:max-height .28s ease,opacity .22s ease,margin .28s ease,padding .28s ease}
+.card.hinted .hintbox, .card.revealed .hintbox{max-height:420px;opacity:1;margin:0 0 12px;padding:9px 11px;border-top-width:1px;border-bottom-width:1px}
 
 .hintitem{margin:4px 0} .hintitem p{margin:2px 0 0;font-size:13px}
 .hlab{font-family:var(--disp);font-size:10.5px;letter-spacing:1.4px;color:var(--dim)}
 .hnote{color:var(--dim);font-style:italic}
-.cplain{display:none;font-size:12.5px;color:var(--pick);margin-top:3px}
+.cplain{font-size:12.5px;color:var(--pick);max-height:0;opacity:0;overflow:hidden;margin:0;padding-top:0;padding-bottom:0;border-top-width:0;border-bottom-width:0;transition:max-height .28s ease,opacity .22s ease,margin .28s ease,padding .28s ease}
 .cplain::before{content:"◦ plain: ";font-family:var(--disp);letter-spacing:.5px;font-size:11px}
-.card.hinted .cplain, .card.revealed .cplain, .choice.showplain .cplain{display:block}
+.card.hinted .cplain, .card.revealed .cplain, .choice.showplain .cplain, .exqbox.as-plain .cplain{max-height:220px;opacity:1;margin-top:3px}
 .plainbtn{font-family:var(--disp);font-size:11px;letter-spacing:.6px;border:1px dashed var(--dim);color:var(--dim);background:none;border-radius:5px;height:20px;padding:0 8px;cursor:pointer;white-space:nowrap}
 .plainbtn:first-of-type{margin-left:auto}
 .choice.showgist .gistbtn{border-style:solid;color:var(--pick);border-color:var(--pick)}
 .choice.showplain .plainbtn{border-style:solid;color:var(--pick);border-color:var(--pick)}
-.gist{display:none;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:3px 8px;margin-top:5px;color:var(--stemc);white-space:pre-wrap;word-break:break-word}
-.card.revealed .gist, .card.q-showgist .gist, .choice.showgist .gist{display:block}
-.explwrap{display:none}
-.card.revealed .explwrap, .card.q-showex .explwrap{display:block}
+.gist{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:3px 8px;color:var(--stemc);white-space:pre-wrap;word-break:break-word;max-height:0;opacity:0;overflow:hidden;margin:0;padding-top:0;padding-bottom:0;border-top-width:0;border-bottom-width:0;transition:max-height .28s ease,opacity .22s ease,margin .28s ease,padding .28s ease}
+.card.revealed .gist, .card.q-showgist .gist, .choice.showgist .gist, .exqbox.as-gist .gist{max-height:160px;opacity:1;margin-top:5px;padding:3px 8px;border-top-width:1px;border-bottom-width:1px}
+.explwrap{max-height:0;opacity:0;overflow:hidden;margin:0;padding-top:0;padding-bottom:0;border-top-width:0;border-bottom-width:0;transition:max-height .28s ease,opacity .22s ease,margin .28s ease,padding .28s ease}
+.card.revealed .explwrap, .card.q-showex .explwrap{max-height:1400px;opacity:1}
 .hintbtn.on{border-style:solid;color:var(--ink);border-color:var(--ink)}
 .claudebtn{border-style:solid;border-color:var(--t1bd);color:var(--t1c);background:var(--t1bg)}
 .card.revealed .choice[data-v="pick"] .gist{border-color:var(--pick);color:var(--pick)}
@@ -234,9 +256,7 @@ button.kexplink{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;ma
 .exhintbox,.exexpl{display:none;border:1px dashed var(--line);border-radius:9px;background:var(--soft);padding:9px 11px;margin:10px 0;font-size:13px}
 .exqbox.as-hint .exhintbox{display:block}
 .exqbox.as-ex .exexpl{display:block}
-.exqbox .cplain,.exqbox .gist,.exqbox .exwhy{display:none}
-.exqbox.as-plain .cplain{display:block}
-.exqbox.as-gist .gist{display:block}
+.exqbox .exwhy{display:none}
 .exqbox.as-reveal .exwhy{display:block}
 .exqbox.as-reveal .exchoice.iscorrect{border-color:var(--pick);background:var(--pickbg)}
 .exqbox .exwhy{font-size:12.5px;font-weight:600;margin-top:4px}
@@ -247,7 +267,6 @@ button.kexplink{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;ma
 @media (max-width:560px){ .setrow .setpill{min-width:110px;font-size:10px} .setpct{min-width:84px} }
 .card.q-nohl mark{background:none;font-weight:inherit;padding:0}
 .card.q-nohl .chips{display:none}
-footer{margin-top:36px;color:var(--dim);font-size:12px}
 @media (max-width:560px){
  /* type scale — 16px floor per iOS/Android readability guidance */
  body{font-size:16px;line-height:1.55}
@@ -288,7 +307,43 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
  .rescard b{font-size:26px}
  .resqhead{padding:12px;min-height:44px}
  .headbtn{min-height:44px;padding-top:8px}
+ .segbtn{min-height:40px;padding:0 18px;font-size:13px}
+ .switch,.ghost{min-height:40px;padding:0 16px;font-size:13px}
 }
+.tour{position:fixed;inset:0;background:rgba(6,8,8,.72);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
+.tourbox{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;max-width:520px;width:100%;padding:22px 20px 16px;max-height:88vh;overflow:auto}
+.tourskip{position:absolute;top:10px;right:12px;background:none;border:0;color:var(--dim);font-family:var(--disp);font-size:13px;letter-spacing:.6px;cursor:pointer;padding:8px}
+.tourkicker{font-family:var(--disp);font-size:11px;letter-spacing:1.6px;color:var(--dim)}
+.tourh{font-family:var(--disp);font-size:24px;letter-spacing:.5px;text-transform:uppercase;margin:4px 0 12px}
+.tourstep{display:none} .tourstep.on{display:block}
+.tourrooms{display:flex;flex-direction:column;gap:10px}
+.tourroom{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--soft)}
+.tourroom p{margin:2px 0 0;font-size:13.5px}
+.tdemo{pointer-events:none;min-height:34px;display:inline-flex;align-items:center}
+.tourol,.tourul{margin:4px 0 0;padding-left:20px;font-size:14px}
+.tourol li,.tourul li{margin:8px 0}
+.tournote{font-size:12.5px;color:var(--dim);margin:10px 0 0}
+.tournav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;border-top:1px dashed var(--line);padding-top:12px}
+.tourdots{display:flex;gap:7px}
+.tourdots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.tourdots i.on{background:var(--ink)}
+@media (max-width:560px){ .tourh{font-size:20px} .tourbox{padding:18px 14px 12px} }
+#dock{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:40;display:flex;gap:6px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px;box-shadow:0 12px 34px rgba(0,0,0,.5);max-width:calc(100vw - 16px);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dockq{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--ink);padding:0 4px;white-space:nowrap}
+.dockbtn{flex:0 0 auto;border:1.5px dashed var(--dim);color:var(--dim);background:none;border-radius:999px;padding:5px 12px;font-family:var(--disp);font-size:12px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.dockbtn.on{border-style:solid;color:var(--ink);border-color:var(--ink)}
+.dockbtn.dead{pointer-events:none;opacity:.4;border-style:solid}
+.dockclaude{border-style:solid;border-color:var(--t1bd);color:var(--t1c);background:var(--t1bg)}
+.dockrev{border:1.5px solid var(--ink);background:var(--ink);color:var(--paper)}
+body.dockon #view-drill{padding-bottom:96px}
+@media (max-width:560px){ #dock{bottom:10px;padding:8px 10px} .dockbtn{min-height:44px;display:inline-flex;align-items:center} }
+#spot{position:fixed;inset:0;z-index:60;pointer-events:none}
+.spotring{position:absolute;border:2px solid var(--mark);border-radius:10px;box-shadow:0 0 0 9999px rgba(6,8,8,.66);transition:all .25s ease;pointer-events:none}
+.spottip{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 14px 10px;max-width:340px;pointer-events:auto;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.spott{font-family:var(--disp);font-size:17px;letter-spacing:.5px;text-transform:uppercase;margin:2px 0 6px}
+.spotp{font-size:13.5px;margin:0}
+.spottip .tournav{margin-top:10px;padding-top:8px}
+@media (max-width:560px){ .spottip{left:10px !important;right:10px !important;max-width:none;bottom:12px !important;top:auto !important} }
 </style></head><body>
 <div class="wrap">
 <header>
@@ -307,6 +362,7 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
  <button class="tab" data-v="exam" onclick="tab(this)">Exam</button>
  <span class="tabnote" id="flagnote">0 flagged</span>
  <button class="tab" id="themebtn" onclick="theme()" title="Toggle dark mode" style="padding:6px 12px">◐ Dark</button>
+ <button class="tab" id="helpbtn" onclick="tourOpen()" title="How this tool works" style="padding:6px 12px">? Tour</button>
 </nav>
 
 <section class="view on" id="view-key">
@@ -321,7 +377,8 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
   <li><b>Exam</b> — 1:1 simulation: 60 Q / 120 min, one per screen, pause/resume, per-question timing. Easy / Medium / Hard set how many assists exist.</li>
   <li><b>↺ Reset</b> — clean Drill state (keeps your flags).</li>
  </ul></div>
- <div class="kblock"><div class="klab">Per-question assists (Drill + Exam Easy)</div><ul class="kul">
+ <div class="kblock"><div class="klab">The floating help dock (Drill + Exam Easy)</div><ul class="kul">
+  <li>Open a question and the <b>dock appears at the bottom</b> — it controls whichever question you're on (watch the Q number).</li>
   <li><b>💡 Hint</b> — what's really being asked + where to look first. Never spoils.</li>
   <li><b>🖍 Highlights</b> — the yellow giveaway wash, per question or all.</li>
   <li><b>⌁ Gists</b> — each choice as one-line pseudo-code; per choice (⌁ gist) or per card.</li>
@@ -744,16 +801,32 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
 
 <section class="view" id="view-drill">
  <div class="toolbar">
-  <button class="fbtn dark on" data-f="all" onclick="filt(this)">All 60</button>
-  <button class="fbtn" data-f="E" style="--sc:#2E7D6B;--scd:#5BC4A8" onclick="filt(this)">Extraction <b>10</b></button><button class="fbtn" data-f="V" style="--sc:#8A5A00;--scd:#D9A94B" onclick="filt(this)">Evals, Review <b>5</b></button><button class="fbtn" data-f="M" style="--sc:#5A4FB5;--scd:#A79BF0" onclick="filt(this)">Multi-Agent Orchestration <b>15</b></button><button class="fbtn" data-f="C" style="--sc:#B04A2F;--scd:#E58B6B" onclick="filt(this)">Claude Code <b>13</b></button><button class="fbtn" data-f="S" style="--sc:#1F6FA8;--scd:#74B6E4" onclick="filt(this)">Support Agent <b>14</b></button><button class="fbtn" data-f="T" style="--sc:#96385E;--scd:#DE8FB4" onclick="filt(this)">MCP <b>3</b></button>
-  <button class="fbtn dark" data-f="flag" onclick="filt(this)">⚑ Flagged</button>
-  <button class="fbtn dark" data-f="dis" onclick="filt(this)">⚠ Disputed 8</button>
-  <button class="fbtn dark" data-f="t3" onclick="filt(this)">⚖ Debate 3</button>
-  <button class="fbtn dark" onclick="hideAll()">Hide all answers</button>
-  <button class="fbtn dark" id="hlbtn" onclick="hilite()">Highlights: on (all)</button>
-  <button class="fbtn dark on" id="vAll" onclick="dview('all')">☰ All view</button>
-  <button class="fbtn dark" id="vSingle" onclick="dview('single')">▭ Single</button>
-  <button class="fbtn dark" onclick="resetDrill()">↺ Reset view</button>
+  <div class="cluster" id="tg-sets"><span class="cluslab">Set <i>· pick one topic</i></span>
+   <div class="clusrow">
+    <button class="fbtn dark on" data-f="all" onclick="filt(this)">All 60</button>
+    <button class="fbtn" data-f="E" style="--sc:#2E7D6B;--scd:#5BC4A8" onclick="filt(this)">Extraction <b>10</b></button><button class="fbtn" data-f="V" style="--sc:#8A5A00;--scd:#D9A94B" onclick="filt(this)">Evals, Review <b>5</b></button><button class="fbtn" data-f="M" style="--sc:#5A4FB5;--scd:#A79BF0" onclick="filt(this)">Multi-Agent Orchestration <b>15</b></button><button class="fbtn" data-f="C" style="--sc:#B04A2F;--scd:#E58B6B" onclick="filt(this)">Claude Code <b>13</b></button><button class="fbtn" data-f="S" style="--sc:#1F6FA8;--scd:#74B6E4" onclick="filt(this)">Support Agent <b>14</b></button><button class="fbtn" data-f="T" style="--sc:#96385E;--scd:#DE8FB4" onclick="filt(this)">MCP <b>3</b></button>
+   </div>
+  </div>
+  <div class="cluster" id="tg-focus"><span class="cluslab">Narrow <i>· stacks on the set</i></span>
+   <div class="clusrow">
+    <button class="fbtn dark foc" data-f="flag" onclick="filt(this)">⚑ Flagged</button>
+    <button class="fbtn dark foc" data-f="dis" onclick="filt(this)">⚠ Disputed 8</button>
+    <button class="fbtn dark foc" data-f="t3" onclick="filt(this)">⚖ Debate 3</button>
+    <span class="showing" id="showing"></span>
+   </div>
+  </div>
+  <div class="cluster" id="tg-view"><span class="cluslab">View</span>
+   <div class="clusrow">
+    <div class="seg" role="group" aria-label="layout">
+      <button class="segbtn on" id="vAll" onclick="dview('all')">☰ All</button>
+      <button class="segbtn" id="vSingle" onclick="dview('single')">▭ Single</button>
+    </div>
+    <button class="switch on" id="hlbtn" onclick="hilite()"><span class="dot"></span>Highlights</button>
+    <span class="vdiv"></span>
+    <button class="ghost" onclick="hideAll()">Hide answers</button>
+    <button class="ghost" onclick="resetDrill()">↺ Reset</button>
+   </div>
+  </div>
  </div>
  <article class="card" data-set="E" data-n="1" data-dis="0" data-tier="2">
  <div class="cardhead">
@@ -770,7 +843,7 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your extraction pipeline processes contracts that frequently include amendments. When a contract contains <mark>both original terms and later amendments</mark> (e.g., original clause specifies &quot;30-day payment terms&quot; while Amendment 1 changes this to &quot;45 days&quot;), the model inconsistently extracts one value or the other with <mark>no indication of which applies</mark>. What&#x27;s the most effective approach to improve extraction accuracy for documents with amendments?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,1)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>A contract holds an OLD value and a NEW value. The model keeps picking one at random. What fixes the extraction itself?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Spot &#x27;no indication of which applies&#x27; — the output can only hold ONE value. Look for the choice that lets it hold both.</p></div>
@@ -823,7 +896,7 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">The web search agent has gathered several relevant sources for a research topic. The document analysis agent now needs to examine these sources. <mark>How does information typically flow</mark> between these two <mark>specialized subagents</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,2)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Plain question: how does info actually travel between subagents in Claude&#x27;s architecture?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Subagents are sealed boxes. Only one path exists — through the coordinator&#x27;s prompt.</p></div>
@@ -873,7 +946,7 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">When researching &quot;renewable energy adoption,&quot; the web search agent returns recent statistics (<mark>2024: 35%</mark> adoption) while the document analysis agent extracts data from internal reports (<mark>2022: 18%</mark> adoption). The synthesis agent incorrectly <mark>flags these as contradictory</mark> sources rather than recognizing the data shows growth over time. What change would best enable the synthesis agent to correctly interpret such <mark>temporal differences</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,3)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Synthesis calls 18% (2022) vs 35% (2024) a contradiction. What&#x27;s it missing, and who should hand it over?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The dates exist upstream but never reach synthesis. Prioritize the choice that carries dates forward.</p></div>
@@ -923,7 +996,7 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">A customer writes: &quot;I&#x27;ve been going back and forth on this return for days. I just <mark>want to speak to someone who can actually help</mark> me.&quot; The agent has confirmed via `lookup_order` that the <mark>return is straightforward</mark>---within policy and <mark>eligible for immediate processing</mark>. What should the agent do?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,4)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Angry customer wants a human — but the fix takes 10 seconds. Best reply?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Two facts collide: &#x27;wants a person&#x27; + &#x27;instantly fixable&#x27;. Find the option honoring BOTH.</p></div>
@@ -973,7 +1046,7 @@ footer{margin-top:36px;color:var(--dim);font-size:12px}
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your pipeline uses a tool called `extract_metadata` with a JSON schema for paper details. You&#x27;ve also defined `lookup_citations` and `verify_doi` tools for enrichment. During testing, you notice that when users include requests like &quot;extract the metadata and tell me how cited it is,&quot; Claude sometimes <mark>calls `lookup_citations` first, which fails</mark> because it <mark>needs the DOI that `extract_metadata` would provide</mark>. What&#x27;s the most effective way to ensure structured metadata extraction happens first?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,5)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Tools run in the wrong order — enrichment before extraction. How do you GUARANTEE just the first step?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>You need a guarantee for step 1 only. Beware anything that locks ALL steps, or that merely hopes.</p></div>
@@ -1026,7 +1099,7 @@ tool_choice={&quot;type&quot;: &quot;auto&quot;}</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">During a billing dispute resolution, your agent successfully retrieves customer info via `get_customer` and order details via `lookup_order`, but when attempting to call `process_refund`, the tool returns a <mark>timeout error</mark>. The agent <mark>has enough information to explain</mark> the charges and verify refund eligibility, but <mark>cannot actually process</mark> the refund due to the backend failure. What approach best balances first-contact resolution with appropriate error handling?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,6)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Half the job worked, half hit a system error. What do you tell the customer?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The agent HAS useful info. Rule out lying and infinite retries; look for honest partial delivery.</p></div>
@@ -1076,7 +1149,7 @@ tool_choice={&quot;type&quot;: &quot;auto&quot;}</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your agent has analyzed a complex service module---reading 23 source files, tracing request flows, and identifying error handling patterns. A developer wants to <mark>compare two testing strategies</mark> before committing to one: end-to-end tests with mocked external services vs. snapshot tests capturing expected outputs. They need to <mark>independently develop both</mark> approaches to evaluate trade-offs. How should you manage the sessions?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,7)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>One expensive analysis, two ideas to test separately. Which session move copies the past into two futures?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Keywords: &#x27;compare&#x27; + &#x27;independently develop&#x27;. That combo = fork.</p></div>
@@ -1127,7 +1200,7 @@ claude --resume &lt;session&gt; --fork-session   # branch B: strategy 2</pre></d
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your system extracts event metadata (date, location, organizer, `attendee_count`) from news articles using a JSON schema with all <mark>nullable fields</mark>. During evaluation, you observe the model frequently generates <mark>plausible but incorrect values</mark> for <mark>fields not mentioned in the article</mark>---for example, outputting &quot;500&quot; for `attendee_count` when the source contains no attendance information. What&#x27;s the most effective way to reduce these false extractions?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,8)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>The model INVENTS plausible values for fields the article never mentions. Cheapest targeted fix?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The model was never told &#x27;empty is OK&#x27;. Permission-to-say-null beats new machinery.</p></div>
@@ -1177,7 +1250,7 @@ claude --resume &lt;session&gt; --fork-session   # branch B: strategy 2</pre></d
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your schema includes a skills: string[] field. Production monitoring reveals <mark>three consistency issues</mark>: (1) compound phrases like &quot;Python and SQL&quot; are <mark>sometimes kept as one entry, sometimes split</mark>; (2) implied but unstated skills occasionally appear in extractions; (3) similar documents produce wildly different array lengths (5-10 vs 40+ entries). Your prompt currently says <mark>&quot;Extract all skills mentioned.&quot;</mark> What&#x27;s the most effective improvement?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,9)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>THREE different judgment inconsistencies at once. Which single fix teaches all three?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Count the problems: 3. Kill any option fixing only 1. Demonstration beats description.</p></div>
@@ -1228,7 +1301,7 @@ Output: {&quot;skills&quot;: [&quot;React&quot;, &quot;Vue&quot;]}   # split, ex
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your extraction system implements automatic retries when validation fails. On each retry, the specific validation error is appended to the prompt. This <mark>retry-with-error-feedback</mark> approach resolves most failures within 2-3 attempts. For which failure pattern would additional retries be <mark>LEAST effective</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,10)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>REVERSED question — which failure does retrying NOT help? (3 of these are retry-friendly.)</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Retry = &#x27;try again with feedback&#x27;. It can reshape output; it cannot create missing information.</p></div>
@@ -1279,7 +1352,7 @@ NOT:      contact_phone lives in a doc the model was never given — no retry co
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">An engineer asks the agent to understand how the caching layer works before adding a new cache invalidation trigger. After initial Grep searches, the agent has identified that caching logic spans <mark>15 files</mark> including decorators, middleware, and service classes (\<mark>~8,000 lines</mark> total). What&#x27;s the most effective next step for building understanding while <mark>managing context constraints</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,11)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>8,000 lines across 15 files, limited context. Understand cache invalidation without drowning — how?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Managing context constraints&#x27; kills read-everything. &#x27;Understand how it works&#x27; kills grep-only. Middle path: follow the architecture.</p></div>
@@ -1329,7 +1402,7 @@ NOT:      contact_phone lives in a doc the model was never given — no retry co
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">The document analysis agent has a single `analyze_document` tool that takes a document and a <mark>free-text instruction parameter</mark>. During evaluation, requests like &quot;extract the key financial metrics&quot; often return narrative summaries, while &quot;summarize the methodology&quot; sometimes returns raw data tables. The synthesis agent reports that <mark>35% of analysis results require re-requests</mark> with clarified instructions. What&#x27;s the most effective way to improve reliability?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,12)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>One mushy do-anything tool → 35% garbage responses. What&#x27;s the STRUCTURAL fix?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Free-text instruction parameter&#x27; is the disease. Anything that keeps that parameter is a bandage.</p></div>
@@ -1381,7 +1454,7 @@ summarize(text, max_words) → {&quot;summary&quot;: str}</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">After the web search agent finds 25 sources (<mark>120K tokens</mark> of raw content), the document analysis agent extracts key insights (15K tokens), and the synthesis agent produces a coherent narrative draft (3K tokens), the coordinator must pass context to the report generation agent for the final output with <mark>proper source citations</mark>. What context-passing strategy provides the best <mark>balance of completeness and efficiency</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,13)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>The citation agent must link claims to sources. What&#x27;s ENOUGH info — without shipping all 120K tokens?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Balance completeness and efficiency&#x27; — kill the two extremes first (names-only, ship-everything).</p></div>
@@ -1433,7 +1506,7 @@ summarize(text, max_words) → {&quot;summary&quot;: str}</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">An engineer used `Claude Code` yesterday to investigate authentication flows in a legacy monolith, building up significant context over a 2-hour session. Today she wants to continue that specific investigation. She&#x27;s worked on <mark>three other codebases since</mark> then and <mark>knows the session was named &quot;auth-deep-dive&quot;</mark>. How should she resume?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,14)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Named session from last week, 3 other codebases used since. Which command returns EXACTLY there?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Most recent&#x27; ≠ &#x27;the one you want&#x27;. She KNOWS the name — use the flag that takes a name.</p></div>
@@ -1483,7 +1556,7 @@ summarize(text, max_words) → {&quot;summary&quot;: str}</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">After implementing tool use with strict schema definitions, JSON syntax errors are eliminated, but 5% of extractions still have <mark>valid JSON with empty arrays</mark> or null values for required fields like citations and methodology. Spot-checking reveals that source documents contain this <mark>information, but in varied formats</mark>---<mark>inline citations vs. bibliographies</mark>, methodology sections vs. details embedded in introductions. What&#x27;s the most effective way to address these failures?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,15)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>JSON is valid but fields come back EMPTY — the info exists, in varied layouts. Is this a skill gap or a luck gap?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The model can&#x27;t RECOGNIZE the formats. Retrying re-rolls the same blindness; teaching fixes it.</p></div>
@@ -1535,7 +1608,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">An engineer&#x27;s exploration subagent spent 30 minutes analyzing a legacy payment system, reading 47 files and documenting data flows. The session was <mark>interrupted</mark> when the engineer&#x27;s connection dropped. While away, a <mark>teammate merged a PR that renamed two utility functions</mark>. The engineer wants to <mark>continue the same exploration</mark>. What&#x27;s the most effective approach?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,16)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Paused agent + one tiny KNOWN change (2 renamed functions). Cheapest safe restart?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The change is small and known. Keep the 47-file context; patch the two facts.</p></div>
@@ -1586,7 +1659,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your codebase exploration tool stores session IDs to allow engineers to continue investigations across work sessions. An engineer spent an hour yesterday analyzing a legacy authentication module, building context about its architecture and dependencies. They want to continue today. The <mark>session ID is valid</mark>, but version control shows <mark>3 of the 12 files</mark> the agent previously read were <mark>modified overnight</mark> by a teammate&#x27;s merge. What approach best balances efficiency and accuracy?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,17)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Valid session, 3 of 12 files changed overnight. What&#x27;s efficient AND accurate?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>9 files unchanged → don&#x27;t re-read them. 3 changed → don&#x27;t ignore them. The answer literally names the 3.</p></div>
@@ -1637,7 +1710,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your multi-agent research pipeline <mark>crashed after processing 12 of 28</mark> documents. The web search agent had identified relevant sources, the document analysis agent had partially completed extraction, and the synthesizer had begun pattern identification. You need to resume processing <mark>without repeating work</mark> or losing fidelity of prior findings. What state management approach best balances <mark>information fidelity with context efficiency</mark> when restoring agent state?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,18)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Crash at doc 12 of 28. Resume without redoing work — balancing fidelity against tokens?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Balance&#x27; is the graded word. Full log = max fidelity, max tokens. Find compact-but-faithful.</p></div>
@@ -1688,7 +1761,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your extraction pipeline processes restaurant menus and must output structured JSON with fields for item names, descriptions, prices, and dietary tags. Some menus use <mark>inconsistent formatting</mark>---prices as <mark>&quot;$12&quot; vs &quot;12.00&quot;</mark>, dietary info as icons vs text. What&#x27;s the <mark>most reliable</mark> approach?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,19)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Messy formats ($12 vs 12.00 vs &#x27;12 dollars&#x27;). Where should normalization live for max reliability?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Kill the cost-absurd options first (per-field calls, vote-of-5). Then: fix at the source vs downstream.</p></div>
@@ -1738,7 +1811,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">In production, you observe that <mark>simple fact-checking queries</mark> (e.g., &quot;What year was the Paris Climate Agreement signed?&quot;) <mark>traverse all four subagents</mark> sequentially, consuming 40+ seconds and significant tokens per query. Complex comparative research benefits from the full pipeline. Your query distribution is <mark>diverse and evolving</mark> as users discover new applications. What&#x27;s the most effective approach to optimize for varying query complexity?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,20)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Simple queries waste the full 4-agent pipeline — and the query mix keeps EVOLVING. What routing survives change?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Diverse and evolving&#x27; murders static rules and trained classifiers. Who adapts for free? The LLM already in the room.</p></div>
@@ -1788,7 +1861,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your system has been operating with 100% human review for 3 months. Analysis shows that extractions with model confidence \&gt;90% have <mark>97% accuracy overall</mark>. To reduce reviewer workload, you plan to automate high-confidence extractions. Before deploying, what validation step is <mark>most critical</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,21)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>97% accuracy overall. Before auto-approving anything, what must you check FIRST?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Overall&#x27; is the trap word. Averages hide a terrible segment.</p></div>
@@ -1840,7 +1913,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">When the agent calls `lookup_order` and receives order details showing the item was purchased 45 days ago, <mark>how does the agentic loop determine</mark> whether to call `process_refund` or `escalate_to_human` next?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,22)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Definition check: in an agentic loop, WHO or WHAT picks the next tool?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Agentic&#x27; = the model steers, every turn. Anything pre-scripted or externally routed is a workflow, not an agent.</p></div>
@@ -1893,7 +1966,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">The synthesis agent receives summarized findings from the web search and document analysis agents, then passes a consolidated summary to the report generator. During testing, you discover the generated reports make factual claims without proper citations---the report generator <mark>cannot attribute statements</mark> to their original sources because that <mark>metadata was lost during the summarization</mark> steps. What&#x27;s the most effective approach to ensure proper source attribution in the final reports?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,23)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Summarization keeps eating the source metadata. Where should metadata live so it CAN&#x27;T be eaten?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Prose can always be paraphrased away. A separate FIELD can&#x27;t. Also: &#x27;pass everything&#x27; = extremes die.</p></div>
@@ -1943,7 +2016,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your `process_refund` tool returns two types of errors: technical errors (&quot;503 Service Unavailable&quot;, &quot;Connection timeout&quot;) that are <mark>transient</mark> (5% of calls), and business errors (&quot;Order exceeds 30-day return window&quot;, &quot;Item already refunded&quot;) that are <mark>permanent</mark> (12% of calls). Monitoring shows the agent <mark>wastes 3-4 turns retrying business errors</mark> that can never succeed. Currently, both error types return only a <mark>plain text message</mark> to Claude. What&#x27;s the most effective way to reduce wasted retries while improving customer-facing response quality?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,24)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Agent wastes retries on hopeless errors AND explains errors badly. One fix for BOTH symptoms?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Count the asks: wasted retries + bad explanations = 2. Some options fix one. One option fixes both.</p></div>
@@ -1994,7 +2067,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">After adding an MCP server with specialized code refactoring tools (`extract_function`, `rename_variable`, `inline_function`), you notice the agent <mark>still uses basic text manipulation</mark> via Write and Bash sed commands for refactoring tasks. The MCP server is connected and healthy. Examining the configuration, you find each MCP tool has a <mark>minimal description like</mark> &quot;`extract_function`: extracts a function from code.&quot; What&#x27;s the most effective way to improve adoption of the MCP refactoring tools?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,25)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>New MCP tools get ignored; each has a one-line description. How does the model pick tools at all?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The model reads descriptions to choose. Thin description = invisible tool.</p></div>
@@ -2044,7 +2117,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">A user is expanding the research system beyond its single web search agent by adding specialized data sources. They add a financial API agent that returns structured JSON with revenue, margins, and growth rates; a news monitoring agent that returns prose summaries of recent developments; and a patent analysis agent that returns structured lists of technology areas. The synthesis agent combines these into executive briefings. Currently, it <mark>converts everything to bullet points</mark>, causing financial comparisons to <mark>lose tabular clarity</mark> and news summaries to <mark>lose narrative flow</mark>. What change would most improve briefing quality?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,26)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Tables, narrative, filings — all flattened to bullets, each losing its strength. Preserve them how?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Convert-to-prose and convert-to-JSON are the SAME mistake in opposite directions. A universal format is that mistake with extra steps.</p></div>
@@ -2094,7 +2167,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your agent has spent 25 minutes exploring a game engine&#x27;s rendering subsystem---reading shader code, buffer management, and frame synchronization logic. An engineer now asks it to understand how the physics engine integrates with rendering for collision debug overlays. You notice recent responses <mark>reference &quot;typical rendering patterns&quot; rather than the specific</mark> VulkanPipeline and FrameGraph classes it discovered earlier. What&#x27;s the most effective approach?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,27)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Context is rotting (generic answers), but the old findings MATTER for the new task. Keep what, shed what?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;References typical patterns instead of the specific classes it discovered&#x27; = rot signal. Keep the knowledge, shed the bloat.</p></div>
@@ -2144,7 +2217,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Documents arrive continuously throughout business hours and need structured data extracted. To reduce costs, you want to use the `Message Batches API` (50% discount, <mark>up-to-24-hour processing window</mark>). Your SLA specifies that extraction results must be available <mark>within 30 hours</mark> of document arrival with <mark>99.9%</mark> reliability. Which batching strategy is most appropriate?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,28)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>SLA is 30 hours; a batch can take up to 24. What&#x27;s the biggest safe gap between batch submissions?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Pure arithmetic: interval + 24 ≤ 30. Solve for interval.</p></div>
@@ -2195,7 +2268,7 @@ worst case: doc lands 00:01 → 06:00 batch → +24h → done hour 30  (= 30h SL
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">In production, final reports frequently contain claims without proper source attribution. Investigation shows that while the web search and document analysis agents correctly attach citations to their outputs, the synthesis agent <mark>loses track of which sources support which conclusions when combining</mark> findings. What&#x27;s the most effective architectural change?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,29)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Sources detach from conclusions during multi-stage merging. Do you prevent it or repair it afterward?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Prevention (data that can&#x27;t detach) beats archaeology (guessing later). Text tags get paraphrased away; fields don&#x27;t.</p></div>
@@ -2245,7 +2318,7 @@ worst case: doc lands 00:01 → 06:00 batch → +24h → done hour 30  (= 30h SL
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">The coordinator agent has `AgentDefinitions` configured for all four specialized subagents, each with appropriate descriptions, prompts, and tool restrictions. During testing, you notice the coordinator correctly reasons about when to delegate---<mark>it generates messages like &quot;I&#x27;ll ask the web search agent</mark> to find sources on this topic&quot;---but <mark>no subagent execution ever occurs</mark>. The coordinator then proceeds as if the delegation happened and continues with incomplete information. <mark>Logs show no errors</mark>. What is the most likely cause?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,30)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>The coordinator narrates &#x27;I&#x27;ll ask the search agent…&#x27; — then nothing happens. Zero errors. What&#x27;s missing?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Intent exists (it names the agents). Action never fires. Silent failure = missing tool permission, not missing knowledge.</p></div>
@@ -2296,7 +2369,7 @@ worst case: doc lands 00:01 → 06:00 batch → +24h → done hour 30  (= 30h SL
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">A developer asks the agent to investigate why a specific API endpoint <mark>intermittently returns 500</mark> errors. The codebase has 200+ files and the developer <mark>doesn&#x27;t know which components</mark> are involved. The agent must <mark>trace the error</mark> through routing, middleware, business logic, and database layers. What task decomposition approach would be most effective?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,31)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Intermittent 500 error, unknown cause, 200+ files. Plan everything first, or adapt as you learn?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Doesn&#x27;t know which component&#x27; = you can&#x27;t plan a path through fog. Each finding must steer the next step.</p></div>
@@ -2346,7 +2419,7 @@ worst case: doc lands 00:01 → 06:00 batch → +24h → done hour 30  (= 30h SL
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your agent has called `lookup_order` multiple times while investigating a customer&#x27;s return requests. Each response includes <mark>40+ fields</mark> (items, shipping details, payment info, status history). Tool outputs now represent the <mark>majority of the conversation&#x27;s context</mark>. The customer mentions <mark>two more orders</mark> they want to discuss. What&#x27;s the most effective approach before making additional lookups?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,32)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>40-field payloads are flooding the conversation, with more coming. Keep what?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The task is a RETURN. Which fields does a return actually need? Keep exactly those.</p></div>
@@ -2397,7 +2470,7 @@ drop: warehouse codes, carrier internals, promo metadata…</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Compliance requires that refunds exceeding $500 must automatically escalate to a human agent---this rule <mark>cannot be left to model discretion</mark>. <mark>Despite clear system prompt instructions</mark>, production logs show the agent occasionally processes high-value refunds directly (<mark>3% failure rate</mark>). How should you achieve <mark>guaranteed</mark> compliance?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,33)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>&#x27;3% failure rate&#x27; + &#x27;guaranteed&#x27; + &#x27;cannot be left to model discretion&#x27;. Prompt-family or code-family?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Guarantee = deterministic = code. Then pick the code option that ALSO handles the escalation requirement.</p></div>
@@ -2448,7 +2521,7 @@ drop: warehouse codes, carrier internals, promo metadata…</pre></div></div>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your extraction system parses e-commerce product descriptions to extract specifications like dimensions, weight, and materials into JSON. Despite having a well-defined schema, the model <mark>inconsistently extracts</mark> the &quot;materials&quot; field---<mark>sometimes returning &quot;cotton blend&quot;, other times</mark> &quot;Cotton/Polyester mix&quot;, and <mark>occasionally omitting</mark> the field when material information is clearly present in the source. What&#x27;s the most effective way to improve extraction consistency?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,34)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Same info, different shape every time (&#x27;cotton blend&#x27; vs a list vs missing). What teaches ONE shape?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The model was never shown the target format. And beware: temp 0 = consistently random, not consistently right.</p></div>
@@ -2499,7 +2572,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">The coordinator provides <mark>detailed step-by-step instructions</mark> to the web search subagent, specifying exact search queries, source priorities, and date filters. Production monitoring reveals three issues: (1) the subagent <mark>reports &quot;insufficient results&quot; rather than trying alternative</mark> approaches when pre-specified searches fail, (2) research quality drops for emerging topics that don&#x27;t match expected patterns, and (3) the subagent <mark>rarely surfaces valuable tangential</mark> sources. What&#x27;s the most effective way to improve subagent adaptability?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,35)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>The over-scripted subagent gives up instead of adapting. How much do you loosen the leash?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The script is the problem — but zero guidance loses quality control. Goldilocks: goals + quality criteria.</p></div>
@@ -2551,7 +2624,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">An engineer asks the agent to find all callers of a function before removing it. The function is defined in a core library but is also exposed through <mark>wrapper modules that rename the function</mark> for domain-specific use (e.g., <mark>calculateTax in the library becomes computeOrderTax</mark> in the orders module). What exploration strategy will most reliably identify all callers?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,36)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>The function gets renamed by wrapper modules. What does grepping the ORIGINAL name miss?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The stem hands you the trap: aliases. Enumerate every exposed name FIRST, then search each.</p></div>
@@ -2602,7 +2675,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">The agent verifies customer identity through a multi-step process before resetting passwords. During testing, you notice that after the customer answers the third verification question, the agent <mark>asks them to provide their name again</mark>, <mark>as if the earlier exchange never happened</mark>. What&#x27;s the most likely cause of this behavior?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,37)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>The agent forgets the name given 3 turns ago. Where does &#x27;memory&#x27; actually live in the Messages API?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The API is stateless. Memory = the messages array YOU resend. Two options describe features that don&#x27;t exist.</p></div>
@@ -2653,7 +2726,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">An engineer asks your agent to identify untested code paths in a legacy payment processing module spanning <mark>45 files</mark>. After reading the first 8 source files, the agent&#x27;s responses are becoming <mark>noticeably less accurate</mark>---it&#x27;s forgetting previously discussed code patterns and <mark>hasn&#x27;t yet located all test files</mark> or traced critical payment flows. What&#x27;s the most effective approach to complete this investigation?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,38)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>8 files read, accuracy already dropping, 37 files to go. WHO should do the remaining reading?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The main context is precious real estate. Delegate the heavy reading; import only conclusions.</p></div>
@@ -2704,7 +2777,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">An engineer used the agent yesterday to analyze a legacy authentication module, identifying <mark>two distinct refactoring approaches</mark>: extracting a microservice versus refactoring in-place. Today, they want to <mark>explore both approaches in depth</mark>---having the agent propose specific code changes for each---<mark>before deciding</mark> which to implement. What&#x27;s the most effective way to structure this exploration?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,39)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Yesterday&#x27;s deep analysis + two rival designs to explore. Same shape as Q7?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Twin question. &#x27;Explore both in depth&#x27; + shared prior analysis = fork.</p></div>
@@ -2755,7 +2828,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your extraction uses tool use with a JSON schema where `property_type` is defined as an enum: [&#x27;house&#x27;, &#x27;apartment&#x27;, &#x27;condo&#x27;, &#x27;townhouse&#x27;]. After deployment, <mark>8% of extractions fail schema validation</mark>. Investigation reveals listings mention many uncommon property types---&quot;studio&quot;, &quot;loft&quot;, &quot;duplex&quot;, &quot;mobile home&quot;, &quot;tiny house&quot;, &quot;converted warehouse&quot;---and <mark>new types continue appearing regularly</mark>. What&#x27;s the most effective long-term solution?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,40)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>4 fixed property types; reality keeps inventing new ones (8% failures). Keep validation AND absorb novelty?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;New types continue appearing&#x27; kills enum whack-a-mole. &#x27;Keep validation&#x27; kills free-text.</p></div>
@@ -2806,7 +2879,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Production reviews reveal inconsistent handling of uncertainty in final reports. Sometimes conflicting subagent findings are <mark>synthesized into a single confident statement (losing nuance)</mark>, while other times reports <mark>over-hedge</mark> with excessive qualifications (becoming unhelpful). When the web search agent returns &quot;industry analysts estimate $50B market size (<mark>methodology varies</mark>)&quot; and the document analysis agent returns &quot;peer-reviewed study estimates 35B(±7B, <mark>95% CI</mark>),&quot; the coordinator either picks one arbitrarily or produces vague statements like &quot;the market may be 35B-50B depending on factors.&quot; What systematic approach best addresses this?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,41)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Synthesis either flattens disagreement into false confidence, or hedges everything. How do you PRESENT uncertainty?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Disagreement is CONTENT, not noise. Kill anything that deletes it (filters) or blends it (averaging).</p></div>
@@ -2859,7 +2932,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Production logs reveal inconsistent error handling: when `lookup_order` fails, the agent sometimes retries 5+ times (wasteful when the order ID doesn&#x27;t exist), sometimes escalates immediately (premature for temporary network issues), and sometimes asks users for clarification (inappropriate when the issue is a backend permission error). Investigation shows your MCP tool returns <mark>uniform error responses</mark>: {&quot;isError&quot;: true, &quot;content&quot;: [{&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: <mark>&quot;Operation failed&quot;</mark>}]}. The agent <mark>cannot distinguish between error types</mark>. What&#x27;s the most effective improvement?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,42)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Every error says &#x27;Operation failed&#x27;; the agent guesses wrong constantly. WHERE does knowledge of the error type live?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The TOOL knows why it failed. Make it say so — don&#x27;t make the agent investigate or guess.</p></div>
@@ -2910,7 +2983,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">After the web search agent and document analysis agent complete their tasks, the coordinator invokes the synthesis agent. However, the synthesis agent responds that it <mark>cannot complete the task because no research findings were provided</mark>. What is the most likely cause of this issue?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,43)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Synthesis says &#x27;no findings were provided&#x27;. Subagents are sealed — so whose job was delivery?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;NO findings&#x27; ≠ &#x27;truncated findings&#x27;. The courier is the coordinator.</p></div>
@@ -2960,7 +3033,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">When analyzing complex legal cases that cite multiple precedents, the document analysis subagent <mark>processes each sequentially</mark>. A landmark case citing <mark>12 precedents</mark> takes over <mark>3 minutes</mark> to analyze completely. What&#x27;s the most effective way to reduce this latency while <mark>preserving the coordinator&#x27;s ability to monitor</mark> and debug the system?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,44)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>12 sequential precedent analyses = 36 slow minutes. Parallelize while the coordinator can still SEE everything?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;Preserve the coordinator&#x27;s ability to monitor&#x27; kills every option where spawning happens below the coordinator.</p></div>
@@ -3012,7 +3085,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Production monitoring shows that follow-up queries like &quot;summarize what we learned about market trends&quot; consistently take 40+ seconds. Investigation reveals the coordinator spawns the synthesis subagent for each summarization request, <mark>passing 80K+ tokens</mark> of accumulated findings. The <mark>coordinator already has these findings in its context</mark> from orchestrating the research. What&#x27;s the most effective way to improve response time for these follow-up summaries?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,45)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>80K tokens shipped to another agent… to summarize what the shipper ALREADY knows. Spot the absurdity?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>&#x27;The coordinator already has these findings in its context&#x27; — the transfer itself is the waste.</p></div>
@@ -3063,7 +3136,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">After integrating a local MCP server providing code analysis tools (`analyze_dependencies`, `find_dead_code`, `calculate_complexity`), you verify the server is healthy and tools appear in the tools/list response. However, you observe that the agent <mark>consistently uses Grep</mark> to search for import statements instead of calling `analyze_dependencies`---even when users explicitly ask about &quot;code dependencies.&quot; Examining tool definitions reveals: MCP: `analyze_dependencies` - <mark>&quot;Analyzes dependency graph&quot;</mark> Built-in: Grep - &quot;Search file contents for a pattern using regular expressions. Returns matching lines with line numbers and surrounding context.&quot; What&#x27;s the most effective approach to improve the agent&#x27;s selection of MCP tools?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,46)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>A rich tool with a 4-word description loses to well-documented Grep every time. Coincidence?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The stem SHOWS you both descriptions side by side. The gap IS the bug.</p></div>
@@ -3113,7 +3186,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your agent is handling a billing dispute. After calling `get_customer` and `lookup_order`, it identifies that the dispute involves a promotional pricing error <mark>requiring manager approval</mark>---beyond the agent&#x27;s authorization level. How should the workflow handle this <mark>mid-process escalation</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,47)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Refund needs a manager ($500+). What should travel WITH the escalation so no work gets repeated?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The agent already investigated. Escalation quality = how little the human must redo.</p></div>
@@ -3165,7 +3238,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">A customer raises <mark>three separate issues</mark> during one session: a refund inquiry (turns 1-15), a subscription question (turns 16-30), and a payment method update (turns 31-45). At <mark>turn 48</mark>, the customer asks <mark>&quot;What happened with my refund?&quot;</mark> The conversation is <mark>approaching context limits</mark>. What strategy best maintains the agent&#x27;s ability to address all issues throughout the session?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,48)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Turn 48; customer asks about issue #1 from turn 5. What kind of storage survives 48 turns INTACT?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>You&#x27;ll need EXACT order IDs and amounts later. Whatever you keep must preserve those verbatim, for ALL issues.</p></div>
@@ -3218,7 +3291,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">A customer sends: &quot;This is frustrating. I&#x27;ve <mark>explained my issue twice</mark> and nothing is being resolved. <mark>I want to talk to a real person NOW</mark>.&quot; The agent <mark>has not yet called any tools</mark> to investigate their account. What should the agent do?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,49)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>&#x27;Explained my issue twice&#x27; + &#x27;REAL PERSON NOW&#x27;. Honor it or negotiate?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Contrast with Q4: there the fix was instant. Here the agent knows NOTHING yet and they&#x27;ve been burned twice already.</p></div>
@@ -3269,7 +3342,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">After investigating a billing dispute over 25+ turns, you&#x27;ve identified that duplicate charges occurred due to a payment gateway timeout triggering retry logic. The required refund <mark>($847) exceeds your $500 authorization limit</mark>. You need to call `escalate_to_human`, and the human agent <mark>won&#x27;t have access to your conversation transcript</mark>. What context should you pass to enable effective resolution?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,50)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>The human gets NO transcript. What&#x27;s the minimum COMPLETE package?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Test each option: could a stranger act on it ALONE? Find the account? Know the cause? Know what to do?</p></div>
@@ -3319,7 +3392,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your agent needs to <mark>insert a new helper function into the middle</mark> of a 150-line utility module, between two existing functions. The Edit tool fails because its `old_string` parameter <mark>cannot find unique text to match</mark> --- the file has <mark>repetitive docstrings</mark>, variable names, and structural patterns. What&#x27;s the most reliable way to complete this insertion?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,51)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Edit can&#x27;t find a unique anchor in repetitive code. Which tool combo doesn&#x27;t NEED an anchor?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The stem says insert into the MIDDLE — kill the append-to-end option instantly. Then: fragile match vs bulletproof rewrite.</p></div>
@@ -3369,7 +3442,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">During testing, you observe that in extended exploration sessions (<mark>30+ minutes</mark>), the agent starts giving <mark>inconsistent answers about code structure it discussed earlier</mark>. Engineers report having to repeat context about modules they&#x27;ve already explored. What&#x27;s the most effective approach to address this?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,52)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>30 minutes in, the agent contradicts its own earlier findings. In-window memory is failing — store findings WHERE?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>In-window memory degrades regardless of size. Durable memory = a FILE the agent re-reads.</p></div>
@@ -3421,7 +3494,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">You&#x27;re implementing the escalation logic for when the agent should call `escalate_to_human`. Your team proposes four different approaches for triggering escalation. Which approach will <mark>most reliably identify cases that genuinely require human intervention</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,53)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Which escalation trigger catches REAL need without false alarms?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Test each trigger against Q49&#x27;s customer (zero tool calls, calm words, explicit demand): which one catches them?</p></div>
@@ -3471,7 +3544,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">When implementing your `lookup_order` <mark>MCP tool</mark>, the backend sometimes returns errors (e.g., &quot;Order not found&quot; or temporary database failures). What is the <mark>correct pattern for communicating these errors</mark> back to the agent?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,54)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Pure spec recall: how do MCP tools report failures so the MODEL can react?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The model can only react to what lands in the conversation. Exceptions die inside the framework.</p></div>
@@ -3523,7 +3596,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">After your daily batch of 10,000 documents completes, <mark>300 documents (3%) failed</mark> with &quot;`<mark>context_length_exceeded</mark>`&quot; errors. The results file <mark>identifies each failure by `custom_id`</mark>. What&#x27;s the <mark>most cost-effective</mark> approach to process these failures?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,55)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>300 of 10,000 failed with INPUT-too-long. Cheapest correct repair?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Two instant kills: anything reprocessing all 10,000, and max_tokens (caps OUTPUT — the error is INPUT).</p></div>
@@ -3574,7 +3647,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">An engineer who just joined the team asks the agent to help them understand the <mark>authentication and authorization architecture</mark> before making security improvements. The codebase has <mark>800+ files across multiple services</mark>. What exploration strategy will most effectively build understanding, given Claude <mark>built-in tools and context limits</mark>?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,56)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>800+ files, multiple services; you need the AUTH architecture. Trace one thread, or fan out?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>Auth is one FLOW crossing services. A flow is traced end-to-end; fragments lose the plot. (Debate question — fan-out is defensible.)</p></div>
@@ -3624,7 +3697,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">A customer returns <mark>4 hours after</mark> their initial session about the same billing dispute. The previous 32-turn session contains `lookup_order` results showing &quot;Status: PENDING, Expected resolution: 24-48 hours.&quot; In testing, you observe that when resuming sessions with stale tool results, the <mark>agent often references the outdated data</mark> in responses (e.g., &quot;I see your refund is still being processed&quot;) <mark>even after subsequent fresh tool calls</mark> return different information. What approach most reliably handles returning customers?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,57)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Old tool data keeps leaking into answers EVEN AFTER fresh calls. Can stale context be out-instructed?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The stem already ran that experiment for you: fresh calls didn&#x27;t fix it. Only ABSENCE fixes it.</p></div>
@@ -3675,7 +3748,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your extraction system processes two document types: standard monthly reports (archived after processing) and <mark>urgent exception reports</mark> (must trigger business alerts <mark>within 30 minutes</mark> of receipt). Both use the same JSON schema. You want to <mark>minimize API costs while meeting latency</mark> requirements. How should you architect the processing pipeline?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,58)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Mixed workload: 30-minute urgent alerts + don&#x27;t-care archive. One processing lane or two?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>A batch can take 24 HOURS. Any option that puts urgent reports in a batch is dead on arrival.</p></div>
@@ -3726,7 +3799,7 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">Your extraction pipeline processes invoices and extracts line items, subtotals, tax amounts, and grand totals. During evaluation, you discover that in 18% of extractions, the sum of extracted line item amounts <mark>doesn&#x27;t match the extracted grand total</mark>---sometimes due to <mark>OCR errors in the source document</mark>, sometimes due to <mark>extraction mistakes by the model</mark>. Downstream <mark>accounting systems reject</mark> records with mismatched totals. What&#x27;s the most effective approach to improve extraction reliability?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,59)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Totals disagree; the cause could be OCR OR the model. Which side do you trust — or neither?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>It&#x27;s ACCOUNTING data. Any option that silently &#x27;fixes&#x27; numbers = fabricating records. Surface the conflict; don&#x27;t decide it.</p></div>
@@ -3777,7 +3850,7 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
  <div class="body">
    <div class="stemlabel">Verbatim question — the <mark>highlight</mark> is what gives the set &amp; answer away</div>
    <p class="stem">After deployment, you find that 12% of extractions contain <mark>semantic errors that pass JSON schema validation</mark> (e.g., a duration like &quot;30 minutes&quot; incorrectly placed in an ingredient quantity field). Human reviewers have <mark>capacity to check only 20%</mark> of extractions. Which approach most effectively allocates reviewer attention?</p>
-   <div class="hintrow"><button class="hintbtn assist" onclick="hint(this)">💡 Hint</button> <button class="hintbtn" onclick="qhl(this)">🖍 Highlights: on</button> <button class="hintbtn assist" onclick="qtog(this,'q-showgist')">⌁ Gists</button> <button class="hintbtn assist" onclick="qtog(this,'q-showex')">In practice</button> <button class="hintbtn claudebtn" onclick="askClaude(this,60)">🤖 Ask Claude</button></div>
+   
    <div class="hintbox">
      <div class="hintitem"><span class="hlab">REALLY ASKING</span><p>Errors LOOK valid (they pass the schema). You can review 20% — spend it where?</p></div>
      <div class="hintitem"><span class="hlab">LOOK FIRST</span><p>The failure mode is confidently-wrong FILLED fields. Empty fields are the honest ones. Random catches only 1 in 5.</p></div>
@@ -3859,7 +3932,82 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
  <div id="exam-results" style="display:none"></div>
 </section>
 
-<footer>Rebuilt 1:1 from Claude_Practice_Questions.docx · verdicts are verified/derived deductions, not an official key · flags live in this tab only (reset on reload).</footer>
+<div id="tour" class="tour" style="display:none" role="dialog" aria-label="How this tool works">
+ <div class="tourbox">
+  <button class="tourskip" onclick="tourDone()">Skip ✕</button>
+  <div class="tourstep on" data-s="0">
+    <div class="tourkicker">WELCOME · 30-SECOND TOUR</div>
+    <h2 class="tourh">One tool, three rooms</h2>
+    <div class="tourrooms">
+      <div class="tourroom"><span class="tab on tdemo">Key</span><p><b>Learn</b> the patterns — cheat codes + one panel per topic set.</p></div>
+      <div class="tourroom"><span class="tab tdemo">Drill</span><p><b>Practice</b> all 60 questions with training wheels you control.</p></div>
+      <div class="tourroom"><span class="tab tdemo">Exam</span><p><b>Rehearse</b> — 60 Q / 120 min, exactly like the real thing.</p></div>
+    </div>
+  </div>
+  <div class="tourstep" data-s="1">
+    <div class="tourkicker">THE STUDY LOOP</div>
+    <h2 class="tourh">Four moves, repeat</h2>
+    <ol class="tourol">
+      <li><b>Key:</b> open a set panel — read its fingerprint + one rule.</li>
+      <li><b>Drill</b> that set: try each question, tap <b>Reveal</b> to check.</li>
+      <li><b>⚑ Flag</b> your misses — then drill the Flagged filter.</li>
+      <li><b>Exam</b> when ready — results rank your weakest set for round two.</li>
+    </ol>
+  </div>
+  <div class="tourstep" data-s="2">
+    <div class="tourkicker">TRAINING WHEELS</div>
+    <h2 class="tourh">Stuck? Every question has help buttons</h2>
+    <ul class="tourul">
+      <li><b>💡 Hint</b> — what the question is <i>really</i> asking. Never spoils.</li>
+      <li><b>⌁ Gists</b> — each choice as one line of pseudo-code.</li>
+      <li><b>◦ plain</b> — a choice rephrased in simple words.</li>
+      <li><b>Reveal</b> — the answer + why every other choice loses.</li>
+      <li><b>🤖 Ask Claude</b> — copies the question for a walkthrough in Claude.</li>
+    </ul>
+    <p class="tournote">In Exam mode, Easy / Medium / Hard decides how many of these exist.</p>
+  </div>
+  <div class="tourstep" data-s="3">
+    <div class="tourkicker">READ THE COLORS</div>
+    <h2 class="tourh">Badges in ten seconds</h2>
+    <ul class="tourul">
+      <li>Colored pills = <b>topic sets</b> — same color everywhere.</li>
+      <li><span class="verdict v-pick" style="display:inline-block">✓ PICK</span> correct · <span class="verdict v-kill" style="display:inline-block">✕ OUT</span> eliminated (struck through).</li>
+      <li><span class="tier t1">DOCS-VERIFIED</span> answer confirmed against official Anthropic docs.</li>
+      <li><b>⚠ Disputed 8</b> — the 8 questions your team's doc had marked wrong. Drill these first.</li>
+    </ul>
+  </div>
+  <div class="tournav">
+    <button class="exnavbtn" id="tprev" onclick="tourGo(-1)">← Back</button>
+    <span class="tourdots" id="tdots"></span>
+    <button class="exnavbtn" id="tnext" onclick="tourGo(1)">Next →</button>
+  </div>
+ </div>
+</div>
+
+<div id="dock" style="display:none" aria-label="Help tools for the current question">
+ <span class="dockq" id="dockq">Q1</span>
+ <button class="dockbtn" data-k="hint" onclick="dockAssist(this)">💡 Hint</button>
+ <button class="dockbtn" data-k="hl" onclick="dockAssist(this)">🖍 HL</button>
+ <button class="dockbtn" data-k="gist" onclick="dockAssist(this)">⌁ Gists</button>
+ <button class="dockbtn" data-k="ex" onclick="dockAssist(this)">In practice</button>
+ <button class="dockbtn dockclaude" data-k="ask" onclick="dockAssist(this)">🤖 Ask</button>
+ <button class="dockbtn dockrev" data-k="rev" onclick="dockAssist(this)">Reveal</button>
+</div>
+
+<div id="spot" style="display:none">
+ <div class="spotring" id="spotring"></div>
+ <div class="spottip" id="spottip">
+  <div class="tourkicker" id="spotstep"></div>
+  <h3 class="spott" id="spottitle"></h3>
+  <p class="spotp" id="spottext"></p>
+  <div class="tournav">
+    <button class="exnavbtn" id="sprev" onclick="spotGo(-1)">← Back</button>
+    <button class="tourskip" style="position:static" onclick="spotEnd(false)">Exit</button>
+    <button class="exnavbtn" id="snext" onclick="spotGo(1)">Next →</button>
+  </div>
+ </div>
+</div>
+
 </div>
 <script>
 const ANS = {"1": "B", "2": "B", "3": "A", "4": "D", "5": "D", "6": "C", "7": "C", "8": "D", "9": "C", "10": "B", "11": "C", "12": "D", "13": "D", "14": "C", "15": "A", "16": "D", "17": "C", "18": "C", "19": "D", "20": "A", "21": "C", "22": "D", "23": "C", "24": "A", "25": "B", "26": "C", "27": "B", "28": "B", "29": "B", "30": "D", "31": "B", "32": "B", "33": "C", "34": "D", "35": "D", "36": "C", "37": "C", "38": "B", "39": "A", "40": "D", "41": "D", "42": "D", "43": "A", "44": "C", "45": "B", "46": "D", "47": "C", "48": "C", "49": "D", "50": "C", "51": "C", "52": "B", "53": "C", "54": "A", "55": "B", "56": "A", "57": "D", "58": "A", "59": "C", "60": "D"};
@@ -3873,7 +4021,66 @@ function tab(btn){
  btn.classList.add('on');
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
  document.getElementById('view-'+btn.dataset.v).classList.add('on');
+ dockSync();
 }
+let LASTQ = null;
+function keepCardAnchored(c, fn){
+ const t = c.getBoundingClientRect().top;
+ fn();
+ const d = c.getBoundingClientRect().top - t;
+ if (d) window.scrollBy({top: d, left: 0, behavior: 'instant'});
+}
+function activeCard(){
+ if (!document.getElementById('view-drill').classList.contains('on')) return null;
+ const cards = [...document.querySelectorAll('#view-drill .card')].filter(c => c.style.display !== 'none' && c.classList.contains('open'));
+ if (!cards.length) return null;
+ if (DMODE === 'single') return cards[0];
+ if (LASTQ) { const c = cards.find(x => x.dataset.n === String(LASTQ)); if (c) { const r = c.getBoundingClientRect(); if (r.bottom > 60 && r.top < window.innerHeight) return c; } }
+ const line = window.innerHeight * 0.33;
+ let best = null, bd = 1e9;
+ for (const c of cards) { const r = c.getBoundingClientRect(); if (r.top <= line && r.bottom >= 60) return c; const d = Math.abs(r.top - line); if (d < bd) { bd = d; best = c; } }
+ return best;
+}
+function dockSync(){
+ const dock = document.getElementById('dock');
+ const c = activeCard();
+ if (!c) { dock.style.display = 'none'; document.body.classList.remove('dockon'); return; }
+ dock.style.display = 'flex';
+ document.body.classList.add('dockon');
+ document.getElementById('dockq').textContent = 'Q' + c.dataset.n;
+ const revealed = c.classList.contains('revealed');
+ const st = { hint: c.classList.contains('hinted'), hl: !c.classList.contains('q-nohl'), gist: c.classList.contains('q-showgist'), ex: c.classList.contains('q-showex') };
+ dock.querySelectorAll('.dockbtn').forEach(b => {
+   const k = b.dataset.k;
+   if (k in st) b.classList.toggle('on', st[k]);
+   if (['hint','gist','ex'].includes(k)) b.classList.toggle('dead', revealed);
+   if (k === 'rev') b.textContent = revealed ? 'Hide' : 'Reveal';
+ });
+}
+function dockAssist(b){
+ const c = activeCard();
+ if (!c) return;
+ LASTQ = c.dataset.n;
+ const k = b.dataset.k;
+ if (k === 'ask') { askClaude(b, parseInt(c.dataset.n, 10)); return; }
+ keepCardAnchored(c, () => {
+   if (k === 'hint') c.classList.toggle('hinted');
+   else if (k === 'hl') c.classList.toggle('q-nohl');
+   else if (k === 'gist') c.classList.toggle('q-showgist');
+   else if (k === 'ex') c.classList.toggle('q-showex');
+   else if (k === 'rev') {
+     c.classList.toggle('revealed');
+     c.querySelector('.reveal').textContent = c.classList.contains('revealed') ? 'Hide answer' : 'Reveal answer';
+   }
+ });
+ dockSync();
+}
+let dockScrollTick = false;
+window.addEventListener('scroll', () => {
+ if (dockScrollTick) return;
+ dockScrollTick = true;
+ requestAnimationFrame(() => { dockScrollTick = false; if (document.getElementById('view-drill').classList.contains('on')) dockSync(); });
+}, {passive: true});
 function keepAnchored(el, fn){
  const t = el.getBoundingClientRect().top;
  fn();
@@ -3881,11 +4088,15 @@ function keepAnchored(el, fn){
  if (d) window.scrollBy({top: d, left: 0, behavior: 'instant'});
 }
 function listTop(){ document.querySelector('#view-drill .toolbar').scrollIntoView({behavior:'instant', block:'start'}); window.scrollBy({top:-80, behavior:'instant'}); }
-function tog(b){b.closest('.card').classList.toggle('open')}
-function rev(b){keepAnchored(b, () => {
- b.closest('.card').classList.toggle('revealed');
- b.textContent = b.closest('.card').classList.contains('revealed') ? 'Hide answer' : 'Reveal answer';
-});}
+function tog(b){const c=b.closest('.card'); c.classList.toggle('open'); LASTQ=c.dataset.n; dockSync();}
+function rev(b){
+ const c = b.closest('.card');
+ keepCardAnchored(c, () => {
+   c.classList.toggle('revealed');
+   b.textContent = c.classList.contains('revealed') ? 'Hide answer' : 'Reveal answer';
+ });
+ LASTQ = c.dataset.n;
+ dockSync();}
 function hint(b){ keepAnchored(b, () => { b.classList.toggle('on'); b.closest('.card').classList.toggle('hinted'); }); }
 function cplain(b){ keepAnchored(b, () => b.closest('.choice').classList.toggle('showplain')); }
 function cgist(b){ keepAnchored(b, () => b.closest('.choice').classList.toggle('showgist')); }
@@ -3899,13 +4110,13 @@ function qhl(b){
 }
 function hilite(){
  const btn = document.getElementById('hlbtn');
- const turnOff = !btn.textContent.includes('off');
+ const turnOff = btn.classList.contains('on');
+ btn.classList.toggle('on', !turnOff);
  document.querySelectorAll('#view-drill .card').forEach(c => {
    c.classList.toggle('q-nohl', turnOff);
    const b = c.querySelector('.hintrow button:nth-child(2)');
    if (b) b.textContent = '🖍 Highlights: ' + (turnOff ? 'off' : 'on');
  });
- btn.textContent = 'Highlights: ' + (turnOff ? 'off' : 'on') + ' (all)';
 }
 function hideAll(){document.querySelectorAll('.card.revealed').forEach(c=>{c.classList.remove('revealed');c.querySelector('.reveal').textContent='Reveal answer';}); listTop();}
 function flag(b){
@@ -3913,19 +4124,20 @@ function flag(b){
  const n = document.querySelectorAll('.flag.on').length;
  document.getElementById('flagnote').textContent = n + ' flagged';
 }
-let CURF = 'all', DMODE = 'all', DIDX = 0;
-function matchesF(c, f){
- if(f==='all') return true;
- if(f==='flag') return c.querySelector('.flag').classList.contains('on');
- if(f==='dis') return c.dataset.dis==='1';
- if(f==='t3') return c.dataset.tier==='3';
- return c.dataset.set===f;
+let CURF = 'all', CURFOC = null, DMODE = 'all', DIDX = 0;
+function matchesF(c){
+ const setOk = CURF === 'all' || c.dataset.set === CURF;
+ let focOk = true;
+ if (CURFOC === 'flag') focOk = c.querySelector('.flag').classList.contains('on');
+ else if (CURFOC === 'dis') focOk = c.dataset.dis === '1';
+ else if (CURFOC === 't3') focOk = c.dataset.tier === '3';
+ return setOk && focOk;
 }
-function applyDrill(){
+function applyDrill(){ requestAnimationFrame(dockSync);
  const cards = [...document.querySelectorAll('#view-drill .card')];
- const matched = cards.filter(c => matchesF(c, CURF));
+ const matched = cards.filter(c => matchesF(c));
  if (DMODE === 'all') {
-   cards.forEach(c => c.style.display = matchesF(c, CURF) ? '' : 'none');
+   cards.forEach(c => c.style.display = matchesF(c) ? '' : 'none');
    document.getElementById('dnav').style.display = 'none';
  } else {
    DIDX = Math.min(DIDX, Math.max(0, matched.length - 1));
@@ -3933,14 +4145,22 @@ function applyDrill(){
    if (matched.length) { const cur = matched[DIDX]; cur.style.display = ''; cur.classList.add('open'); }
    const nav = document.getElementById('dnav');
    nav.style.display = matched.length ? 'flex' : 'none';
-   document.getElementById('dpos').textContent = matched.length ? `${DIDX+1} / ${matched.length}${CURF==='all'?'':' (filtered)'}` : '';
+   document.getElementById('dpos').textContent = matched.length ? `${DIDX+1} / ${matched.length}${(CURF!=='all'||CURFOC)?' (filtered)':''}` : '';
  }
+ const sh = document.getElementById('showing');
+ if (sh) sh.textContent = (CURF !== 'all' || CURFOC) ? '→ showing ' + matched.length + ' of 60' : '';
 }
 function filt(btn){
- if(!btn.dataset.f) return;
- document.querySelectorAll('.fbtn[data-f]').forEach(b=>b.classList.remove('on'));
- btn.classList.add('on');
- CURF = btn.dataset.f; DIDX = 0;
+ const f = btn.dataset.f;
+ if (!f) return;
+ if (['flag','dis','t3'].includes(f)) {
+   CURFOC = (CURFOC === f) ? null : f;
+   document.querySelectorAll('.fbtn.foc').forEach(b => b.classList.toggle('on', b.dataset.f === CURFOC));
+ } else {
+   CURF = f;
+   document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b => b.classList.toggle('on', b.dataset.f === f));
+ }
+ DIDX = 0;
  applyDrill(); listTop();
 }
 function dview(m){
@@ -3950,7 +4170,7 @@ function dview(m){
  applyDrill(); listTop();
 }
 function dnav(d){
- const max = [...document.querySelectorAll('#view-drill .card')].filter(c => matchesF(c, CURF)).length;
+ const max = [...document.querySelectorAll('#view-drill .card')].filter(c => matchesF(c)).length;
  DIDX = Math.min(max-1, Math.max(0, DIDX + d));
  applyDrill(); listTop();
 }
@@ -3965,10 +4185,10 @@ function resetDrill(){
    const hb = c.querySelector('.hintrow button:nth-child(2)'); if (hb) hb.textContent = '🖍 Highlights: on';
    c.querySelector('.reveal').textContent = 'Reveal answer';
  });
- document.getElementById('hlbtn').textContent = 'Highlights: on (all)';
+ document.getElementById('hlbtn').classList.add('on');
  document.querySelectorAll('.fbtn[data-f]').forEach(b=>b.classList.remove('on'));
  document.querySelector('.fbtn[data-f="all"]').classList.add('on');
- CURF = 'all'; DIDX = 0;
+ CURF = 'all'; CURFOC = null; DIDX = 0;
  applyDrill(); listTop();
 }
 function askClaude(btn, n){
@@ -4019,29 +4239,40 @@ function fallbackCopy(text){
 function jumpSet(n){
  const setk = QMETA[n].s;
  document.querySelector('.tab[data-v="drill"]').click();
- document.querySelectorAll('.fbtn[data-f]').forEach(b=>b.classList.remove('on'));
- document.querySelector('.fbtn[data-f="'+setk+'"]').classList.add('on');
+ CURFOC = null;
+ document.querySelectorAll('.fbtn.foc').forEach(b=>b.classList.remove('on'));
+ document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b=>b.classList.toggle('on', b.dataset.f===setk));
  CURF = setk;
  if (DMODE === 'single') {
-   const matched = [...document.querySelectorAll('#view-drill .card')].filter(c => matchesF(c, CURF));
+   const matched = [...document.querySelectorAll('#view-drill .card')].filter(c => matchesF(c));
    DIDX = Math.max(0, matched.findIndex(c => c.dataset.n === String(n)));
    applyDrill(); listTop();
  } else {
    applyDrill();
    const c = document.querySelector('.card[data-n="'+n+'"]');
-   if(c){ c.classList.add('open'); c.scrollIntoView({behavior:'smooth',block:'start'}); }
+   if(c){ c.classList.add('open'); scrollUnderToolbar(c); }
+ }
+}
+function scrollUnderToolbar(el){
+ const tb = document.querySelector('#view-drill .toolbar');
+ const sticky = getComputedStyle(tb).position === 'sticky';
+ el.scrollIntoView({behavior:'instant', block:'start'});
+ if (sticky) {
+   const d = el.getBoundingClientRect().top - (tb.getBoundingClientRect().bottom + 8);
+   if (Math.abs(d) > 2) window.scrollBy({top: d, behavior: 'instant'});
  }
 }
 function jump(n){
  document.querySelector('.tab[data-v="drill"]').click();
- document.querySelectorAll('.fbtn[data-f]').forEach(b=>b.classList.remove('on'));
- document.querySelector('.fbtn[data-f="all"]').classList.add('on');
+ CURFOC = null;
+ document.querySelectorAll('.fbtn.foc').forEach(b=>b.classList.remove('on'));
+ document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b=>b.classList.toggle('on', b.dataset.f==='all'));
  CURF='all';
  if (DMODE === 'single') { DIDX = n - 1; applyDrill(); listTop(); }
  else {
    applyDrill();
    const c = document.querySelector('.card[data-n="'+n+'"]');
-   if(c){ c.classList.add('open'); c.scrollIntoView({behavior:'smooth',block:'start'}); }
+   if(c){ c.classList.add('open'); scrollUnderToolbar(c); }
  }
 }
 const QMETA = {"1": {"s": "E", "w": "B"}, "2": {"s": "M", "w": "B"}, "3": {"s": "M", "w": "A"}, "4": {"s": "S", "w": "D"}, "5": {"s": "E", "w": "D"}, "6": {"s": "S", "w": "C"}, "7": {"s": "C", "w": "C"}, "8": {"s": "E", "w": "D"}, "9": {"s": "E", "w": "C"}, "10": {"s": "E", "w": "B"}, "11": {"s": "C", "w": "C"}, "12": {"s": "M", "w": "D"}, "13": {"s": "M", "w": "D"}, "14": {"s": "C", "w": "C"}, "15": {"s": "E", "w": "A"}, "16": {"s": "C", "w": "D"}, "17": {"s": "C", "w": "C"}, "18": {"s": "M", "w": "C"}, "19": {"s": "E", "w": "D"}, "20": {"s": "M", "w": "A"}, "21": {"s": "V", "w": "C"}, "22": {"s": "S", "w": "D"}, "23": {"s": "M", "w": "C"}, "24": {"s": "S", "w": "A"}, "25": {"s": "T", "w": "B"}, "26": {"s": "M", "w": "C"}, "27": {"s": "C", "w": "B"}, "28": {"s": "V", "w": "B"}, "29": {"s": "M", "w": "B"}, "30": {"s": "M", "w": "D"}, "31": {"s": "C", "w": "B"}, "32": {"s": "S", "w": "B"}, "33": {"s": "S", "w": "C"}, "34": {"s": "E", "w": "D"}, "35": {"s": "M", "w": "D"}, "36": {"s": "C", "w": "C"}, "37": {"s": "S", "w": "C"}, "38": {"s": "C", "w": "B"}, "39": {"s": "C", "w": "A"}, "40": {"s": "E", "w": "D"}, "41": {"s": "M", "w": "D"}, "42": {"s": "S", "w": "D"}, "43": {"s": "M", "w": "A"}, "44": {"s": "M", "w": "C"}, "45": {"s": "M", "w": "B"}, "46": {"s": "T", "w": "D"}, "47": {"s": "S", "w": "C"}, "48": {"s": "S", "w": "C"}, "49": {"s": "S", "w": "D"}, "50": {"s": "S", "w": "C"}, "51": {"s": "C", "w": "C"}, "52": {"s": "C", "w": "B"}, "53": {"s": "S", "w": "C"}, "54": {"s": "T", "w": "A"}, "55": {"s": "V", "w": "B"}, "56": {"s": "C", "w": "A"}, "57": {"s": "S", "w": "D"}, "58": {"s": "V", "w": "A"}, "59": {"s": "E", "w": "C"}, "60": {"s": "V", "w": "D"}};
@@ -4112,7 +4343,8 @@ function renderExQ(){
   qbox.innerHTML = `<p class="exstem">${stem}</p>${extra}${ch}`;
   // assist bar per mode; toggles reset per question
   const AS = {easy:[['hint','💡 hint'],['plain','◦ plain words'],['gist','⌁ gists'],['ex','in practice'],['reveal','reveal answer']], medium:[['hint','💡 hint'],['plain','◦ plain words']], hard:[]};
-  document.getElementById('exassist').innerHTML = (AS[EX.mode]||[]).map(([k,l])=>`<button class="asbtn" data-k="${k}" onclick="exAssist(this)">${l}</button>`).join('');
+  const asBtns = (AS[EX.mode]||[]).map(([k,l])=>`<button class="asbtn" data-k="${k}" onclick="exAssist(this)">${l}</button>`).join('');
+  document.getElementById('exassist').innerHTML = asBtns ? '<span class="tglab">Help<br><i>' + EX.mode + ' mode</i></span>' + asBtns : '';
   document.getElementById('exqlabel').textContent = `Q ${EX.cur+1} / 60`;
   document.getElementById('exflagbtn').classList.toggle('on', EX.flags.has(n));
   document.getElementById('exprev').disabled = EX.cur===0;
@@ -4227,6 +4459,99 @@ function resTog(n){
     d.appendChild(wrap); d.dataset.built='1';
   }
 }
+const SPOT_STEPS = [
+ {sel:'.tabs', t:'The three rooms', p:'Key = learn the patterns. Drill = practice with help. Exam = the 1:1 rehearsal. ? Tour replays this anytime; the ◐ button flips light/dark.',
+   prep:()=>{} },
+ {sel:'#tg-sets', t:'Sets — pick a topic', p:'Every question belongs to one of 6 colored sets. Tap a pill to study just that group. The colors match everywhere: Key panels, question cards, exam results.',
+   prep:()=>{ document.querySelector('.tab[data-v="drill"]').click(); resetDrill(); } },
+ {sel:'#tg-focus', t:'Narrow — stacks on your set', p:'These + chips COMBINE with the set above: Extraction + ⚑ Flagged = your flagged Extraction questions. ⚠ Disputed 8 = the ones your team’s doc had wrong — drill these first. Tap again to clear.',
+   prep:()=>{} },
+ {sel:'#tg-view', t:'View — layout, highlights, actions', p:'The joined ☰ All / ▭ Single control picks the layout. The Highlights switch (green dot = on) controls the giveaway wash everywhere. Past the divider: one-shot actions — Hide answers and ↺ Reset (your flags survive).',
+   prep:()=>{} },
+ {sel:'.card[data-n="1"] .cardhead', t:'A question card', p:'⚑ flags it for later. The colored pill = its set. The badge = answer confidence: DOCS-VERIFIED beats GUIDANCE beats DEBATE.',
+   prep:()=>{ document.querySelector('.card[data-n="1"]').classList.add('open'); } },
+ {sel:'.card[data-n="1"] .chips', t:'Skim first, read later', p:'The bold line is the one-sentence takeaway. The yellow chips are the exact phrases in the question that give the answer away — spot these and you often skip the wall of text.',
+   prep:()=>{} },
+ {sel:'#dock', t:'The floating help dock', p:'It follows whichever question you’re on — the Q number shows which. 💡 Hint = what’s really asked (never spoils). 🖍 HL = highlights for this question. ⌁ Gists = choices as one-line code. In practice = the winning mechanism + snippet. 🤖 Ask copies the question for Claude. Reveal = the full answer. It floats, so the page never jumps under your finger.',
+   prep:()=>{ LASTQ='1'; dockSync(); } },
+ {sel:'.card[data-n="1"] .choice[data-l="A"] .chead', t:'Per-choice toggles', p:'Each answer choice has its own ◦ plain (simple-words rephrase) and ⌁ gist (one-line code sketch). Toggle just the one you’re stuck on.',
+   prep:()=>{} },
+ {sel:'.card[data-n="1"] .reveal', t:'Reveal — the full answer', p:'One tap shows everything: ✓ the pick, ✕ eliminated choices struck through, why each loses, and the in-practice example. The help toggles gray out — they’re already showing.',
+   prep:()=>{} },
+ {sel:'.tab[data-v="exam"]', t:'When you’re ready: Exam', p:'60 questions, 120 minutes, one per screen — Easy/Medium/Hard controls how many help tools exist. Results rank your weakest set and tell you HOW you miss (close-2nds vs outright kills). That report is your next drill list.',
+   prep:()=>{} },
+];
+let spotIdx = 0, spotPrevState = null;
+function spotStart(){
+ spotPrevState = { view: document.querySelector('.tab.on[data-v]').dataset.v };
+ spotIdx = 0;
+ document.getElementById('spot').style.display = 'block';
+ spotShow();
+}
+function spotShow(){
+ const s = SPOT_STEPS[spotIdx];
+ s.prep();
+ const el = document.querySelector(s.sel);
+ el.scrollIntoView({behavior:'instant', block:'center'});
+ requestAnimationFrame(() => {
+   const r = el.getBoundingClientRect();
+   const ring = document.getElementById('spotring');
+   ring.style.left = (r.left - 6) + 'px';
+   ring.style.top = (r.top - 6) + 'px';
+   ring.style.width = (r.width + 12) + 'px';
+   ring.style.height = (r.height + 12) + 'px';
+   const tip = document.getElementById('spottip');
+   document.getElementById('spotstep').textContent = 'COMPONENT ' + (spotIdx + 1) + ' / ' + SPOT_STEPS.length;
+   document.getElementById('spottitle').textContent = s.t;
+   document.getElementById('spottext').textContent = s.p;
+   document.getElementById('sprev').style.visibility = spotIdx === 0 ? 'hidden' : 'visible';
+   document.getElementById('snext').textContent = spotIdx === SPOT_STEPS.length - 1 ? 'Finish ✓' : 'Next →';
+   if (window.innerWidth > 560) {
+     const below = r.bottom + 16;
+     const tipH = tip.offsetHeight || 170;
+     tip.style.left = Math.max(10, Math.min(r.left, window.innerWidth - 360)) + 'px';
+     tip.style.top = (below + tipH < window.innerHeight ? below : Math.max(10, r.top - tipH - 16)) + 'px';
+     tip.style.bottom = 'auto';
+   }
+ });
+}
+function spotGo(d){
+ if (spotIdx === SPOT_STEPS.length - 1 && d === 1) { spotEnd(true); return; }
+ spotIdx = Math.min(SPOT_STEPS.length - 1, Math.max(0, spotIdx + d));
+ spotShow();
+}
+function spotEnd(finished){
+ document.getElementById('spot').style.display = 'none';
+ // restore what the walkthrough touched
+ const c1 = document.querySelector('.card[data-n="1"]');
+ c1.classList.remove('open','revealed');
+ c1.querySelector('.reveal').textContent = 'Reveal answer';
+ if (finished) { document.querySelector('.tab[data-v="key"]').click(); ksecgo(0); }
+ else if (spotPrevState) { document.querySelector('.tab[data-v="' + spotPrevState.view + '"]').click(); }
+ window.scrollTo({top:0, behavior:'instant'});
+}
+window.addEventListener('resize', () => { if (document.getElementById('spot').style.display !== 'none') spotShow(); });
+const TOUR_STEPS = 4;
+let tourStep = 0;
+function safeGet(k){ try { return window.localStorage.getItem(k); } catch(e) { return null; } }
+function safeSet(k, v){ try { window.localStorage.setItem(k, v); } catch(e) {} }
+function tourRender(){
+ document.querySelectorAll('.tourstep').forEach(s => s.classList.toggle('on', +s.dataset.s === tourStep));
+ document.getElementById('tdots').innerHTML = Array.from({length: TOUR_STEPS}, (_, i) => '<i class="' + (i === tourStep ? 'on' : '') + '"></i>').join('');
+ document.getElementById('tprev').style.visibility = tourStep === 0 ? 'hidden' : 'visible';
+ document.getElementById('tnext').textContent = tourStep === TOUR_STEPS - 1 ? 'Walk me through the screen →' : 'Next →';
+}
+function tourGo(d){
+ if (tourStep === TOUR_STEPS - 1 && d === 1) {
+   tourDone();
+   spotStart();
+   return;
+ }
+ tourStep = Math.min(TOUR_STEPS - 1, Math.max(0, tourStep + d));
+ tourRender();
+}
+function tourOpen(){ tourStep = 0; tourRender(); document.getElementById('tour').style.display = 'flex'; }
+function tourDone(){ document.getElementById('tour').style.display = 'none'; safeSet('ccaf_tour_done', '1'); }
 function ksec(i){ document.getElementById('ksec'+i).classList.toggle('open'); }
 function ksecgo(i){
  document.querySelectorAll('.ksec.open').forEach(s => s.classList.remove('open'));
@@ -4257,7 +4582,10 @@ function kexp(n){
    }
  }
 }
+if (!safeGet('ccaf_tour_done')) tourOpen();
 document.addEventListener('click', function(e){
+ const btn = e.target.closest('button');
+ if (btn && e.detail > 0) btn.blur(); // pointer clicks only; keyboard activation keeps focus
  const js = e.target.closest('[data-jumpset]');
  if (js) { e.preventDefault(); jumpSet(parseInt(js.dataset.jumpset, 10)); return; }
  const j = e.target.closest('[data-jump]');
