@@ -92,6 +92,13 @@ table at once.
       follows the same predicate
 - [x] Single view: Prev / n / Next bar + card get bottom clearance above
       the pill (they were hidden underneath)
+- [x] **Compact header (user request):** the big h1 + subtitle traded for a
+      one-row bar — small washed title, tabs, flag note, theme, tour
+- [x] **Pinned question (user request):** Single view pins Q row + cue +
+      stem (QuestionStemHeader) while choices scroll under it, one card
+      visual with the set-colored border
+- [x] Dock rail constrained to the question area (was centering over the
+      toolbar) and scrolls internally on short windows
 - [x] Highlights dot-switch (9px dot, pick-green when on) in VIEW cluster
 - [x] Ghost buttons: dashed `HIDE ANSWERS` / `↺ RESET` + vertical divider
 

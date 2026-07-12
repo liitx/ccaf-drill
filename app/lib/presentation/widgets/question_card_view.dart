@@ -21,6 +21,7 @@ class QuestionCardView extends StatelessWidget {
     required this.question,
     this.forceRevealed = false,
     this.pickedLetter,
+    this.bodyOnly = false,
     super.key,
   });
 
@@ -34,6 +35,10 @@ class QuestionCardView extends StatelessWidget {
   /// Tag this letter as "YOUR PICK" (exam review).
   final String? pickedLetter;
 
+  /// Render only the body (assists + choices + reveal) with no card chrome
+  /// and no stem — the Single view pins [QuestionStemHeader] above it.
+  final bool bodyOnly;
+
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
@@ -44,6 +49,17 @@ class QuestionCardView extends StatelessWidget {
     final revealed = forceRevealed || drill.revealed.contains(n);
     final isDockTarget = !forceRevealed && drill.activeQuestion == n;
     final set = question.topicSet;
+
+    if (bodyOnly) {
+      return _Body(
+        question: question,
+        revealed: drill.revealed.contains(n),
+        forceRevealed: false,
+        pickedLetter: pickedLetter,
+        ttsTarget: tts.currentTarget,
+        showStem: false,
+      );
+    }
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -224,6 +240,7 @@ class _Body extends StatelessWidget {
     required this.forceRevealed,
     required this.pickedLetter,
     required this.ttsTarget,
+    this.showStem = true,
   });
 
   final Question question;
@@ -231,6 +248,9 @@ class _Body extends StatelessWidget {
   final bool forceRevealed;
   final String? pickedLetter;
   final SpeechTarget? ttsTarget;
+
+  /// False when the stem is pinned above (Single view).
+  final bool showStem;
 
   @override
   Widget build(BuildContext context) {
@@ -247,26 +267,28 @@ class _Body extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'VERBATIM QUESTION — THE HIGHLIGHT IS WHAT GIVES THE SET & '
-            'ANSWER AWAY',
-            style: context.display(10).copyWith(color: p.dim),
-          ),
-          const SizedBox(height: 6),
-          Container(
-            decoration: BoxDecoration(
-              color: stemBeingRead
-                  ? p.link.withValues(alpha: .10)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(4),
+          if (showStem) ...[
+            Text(
+              'VERBATIM QUESTION — THE HIGHLIGHT IS WHAT GIVES THE SET & '
+              'ANSWER AWAY',
+              style: context.display(10).copyWith(color: p.dim),
             ),
-            child: HighlightedStem(
-              stem: question.stem,
-              signals: drill.highlightsOn || forceRevealed
-                  ? question.signals
-                  : const [],
+            const SizedBox(height: 6),
+            Container(
+              decoration: BoxDecoration(
+                color: stemBeingRead
+                    ? p.link.withValues(alpha: .10)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: HighlightedStem(
+                stem: question.stem,
+                signals: drill.highlightsOn || forceRevealed
+                    ? question.signals
+                    : const [],
+              ),
             ),
-          ),
+          ],
           _Fold(
             open: hinted,
             child: _HintBox(question: question),
@@ -298,6 +320,93 @@ class _Body extends StatelessWidget {
               ),
             ),
           if (revealed) _AfterReveal(question: question),
+        ],
+      ),
+    );
+  }
+}
+
+/// The pinned question header for the Single view: Q row + cue + stem stay
+/// visible while the answer choices scroll underneath (kept deliberately
+/// minimal — chips and assists live in the scrolling body).
+class QuestionStemHeader extends StatelessWidget {
+  /// Creates the pinned header for [question].
+  const QuestionStemHeader({required this.question, super.key});
+
+  /// The question whose stem stays pinned.
+  final Question question;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final drill = context.watch<DrillCubit>().state;
+    final tts = context.watch<TtsCubit>().state;
+    final n = question.number;
+    final set = question.topicSet;
+    final flagged = drill.flagged.contains(n);
+    final stemBeingRead =
+        tts.currentTarget?.question == n && tts.currentTarget?.letter == null;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 8, 14, 10),
+      decoration: BoxDecoration(
+        color: p.card,
+        border: Border(bottom: BorderSide(color: p.line)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              IconButton(
+                tooltip: 'Flag to drill later',
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: Icon(
+                  flagged ? Icons.flag : Icons.outlined_flag,
+                  color: flagged ? p.flagOn : p.flagOff,
+                  size: 18,
+                ),
+                onPressed: () => context.read<DrillCubit>().toggleFlag(n),
+              ),
+              const SizedBox(width: 8),
+              Text('Q$n', style: context.display(15)),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: set.colorDim.withValues(alpha: .18),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  set.displayName,
+                  style: context.display(10).copyWith(color: set.colorDim),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            question.cue,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              color: p.ink,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Container(
+            decoration: BoxDecoration(
+              color: stemBeingRead
+                  ? p.link.withValues(alpha: .10)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: HighlightedStem(
+              stem: question.stem,
+              signals: drill.highlightsOn ? question.signals : const [],
+            ),
+          ),
         ],
       ),
     );

@@ -118,19 +118,13 @@ class _HomeShellState extends State<HomeShell> {
         children: [
           ContentColumn(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const _SiteHeader(),
-                  TabChrome(
-                    room: _room,
-                    onChanged: (room) {
-                      context.read<TtsCubit>().stop();
-                      setState(() => _room = room);
-                    },
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TabChrome(
+                room: _room,
+                onChanged: (room) {
+                  context.read<TtsCubit>().stop();
+                  setState(() => _room = room);
+                },
               ),
             ),
           ),
@@ -143,42 +137,6 @@ class _HomeShellState extends State<HomeShell> {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// The web header: uppercase Barlow title with the washed 'drill' word and
-/// the dim subtitle (h1 / h1 em / .sub in styles.css).
-class _SiteHeader extends StatelessWidget {
-  const _SiteHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    final p = context.palette;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text.rich(
-          TextSpan(
-            style: context.display(30, weight: FontWeight.w700),
-            children: [
-              const TextSpan(text: 'CCA-F '),
-              TextSpan(
-                text: 'DRILL',
-                style: TextStyle(backgroundColor: p.highlightWash),
-              ),
-              const TextSpan(text: ' · PATTERN KEY + 60Q'),
-            ],
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          'Key = one panel per set: how to recognize it, the one rule, and '
-          'every member question lined up. Drill = flag questions, answer '
-          'in your head, hit one Reveal — verdicts appear inline.',
-          style: TextStyle(fontSize: 13.5, color: p.dim),
-        ),
-      ],
     );
   }
 }
@@ -208,24 +166,46 @@ class TabChrome extends StatelessWidget {
       ),
       child: Row(
         children: [
-          for (final candidate in AppRoom.values)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: WebChip(
-                label: candidate.label,
-                selected: room == candidate,
-                fontSize: 16,
-                radius: 8,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 6,
+          Expanded(
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                // Compact site title (the big h1 + subtitle traded for
+                // space — the info lives in the Key guide and the tour).
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Text.rich(
+                    TextSpan(
+                      style: context.display(18, weight: FontWeight.w700),
+                      children: [
+                        const TextSpan(text: 'CCA-F '),
+                        TextSpan(
+                          text: 'DRILL',
+                          style: TextStyle(backgroundColor: p.highlightWash),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                onTap: () => onChanged(candidate),
-              ),
+                for (final candidate in AppRoom.values)
+                  WebChip(
+                    label: candidate.label,
+                    selected: room == candidate,
+                    fontSize: 16,
+                    radius: 8,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    onTap: () => onChanged(candidate),
+                  ),
+              ],
             ),
-          const Spacer(),
+          ),
           Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Text(
               '$flagged flagged',
               style: TextStyle(fontSize: 12.5, color: p.dim),

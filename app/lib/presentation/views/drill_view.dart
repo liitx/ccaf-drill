@@ -29,34 +29,40 @@ class DrillView extends StatelessWidget {
         : matching.where((q) => q.number == drill.activeQuestion).firstOrNull;
     final rail = AssistDock.isRail(MediaQuery.sizeOf(context).width);
 
-    return Stack(
+    final dockVisible =
+        active != null && drill.expanded.contains(active.number);
+
+    return Column(
       children: [
         ContentColumn(
-          child: Column(
+          child: _Toolbar(total: questions.length, matching: matching.length),
+        ),
+        Expanded(
+          // The dock floats over the question area only — never the toolbar.
+          child: Stack(
             children: [
-              _Toolbar(total: questions.length, matching: matching.length),
-              Expanded(
+              ContentColumn(
                 child: drill.layout == DrillLayout.all
                     ? _AllList(matching: matching, railPadding: rail)
                     : _SinglePager(matching: matching),
               ),
+              if (dockVisible)
+                rail
+                    ? Positioned(
+                        right: 12,
+                        top: 0,
+                        bottom: 0,
+                        child: Center(child: AssistDock(question: active)),
+                      )
+                    : Positioned(
+                        left: 12,
+                        right: 12,
+                        bottom: 12,
+                        child: Center(child: AssistDock(question: active)),
+                      ),
             ],
           ),
         ),
-        if (active != null && drill.expanded.contains(active.number))
-          rail
-              ? Positioned(
-                  right: 12,
-                  top: 0,
-                  bottom: 0,
-                  child: Center(child: AssistDock(question: active)),
-                )
-              : Positioned(
-                  left: 12,
-                  right: 12,
-                  bottom: 12,
-                  child: Center(child: AssistDock(question: active)),
-                ),
       ],
     );
   }
@@ -108,19 +114,44 @@ class _SinglePager extends StatelessWidget {
 
     final width = MediaQuery.sizeOf(context).width;
     final rail = AssistDock.isRail(width);
+    final p = context.palette;
 
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            // Right clearance while the rail sits in a tight gutter; bottom
-            // clearance so the card never hides under the pill.
+          // One card visual: the question header stays pinned while the
+          // choices scroll underneath it.
+          child: Padding(
             padding: EdgeInsets.only(
               left: 12,
               right: rail && width < 1160 ? 120 : 12,
-              bottom: rail ? 12 : 96,
+              top: 8,
             ),
-            child: QuestionCardView(question: question),
+            child: Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: p.card,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: question.topicSet.colorDim,
+                  width: 1.5,
+                ),
+              ),
+              child: Column(
+                children: [
+                  QuestionStemHeader(question: question),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(bottom: rail ? 12 : 96),
+                      child: QuestionCardView(
+                        question: question,
+                        bodyOnly: true,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
         Padding(

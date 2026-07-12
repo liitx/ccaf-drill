@@ -135,7 +135,12 @@ class AssistDock extends StatelessWidget {
             )
           : null,
       child: rail
-          ? Column(mainAxisSize: MainAxisSize.min, children: _spaced(buttons))
+          ? SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: _spaced(buttons),
+              ),
+            )
           : SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
