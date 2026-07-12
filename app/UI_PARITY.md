@@ -72,15 +72,18 @@ table at once.
       `N flagged` note, ◐/◑ theme + ? Tour right-aligned, 2px ink rule
 - [x] Site header restored: washed 'DRILL' h1 + dim subtitle
 
-### P3 — Drill toolbar v3
-- [ ] Cluster labels (`SET · pick one topic`, `NARROW · stacks on the set`,
-      `VIEW`) in 10px uppercase dim
-- [ ] Set pills → `WebChip` in set color (border idle, fill selected)
-- [ ] Narrow chips with `+` prefix and combinable readout (`→ showing N of 60`)
-- [ ] Joined ☰ All | ▭ Single segmented pair (shared 1.5px border, no
-      Material checkmark)
-- [ ] Highlights dot-switch (green dot = on) moved into the VIEW cluster
-- [ ] Ghost buttons: `HIDE ANSWERS` / `↺ RESET` uppercase text buttons
+### P3 — Drill toolbar v3 ✅ 2026-07-11
+- [x] Cluster labels (`SET · pick one topic`, `NARROW · stacks on the set`,
+      `VIEW`) — Barlow 10.5, +1.4 tracking, dim (.cluslab)
+- [x] Set pills → `WebChip` in set color (color light / colorDim dark),
+      `All 60` ink chip
+- [x] Narrow chips (`⚑ Flagged` / `⚠ Disputed 8` / `⚖ Debate 3` — no `+`
+      prefix, matching the live markup; enum labels corrected) +
+      `→ showing N of 60` readout
+- [x] Joined ☰ All | ▭ Single pair: shared 1.5px ink border, inner
+      divider, ink fill (no Material checkmark)
+- [x] Highlights dot-switch (9px dot, pick-green when on) in VIEW cluster
+- [x] Ghost buttons: dashed `HIDE ANSWERS` / `↺ RESET` + vertical divider
 
 ### P4 — Card + choices
 - [ ] `.setpill` solid fill (color light / colorDim dark) + paper text,

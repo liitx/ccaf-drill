@@ -150,85 +150,231 @@ class _Toolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
+    final dark = Theme.of(context).brightness == Brightness.dark;
     final cubit = context.read<DrillCubit>();
     final drill = context.watch<DrillCubit>().state;
     final filtered = drill.setFilter != null || drill.narrow != null;
 
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: p.line)),
+      ),
+      child: Wrap(
+        spacing: 26,
+        runSpacing: 10,
         children: [
-          Text(
-            'SET · pick one topic',
-            style: context.display(10).copyWith(color: p.dim),
-          ),
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
+          _Cluster(
+            label: 'Set',
+            sublabel: '· pick one topic',
             children: [
-              ChoiceChip(
-                label: Text('✓ ALL $total'),
+              WebChip(
+                label: 'All $total',
                 selected: drill.setFilter == null,
-                onSelected: (_) => cubit.selectSet(null),
+                onTap: () => cubit.selectSet(null),
               ),
               for (final set in TopicSet.values)
-                ChoiceChip(
-                  label: Text(set.shortName),
+                WebChip(
+                  label: set.shortName,
                   selected: drill.setFilter == set,
-                  selectedColor: set.colorDim.withValues(alpha: .25),
-                  onSelected: (_) =>
+                  accent: dark ? set.colorDim : set.color,
+                  onTap: () =>
                       cubit.selectSet(drill.setFilter == set ? null : set),
                 ),
             ],
           ),
-          const SizedBox(height: 8),
-          Row(
+          _Cluster(
+            label: 'Narrow',
+            sublabel: '· stacks on the set',
             children: [
-              Expanded(
-                child: Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    for (final filter in NarrowFilter.values)
-                      FilterChip(
-                        label: Text(filter.label),
-                        selected: drill.narrow == filter,
-                        onSelected: (_) => cubit.toggleNarrow(filter),
-                      ),
-                    if (filtered)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          '→ showing $matching of $total',
-                          style: TextStyle(fontSize: 12.5, color: p.dim),
-                        ),
-                      ),
-                  ],
+              for (final filter in NarrowFilter.values)
+                WebChip(
+                  label: filter.label,
+                  selected: drill.narrow == filter,
+                  onTap: () => cubit.toggleNarrow(filter),
                 ),
+              if (filtered)
+                Text(
+                  '→ showing $matching of $total',
+                  style: context.display(12).copyWith(color: p.dim),
+                ),
+            ],
+          ),
+          _Cluster(
+            label: 'View',
+            children: [
+              _JoinedSegment(layout: drill.layout),
+              _DotSwitch(
+                label: 'Highlights',
+                on: drill.highlightsOn,
+                onTap: cubit.toggleHighlights,
               ),
-              SegmentedButton<DrillLayout>(
-                segments: const [
-                  ButtonSegment(value: DrillLayout.all, label: Text('☰ All')),
-                  ButtonSegment(
-                    value: DrillLayout.single,
-                    label: Text('▭ Single'),
-                  ),
-                ],
-                selected: {drill.layout},
-                onSelectionChanged: (selection) =>
-                    cubit.setLayout(selection.single),
+              Container(width: 1, height: 22, color: p.line),
+              WebChip(
+                label: 'Hide answers',
+                dashed: true,
+                borderWidth: 1,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 13,
+                  vertical: 4,
+                ),
+                onTap: cubit.hideAllAnswers,
               ),
-              const SizedBox(width: 8),
-              TextButton(
-                onPressed: cubit.hideAllAnswers,
-                child: const Text('Hide answers'),
+              WebChip(
+                label: '↺ Reset',
+                dashed: true,
+                borderWidth: 1,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 13,
+                  vertical: 4,
+                ),
+                onTap: cubit.reset,
               ),
-              TextButton(onPressed: cubit.reset, child: const Text('↺ Reset')),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// One toolbar cluster: uppercase tracking label over a chip row
+/// (.cluster / .cluslab / .clusrow).
+class _Cluster extends StatelessWidget {
+  const _Cluster({required this.label, required this.children, this.sublabel});
+
+  final String label;
+  final String? sublabel;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text.rich(
+          TextSpan(
+            style: context
+                .display(10.5)
+                .copyWith(color: p.dim, letterSpacing: 1.4),
+            children: [
+              TextSpan(text: label.toUpperCase()),
+              if (sublabel != null)
+                TextSpan(
+                  text: ' $sublabel',
+                  style: const TextStyle(letterSpacing: .3),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 5),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: children,
+        ),
+      ],
+    );
+  }
+}
+
+/// The joined ☰ All | ▭ Single segmented pair (.seg / .segbtn): one shared
+/// 1.5px ink border, inner divider, selected half filled ink.
+class _JoinedSegment extends StatelessWidget {
+  const _JoinedSegment({required this.layout});
+
+  final DrillLayout layout;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final cubit = context.read<DrillCubit>();
+
+    Widget half(String label, DrillLayout value, {bool divider = false}) {
+      final on = layout == value;
+      return InkWell(
+        onTap: () => cubit.setLayout(value),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 4),
+          decoration: BoxDecoration(
+            color: on ? p.ink : null,
+            border: divider
+                ? Border(left: BorderSide(color: p.ink, width: 1.5))
+                : null,
+          ),
+          child: Text(
+            label.toUpperCase(),
+            style: context
+                .display(12.5)
+                .copyWith(color: on ? p.buttonForeground : p.ink),
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: p.ink, width: 1.5),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          half('☰ All', DrillLayout.all),
+          half('▭ Single', DrillLayout.single, divider: true),
+        ],
+      ),
+    );
+  }
+}
+
+/// The Highlights dot-switch (.switch / .dot): pill with a 9px dot that
+/// goes pick-green when on.
+class _DotSwitch extends StatelessWidget {
+  const _DotSwitch({
+    required this.label,
+    required this.on,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool on;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(999),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 4),
+        decoration: BoxDecoration(
+          border: Border.all(color: p.line, width: 1.5),
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 9,
+              height: 9,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: on ? p.pick : p.line,
+              ),
+            ),
+            const SizedBox(width: 7),
+            Text(
+              label.toUpperCase(),
+              style: context.display(12.5).copyWith(color: on ? p.ink : p.dim),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -35,7 +35,7 @@ void main() {
     // Drill room: toolbar + Q1 card.
     await tester.tap(find.text('DRILL'));
     await tester.pumpAndSettle();
-    expect(find.text('✓ ALL 60'), findsOneWidget);
+    expect(find.text('ALL 60'), findsOneWidget); // web .fbtn 'All 60', uppercased
     expect(find.text('Q1'), findsWidgets);
 
     // Expand Q1 → reveal → verdict badge appears.

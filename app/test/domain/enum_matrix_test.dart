@@ -195,7 +195,10 @@ void main() {
   group('NarrowFilter matrix (3 × 1)', () {
     for (final filter in NarrowFilter.values) {
       test('$filter label', () {
-        expect(filter.label, startsWith('+ '));
+        // Web parity: chips read '⚑ Flagged' etc. — no '+' prefix
+        // (src/assets/body.html #tg-focus).
+        expect(filter.label, isNotEmpty);
+        expect(filter.label, isNot(startsWith('+')));
       });
     }
   });
