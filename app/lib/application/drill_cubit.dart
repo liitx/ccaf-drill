@@ -229,9 +229,6 @@ final class DrillCubit extends Cubit<DrillState> {
   void setActiveQuestion(int? question) =>
       emit(state.copyWith(activeQuestion: () => question));
 
-  /// Hide all revealed answers.
-  void hideAllAnswers() => emit(state.copyWith(revealed: const {}));
-
   /// Reset everything except flags (mirrors the web ↺ Reset).
   void reset() => emit(DrillState(flagged: state.flagged));
 }

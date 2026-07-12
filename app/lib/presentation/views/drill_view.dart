@@ -211,16 +211,6 @@ class _Toolbar extends StatelessWidget {
               ),
               Container(width: 1, height: 22, color: p.line),
               WebChip(
-                label: 'Hide answers',
-                dashed: true,
-                borderWidth: 1,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 13,
-                  vertical: 4,
-                ),
-                onTap: cubit.hideAllAnswers,
-              ),
-              WebChip(
                 label: '↺ Reset',
                 dashed: true,
                 borderWidth: 1,
@@ -281,8 +271,9 @@ class _Cluster extends StatelessWidget {
   }
 }
 
-/// The joined ☰ All | ▭ Single segmented pair (.seg / .segbtn): one shared
-/// 1.5px ink border, inner divider, selected half filled ink.
+/// The ☰ All | ▭ Single layout control — a true toggle: the whole pill is
+/// one tap target and every click flips the state (the active half is
+/// filled ink; .seg visual, toggle behavior by user request).
 class _JoinedSegment extends StatelessWidget {
   const _JoinedSegment({required this.layout});
 
@@ -292,41 +283,46 @@ class _JoinedSegment extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.palette;
     final cubit = context.read<DrillCubit>();
+    final next = layout == DrillLayout.all
+        ? DrillLayout.single
+        : DrillLayout.all;
 
     Widget half(String label, DrillLayout value, {bool divider = false}) {
       final on = layout == value;
-      return InkWell(
-        onTap: () => cubit.setLayout(value),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 4),
-          decoration: BoxDecoration(
-            color: on ? p.ink : null,
-            border: divider
-                ? Border(left: BorderSide(color: p.ink, width: 1.5))
-                : null,
-          ),
-          child: Text(
-            label.toUpperCase(),
-            style: context
-                .display(12.5)
-                .copyWith(color: on ? p.buttonForeground : p.ink),
-          ),
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 4),
+        decoration: BoxDecoration(
+          color: on ? p.ink : null,
+          border: divider
+              ? Border(left: BorderSide(color: p.ink, width: 1.5))
+              : null,
+        ),
+        child: Text(
+          label.toUpperCase(),
+          style: context
+              .display(12.5)
+              .copyWith(color: on ? p.buttonForeground : p.ink),
         ),
       );
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: p.ink, width: 1.5),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          half('☰ All', DrillLayout.all),
-          half('▭ Single', DrillLayout.single, divider: true),
-        ],
+    return InkWell(
+      onTap: () => cubit.setLayout(next),
+      borderRadius: BorderRadius.circular(999),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: p.ink, width: 1.5),
+          borderRadius: BorderRadius.circular(999),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            half('☰ All', DrillLayout.all),
+            half('▭ Single', DrillLayout.single, divider: true),
+          ],
+        ),
       ),
     );
   }

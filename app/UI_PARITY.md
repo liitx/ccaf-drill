@@ -82,6 +82,10 @@ table at once.
       `→ showing N of 60` readout
 - [x] Joined ☰ All | ▭ Single pair: shared 1.5px ink border, inner
       divider, ink fill (no Material checkmark)
+- [x] **Deliberate divergences (user request 2026-07-11):** the All/Single
+      pill is a true toggle — one tap target, each click flips the layout;
+      `Hide answers` ghost removed (Reveal/Hide lives in the dock), cubit
+      method deleted with it
 - [x] Highlights dot-switch (9px dot, pick-green when on) in VIEW cluster
 - [x] Ghost buttons: dashed `HIDE ANSWERS` / `↺ RESET` + vertical divider
 
