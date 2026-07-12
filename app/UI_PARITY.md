@@ -66,10 +66,11 @@ table at once.
 - [x] Density pass: cue 14, stem 13.5, chip 12 w600, choice radius 9 +
       8×11 padding + 7px gap
 
-### P2 — Shell: tabs + top bar
-- [ ] Replace AppBar+chips with the web top bar: `.tab` styled buttons
-      (uppercase Barlow 16, 1.5px ink border, radius 8, on = ink fill),
-      flag count, ◐ theme button, ? Tour — right-aligned like the web
+### P2 — Shell: tabs + top bar ✅ 2026-07-11
+- [x] AppBar+chips replaced with the web top bar: `.tab`-styled WebChips
+      (Barlow 16, 1.5px ink border, radius 8, on = ink fill), live
+      `N flagged` note, ◐/◑ theme + ? Tour right-aligned, 2px ink rule
+- [x] Site header restored: washed 'DRILL' h1 + dim subtitle
 
 ### P3 — Drill toolbar v3
 - [ ] Cluster labels (`SET · pick one topic`, `NARROW · stacks on the set`,

@@ -10,6 +10,7 @@ import 'package:ccaf_drill/presentation/views/drill_view.dart';
 import 'package:ccaf_drill/presentation/views/exam_view.dart';
 import 'package:ccaf_drill/presentation/views/key_view.dart';
 import 'package:ccaf_drill/presentation/views/onboarding_tour.dart';
+import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -113,38 +114,78 @@ class _HomeShellState extends State<HomeShell> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('CCA-F DRILL', style: context.display(18)),
-        actions: [
-          TextButton(
-            onPressed: () => showOnboardingTour(context),
-            child: const Text('? Tour'),
+      body: Column(
+        children: [
+          ContentColumn(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const _SiteHeader(),
+                  TabChrome(
+                    room: _room,
+                    onChanged: (room) {
+                      context.read<TtsCubit>().stop();
+                      setState(() => _room = room);
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
-          IconButton(
-            tooltip: 'Toggle theme',
-            onPressed: () => context.read<SettingsCubit>().toggleTheme(),
-            icon: Icon(settings.darkMode ? Icons.light_mode : Icons.dark_mode),
+          Expanded(
+            child: switch (_room) {
+              AppRoom.key => KeyView(questions: widget.questions),
+              AppRoom.drill => DrillView(questions: widget.questions),
+              AppRoom.exam => const ExamView(),
+            },
           ),
         ],
-        bottom: TabChrome(
-          room: _room,
-          onChanged: (room) {
-            context.read<TtsCubit>().stop();
-            setState(() => _room = room);
-          },
-        ),
       ),
-      body: switch (_room) {
-        AppRoom.key => KeyView(questions: widget.questions),
-        AppRoom.drill => DrillView(questions: widget.questions),
-        AppRoom.exam => const ExamView(),
-      },
     );
   }
 }
 
-/// The Key / Drill / Exam tab strip.
-class TabChrome extends StatelessWidget implements PreferredSizeWidget {
+/// The web header: uppercase Barlow title with the washed 'drill' word and
+/// the dim subtitle (h1 / h1 em / .sub in styles.css).
+class _SiteHeader extends StatelessWidget {
+  const _SiteHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text.rich(
+          TextSpan(
+            style: context.display(30, weight: FontWeight.w700),
+            children: [
+              const TextSpan(text: 'CCA-F '),
+              TextSpan(
+                text: 'DRILL',
+                style: TextStyle(backgroundColor: p.highlightWash),
+              ),
+              const TextSpan(text: ' · PATTERN KEY + 60Q'),
+            ],
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          'Key = one panel per set: how to recognize it, the one rule, and '
+          'every member question lined up. Drill = flag questions, answer '
+          'in your head, hit one Reveal — verdicts appear inline.',
+          style: TextStyle(fontSize: 13.5, color: p.dim),
+        ),
+      ],
+    );
+  }
+}
+
+/// The web .tabs bar: Key/Drill/Exam tab buttons, the flag-count note,
+/// then the ◐ theme and ? Tour buttons, over a 2px ink rule.
+class TabChrome extends StatelessWidget {
   /// Creates the tab strip.
   const TabChrome({required this.room, required this.onChanged, super.key});
 
@@ -155,24 +196,60 @@ class TabChrome extends StatelessWidget implements PreferredSizeWidget {
   final ValueChanged<AppRoom> onChanged;
 
   @override
-  Size get preferredSize => const Size.fromHeight(44);
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final settings = context.watch<SettingsCubit>().state;
+    final flagged = context.watch<DrillCubit>().state.flagged.length;
 
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 6),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (final candidate in AppRoom.values)
+    return Container(
+      padding: const EdgeInsets.only(top: 10, bottom: 8),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: p.ink, width: 2)),
+      ),
+      child: Row(
+        children: [
+          for (final candidate in AppRoom.values)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: WebChip(
+                label: candidate.label,
+                selected: room == candidate,
+                fontSize: 16,
+                radius: 8,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
+                onTap: () => onChanged(candidate),
+              ),
+            ),
+          const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ChoiceChip(
-              label: Text(candidate.label),
-              selected: room == candidate,
-              onSelected: (_) => onChanged(candidate),
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(
+              '$flagged flagged',
+              style: TextStyle(fontSize: 12.5, color: p.dim),
             ),
           ),
-      ],
-    ),
-  );
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: WebChip(
+              label: settings.darkMode ? '◑ Light' : '◐ Dark',
+              fontSize: 16,
+              radius: 8,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              onTap: () => context.read<SettingsCubit>().toggleTheme(),
+            ),
+          ),
+          WebChip(
+            label: '? Tour',
+            fontSize: 16,
+            radius: 8,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            onTap: () => showOnboardingTour(context),
+          ),
+        ],
+      ),
+    );
+  }
 }
