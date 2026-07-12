@@ -131,6 +131,22 @@ table at once.
 - [ ] (deferred) sticky nav chips row + member-row hover — low value in
       the Flutter shell, revisit if missed
 
+### P9 — Exam responsiveness + text audit ✅ 2026-07-11
+- [x] **Flag feedback bug**: web `.pal.cur` is an OUTLINE and `.pal.flagged`
+      a BORDER — they coexist. Flutter had merged them with current winning,
+      so flagging the current question showed nothing until navigation.
+      Split into border (flag/answered) + boxShadow ring (current)
+- [x] Palette cells animate state changes (AnimatedContainer 180ms easeOut)
+- [x] Question transitions: 240ms crossfade + subtle drift
+      (AnimatedSwitcher), present but not distracting
+- [x] Text audit vs hosted: gists/examples/stems/whys are 1:1 by
+      construction (same data JSONs; parity test pins the answer key).
+      Three real gaps found + fixed: hintbox row 3 ('EACH CHOICE IN PLAIN
+      WORDS…'), exam In-practice assist now the full block (mechanism pill
+      + lead + snippet, was lead-only), '◉ marked in your doc' tag on the
+      team-marked choice after reveal (web .srcmark, exact --smbg/--smc
+      colors)
+
 ### P8 — Spotlight walkthrough ✅ 2026-07-11
 - [x] 11-step spotlight: dim barrier with a gold-ringed cutout over live
       components, list-format tooltips (COMPONENT n / 11), Back/Exit/Next

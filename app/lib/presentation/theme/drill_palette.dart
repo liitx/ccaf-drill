@@ -36,6 +36,8 @@ final class DrillPalette extends ThemeExtension<DrillPalette> {
     required this.tier3Background,
     required this.tier3Foreground,
     required this.tier3Border,
+    required this.markedNoteBackground,
+    required this.markedNoteForeground,
   });
 
   /// Page background.
@@ -120,6 +122,12 @@ final class DrillPalette extends ThemeExtension<DrillPalette> {
   /// DEBATE badge border (--t3bd).
   final Color tier3Border;
 
+  /// '◉ marked in your doc' tag background (--smbg).
+  final Color markedNoteBackground;
+
+  /// '◉ marked in your doc' tag text (--smc).
+  final Color markedNoteForeground;
+
   /// Dark theme (the default) — src/assets/styles.css `body.dark`.
   static const dark = DrillPalette(
     paper: Color(0xFF0C0E0F),
@@ -149,6 +157,8 @@ final class DrillPalette extends ThemeExtension<DrillPalette> {
     tier3Background: Color(0xFF221723),
     tier3Foreground: Color(0xFFCB90AF),
     tier3Border: Color(0xFF3F2A39),
+    markedNoteBackground: Color(0xFF2C2610),
+    markedNoteForeground: Color(0xFFD6BE72),
   );
 
   /// Light theme — src/assets/styles.css `:root`.
@@ -180,6 +190,8 @@ final class DrillPalette extends ThemeExtension<DrillPalette> {
     tier3Background: Color(0xFFF5E9F0),
     tier3Foreground: Color(0xFF96385E),
     tier3Border: Color(0xFFE3C2D3),
+    markedNoteBackground: Color(0xFFFFF3CE),
+    markedNoteForeground: Color(0xFF7A5A10),
   );
 
   @override

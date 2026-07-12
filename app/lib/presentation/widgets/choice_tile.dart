@@ -112,6 +112,27 @@ class ChoiceTile extends StatelessWidget {
                         .copyWith(color: _verdictColor(p)),
                   ),
                 ),
+              // Web .srcmark: the team-doc mark, visible once revealed.
+              if (revealed && question.markedLetter == choice.letter) ...[
+                const SizedBox(width: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: p.markedNoteBackground,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    '◉ marked in your doc',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: p.markedNoteForeground,
+                    ),
+                  ),
+                ),
+              ],
               if (isYourPick) ...[
                 const SizedBox(width: 6),
                 Text(

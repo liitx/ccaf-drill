@@ -485,6 +485,11 @@ class _HintBox extends StatelessWidget {
         children: [
           item('REALLY ASKING', question.hintAsk),
           item('LOOK FIRST', question.hintFirst),
+          // Web hintbox row 3 (.hnote): points at the per-choice plains.
+          item(
+            'EACH CHOICE IN PLAIN WORDS',
+            'now shown in green under each choice — no verdicts spoiled.',
+          ),
         ],
       ),
     );

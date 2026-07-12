@@ -170,7 +170,29 @@ class _RunScreen extends StatelessWidget {
           ),
         ),
         _Palette(exam: exam),
-        Expanded(child: _QuestionPane(question: question)),
+        Expanded(
+          // Soft crossfade + slight drift between questions — present but
+          // not distracting.
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 240),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeIn,
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween(
+                  begin: const Offset(.015, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              ),
+            ),
+            child: _QuestionPane(
+              key: ValueKey(question.number),
+              question: question,
+            ),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(8),
           child: Row(
@@ -242,33 +264,41 @@ class _Palette extends StatelessWidget {
           for (var n = 1; n <= 60; n++)
             InkWell(
               onTap: () => context.read<ExamCubit>().goTo(n - 1),
-              child: Container(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOut,
                 width: 30,
                 height: 26,
                 alignment: Alignment.center,
-                // .pal cell states: answered = pick wash, current = ink ring
+                // Web .pal semantics: flagged owns the BORDER, current is a
+                // separate OUTLINE (boxShadow ring) — both show at once, so
+                // flagging the current question updates instantly.
                 decoration: BoxDecoration(
                   color: exam.answers.containsKey(n)
                       ? p.pickBackground
                       : p.card,
                   border: Border.all(
-                    color: exam.currentIndex == n - 1
-                        ? p.ink
-                        : exam.flagged.contains(n)
+                    color: exam.flagged.contains(n)
                         ? p.flagOn
                         : exam.answers.containsKey(n)
                         ? p.pick
                         : p.line,
-                    width: exam.currentIndex == n - 1 ? 1.5 : 1,
                   ),
                   borderRadius: BorderRadius.circular(5),
+                  boxShadow: exam.currentIndex == n - 1
+                      ? [BoxShadow(color: p.ink, spreadRadius: 2)]
+                      : const [],
                 ),
                 child: Text(
                   '$n',
                   style: context
                       .display(12)
                       .copyWith(
-                        color: exam.answers.containsKey(n) ? p.pick : p.dim,
+                        color: exam.flagged.contains(n)
+                            ? p.flagOn
+                            : exam.answers.containsKey(n)
+                            ? p.pick
+                            : p.dim,
                       ),
                 ),
               ),
@@ -280,7 +310,7 @@ class _Palette extends StatelessWidget {
 }
 
 class _QuestionPane extends StatelessWidget {
-  const _QuestionPane({required this.question});
+  const _QuestionPane({required this.question, super.key});
 
   final Question question;
 
@@ -339,9 +369,64 @@ class _QuestionPane extends StatelessWidget {
           ],
           if (exam.assistsOn.contains(AssistAction.example)) ...[
             const SizedBox(height: 8),
-            Text(
-              question.example.lead,
-              style: TextStyle(fontSize: 13.5, color: p.ink),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: p.pick.withValues(alpha: .5)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: p.line),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          question.example.mechanism,
+                          style: context.display(10),
+                        ),
+                      ),
+                      Text(
+                        'IN PRACTICE',
+                        style: context.display(10).copyWith(color: p.dim),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    question.example.lead,
+                    style: TextStyle(fontSize: 13.5, color: p.ink),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: p.soft,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      question.example.snippet,
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 12.5,
+                        color: p.ink,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
           const SizedBox(height: 10),
