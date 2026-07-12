@@ -5,6 +5,7 @@ import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
 import 'package:ccaf_drill/presentation/widgets/question_card_view.dart';
 import 'package:ccaf_drill/presentation/widgets/voice_settings_sheet.dart';
+import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -41,7 +42,16 @@ class AssistDock extends StatelessWidget {
         tts.playingQuestion == n && tts.playingScope == scope;
 
     final buttons = <Widget>[
-      Text('Q$n', style: context.display(15)),
+      Container(
+        padding: const EdgeInsets.only(bottom: 6),
+        alignment: Alignment.center,
+        decoration: rail
+            ? BoxDecoration(
+                border: Border(bottom: BorderSide(color: p.line)),
+              )
+            : null,
+        child: Text('Q$n', style: context.display(15)),
+      ),
       _DockButton(
         action: AssistAction.hint,
         on: drill.hinted.contains(n),
@@ -135,10 +145,15 @@ class AssistDock extends StatelessWidget {
             )
           : null,
       child: rail
-          ? SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: _spaced(buttons),
+          ? SizedBox(
+              // .dockbtn rail: fixed 92px like the web
+              width: 76,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: _spaced(buttons),
+                ),
               ),
             )
           : SingleChildScrollView(
@@ -180,37 +195,49 @@ class _DockButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = context.palette;
     final label = labelOverride ?? action.label;
-    return Opacity(
-      opacity: dead ? .4 : 1,
-      child: InkWell(
-        onTap: dead ? null : onTap,
-        borderRadius: BorderRadius.circular(999),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            color: filled ? p.ink : null,
-            border: Border.all(
-              color: playing || on ? p.ink : p.dim,
-              width: playing ? 1.6 : 1.2,
-            ),
-            borderRadius: BorderRadius.circular(999),
-          ),
-          child: Text(
-            playing ? '⏹ ${label.replaceAll('🔊 ', '')}' : label,
-            style: context
-                .display(11)
-                .copyWith(
-                  color: filled
-                      ? p.buttonForeground
-                      : (on || playing ? p.ink : p.dim),
-                ),
-          ),
-        ),
-      ),
+    final chip = WebChip(
+      label: playing ? '⏹ ${label.replaceAll('🔊 ', '')}' : label,
+      // Web semantic: dashed = available toggle, solid border = active,
+      // ink fill = the Reveal action.
+      dashed: !on && !playing && !filled,
+      selected: filled,
+      enabled: !dead,
+      fontSize: 12,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      onTap: onTap,
     );
+    return playing ? _Pulse(child: chip) : chip;
   }
+}
+
+/// The web .playing keyframe: opacity pulses while audio runs.
+class _Pulse extends StatefulWidget {
+  const _Pulse({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_Pulse> createState() => _PulseState();
+}
+
+class _PulseState extends State<_Pulse> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1100),
+  )..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => FadeTransition(
+    opacity: Tween<double>(begin: 1, end: .55).animate(_controller),
+    child: widget.child,
+  );
 }
 
 class _DockDivider extends StatelessWidget {

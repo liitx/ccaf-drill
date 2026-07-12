@@ -29,6 +29,13 @@ final class DrillPalette extends ThemeExtension<DrillPalette> {
     required this.runnerBackground,
     required this.kill,
     required this.killBackground,
+    required this.tier1Background,
+    required this.tier1Foreground,
+    required this.tier1Border,
+    required this.tier2Background,
+    required this.tier3Background,
+    required this.tier3Foreground,
+    required this.tier3Border,
   });
 
   /// Page background.
@@ -92,6 +99,27 @@ final class DrillPalette extends ThemeExtension<DrillPalette> {
   /// Background behind a revealed kill.
   final Color killBackground;
 
+  /// DOCS-VERIFIED badge background (--t1bg).
+  final Color tier1Background;
+
+  /// DOCS-VERIFIED badge text (--t1c).
+  final Color tier1Foreground;
+
+  /// DOCS-VERIFIED badge border (--t1bd).
+  final Color tier1Border;
+
+  /// GUIDANCE badge background (--t2bg; text = dim, border = line).
+  final Color tier2Background;
+
+  /// DEBATE badge background (--t3bg).
+  final Color tier3Background;
+
+  /// DEBATE badge text (--t3c).
+  final Color tier3Foreground;
+
+  /// DEBATE badge border (--t3bd).
+  final Color tier3Border;
+
   /// Dark theme (the default) — src/assets/styles.css `body.dark`.
   static const dark = DrillPalette(
     paper: Color(0xFF0C0E0F),
@@ -114,6 +142,13 @@ final class DrillPalette extends ThemeExtension<DrillPalette> {
     runnerBackground: Color(0xFF221C0F),
     kill: Color(0xFFD68078),
     killBackground: Color(0xFF251714),
+    tier1Background: Color(0xFF131E29),
+    tier1Foreground: Color(0xFF84B2D8),
+    tier1Border: Color(0xFF28394A),
+    tier2Background: Color(0xFF181F1A),
+    tier3Background: Color(0xFF221723),
+    tier3Foreground: Color(0xFFCB90AF),
+    tier3Border: Color(0xFF3F2A39),
   );
 
   /// Light theme — src/assets/styles.css `:root`.
@@ -138,6 +173,13 @@ final class DrillPalette extends ThemeExtension<DrillPalette> {
     runnerBackground: Color(0xFFFBF3E0),
     kill: Color(0xFF9E3A32),
     killBackground: Color(0xFFF8EFEE),
+    tier1Background: Color(0xFFE4EEF7),
+    tier1Foreground: Color(0xFF1F5C8C),
+    tier1Border: Color(0xFFBDD5E8),
+    tier2Background: Color(0xFFF0F0EA),
+    tier3Background: Color(0xFFF5E9F0),
+    tier3Foreground: Color(0xFF96385E),
+    tier3Border: Color(0xFFE3C2D3),
   );
 
   @override

@@ -4,6 +4,7 @@ import 'package:ccaf_drill/domain/assists.dart';
 import 'package:ccaf_drill/domain/exam_mode.dart';
 import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
+import 'package:ccaf_drill/presentation/widgets/badges.dart';
 import 'package:ccaf_drill/presentation/widgets/question_card_view.dart';
 import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
@@ -49,16 +50,36 @@ class _StartScreen extends StatelessWidget {
           for (final mode in ExamMode.values)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
-              child: OutlinedButton(
-                onPressed: () => context.read<ExamCubit>().start(mode),
-                child: SizedBox(
-                  width: 260,
+              child: InkWell(
+                onTap: () => context.read<ExamCubit>().start(mode),
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  width: 280,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  // .modebtn: soft card; hard carries the web's preselected
+                  // ink border.
+                  decoration: BoxDecoration(
+                    color: p.soft,
+                    border: Border.all(
+                      color: mode == ExamMode.hard ? p.ink : p.line,
+                      width: 1.5,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(mode.label, style: context.display(15)),
+                      Text(
+                        mode.label.toUpperCase(),
+                        style: context.display(17),
+                      ),
                       Text(
                         mode.availableAssists.isEmpty
-                            ? 'exactly like the real exam'
+                            ? 'exactly like the real exam: nothing but the '
+                                  'question'
                             : '${mode.availableAssists.length} assist '
                                   'toggles per question',
                         style: TextStyle(fontSize: 12, color: p.dim),
@@ -115,9 +136,11 @@ class _RunScreen extends StatelessWidget {
             children: [
               Text(
                 _clock(exam.remainingSeconds),
+                // .extimer: Barlow w700 24px, red under 10:00
                 style: context
-                    .display(20)
+                    .display(24, weight: FontWeight.w700)
                     .copyWith(
+                      letterSpacing: 1,
                       color: exam.remainingSeconds <= 600 ? p.kill : p.ink,
                     ),
               ),
@@ -220,23 +243,34 @@ class _Palette extends StatelessWidget {
             InkWell(
               onTap: () => context.read<ExamCubit>().goTo(n - 1),
               child: Container(
-                width: 26,
-                height: 22,
+                width: 30,
+                height: 26,
                 alignment: Alignment.center,
+                // .pal cell states: answered = pick wash, current = ink ring
                 decoration: BoxDecoration(
                   color: exam.answers.containsKey(n)
-                      ? p.pick.withValues(alpha: .25)
-                      : p.soft,
+                      ? p.pickBackground
+                      : p.card,
                   border: Border.all(
                     color: exam.currentIndex == n - 1
                         ? p.ink
                         : exam.flagged.contains(n)
                         ? p.flagOn
+                        : exam.answers.containsKey(n)
+                        ? p.pick
                         : p.line,
+                    width: exam.currentIndex == n - 1 ? 1.5 : 1,
                   ),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(5),
                 ),
-                child: Text('$n', style: TextStyle(fontSize: 10, color: p.ink)),
+                child: Text(
+                  '$n',
+                  style: context
+                      .display(12)
+                      .copyWith(
+                        color: exam.answers.containsKey(n) ? p.pick : p.dim,
+                      ),
+                ),
               ),
             ),
         ],
@@ -273,7 +307,20 @@ class _QuestionPane extends StatelessWidget {
             Wrap(
               spacing: 6,
               runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
+                Text.rich(
+                  TextSpan(
+                    style: context.display(10.5).copyWith(color: p.dim),
+                    children: [
+                      const TextSpan(text: 'HELP\n'),
+                      TextSpan(
+                        text: exam.mode.label.toLowerCase(),
+                        style: const TextStyle(letterSpacing: .3),
+                      ),
+                    ],
+                  ),
+                ),
                 for (final assist in AssistAction.values)
                   if (available.contains(assist))
                     _ExamAssistChip(assist: assist, question: question),
@@ -325,26 +372,32 @@ class _ExamAssistChip extends StatelessWidget {
     final tts = context.watch<TtsCubit>().state;
     final revealed = exam.assistsOn.contains(AssistAction.reveal);
 
+    // .asbtn: dashed = available, solid outline = active.
     if (assist.isSpeak) {
       final scope = speechScopeFor[assist]!;
       final dead = assist == AssistAction.speakWhy && !revealed;
       final playing =
           tts.playingQuestion == question.number && tts.playingScope == scope;
-      return FilterChip(
-        label: Text(playing ? '⏹ stop' : assist.label),
-        selected: playing,
-        onSelected: dead
-            ? null
-            : (_) => context.read<TtsCubit>().play(question, scope),
+      return WebChip(
+        label: playing ? '⏹ stop' : assist.label,
+        dashed: !playing,
+        enabled: !dead,
+        fontSize: 12,
+        radius: 6,
+        borderWidth: 1,
+        onTap: () => context.read<TtsCubit>().play(question, scope),
       );
     }
-    return FilterChip(
-      label: Text(assist.label),
-      selected: exam.assistsOn.contains(assist),
-      onSelected: (_) {
+    final on = exam.assistsOn.contains(assist);
+    return WebChip(
+      label: assist.label,
+      dashed: !on,
+      fontSize: 12,
+      radius: 6,
+      borderWidth: 1,
+      onTap: () {
         cubit.toggleAssist(assist);
-        if (assist == AssistAction.reveal &&
-            exam.assistsOn.contains(AssistAction.reveal)) {
+        if (assist == AssistAction.reveal && on) {
           context.read<TtsCubit>().stop();
         }
       },
@@ -474,13 +527,10 @@ class _ResultsScreen extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(
-                  width: 220,
-                  child: Text(
-                    row.topicSet.displayName,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: row.topicSet.colorDim,
-                    ),
+                  width: 230,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: SetPill(set: row.topicSet, fontSize: 10.5),
                   ),
                 ),
                 Expanded(

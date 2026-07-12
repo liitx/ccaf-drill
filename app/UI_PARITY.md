@@ -102,35 +102,34 @@ table at once.
 - [x] Highlights dot-switch (9px dot, pick-green when on) in VIEW cluster
 - [x] Ghost buttons: dashed `HIDE ANSWERS` / `↺ RESET` + vertical divider
 
-### P4 — Card + choices
-- [ ] `.setpill` solid fill (color light / colorDim dark) + paper text,
-      radius 4, 11.5px
-- [ ] Verdict badges + tier badge sizes per `.verdict`/`.tier`
-- [ ] Choice tiles: radius 9, 8×11 padding; minis as 20px-high dashed
-      `WebChip`s (`◦ plain`, `⌁ gist`)
-- [ ] Reveal: full-width ink-filled uppercase bar; revealed = outlined
-      "HIDE ANSWER"
-- [ ] Stem label row + 13.5px stem + tighter hintbox/example blocks
+### P4 — Card + choices ✅ 2026-07-11
+- [x] `SetPill`: solid set-color fill (colorDim in dark) + paper text,
+      radius 4, Barlow 11.5 — card header, pinned header, exam results
+- [x] `TierBadge`: tier-tinted bg/border/text (t1/t2/t3 palette colors
+      added to DrillPalette), Barlow 10.5 tracked
+- [x] Choice minis: 1px dashed WebChips radius 5; on = solid pick outline
+- [x] Reveal: full-width ink bar, uppercase; revealed = outlined HIDE
+- [x] Densities landed in P1 (cue 14, stem 13.5, choice 9/8×11)
 
-### P5 — Dock
-- [ ] Idle buttons dashed 1.5px `--dim`, active solid `--ink`, playing =
-      pulse (AnimatedOpacity loop), reveal button ink-filled
-- [ ] Rail: exactly 92px wide, 3px set-color top border, `Q#` header with
-      bottom hairline; bottom pill scrolls horizontally under 1100px
+### P5 — Dock ✅ 2026-07-11
+- [x] Buttons are WebChips: dashed idle / solid active / dead at 45%;
+      playing pulses (1.1s fade loop); Reveal = ink fill
+- [x] Rail: fixed width, 3px set-color top border, Q# header with bottom
+      hairline, internal scroll on short windows; pill scrolls horizontally
 
-### P6 — Exam
-- [ ] Start: left-aligned bordered mode cards w/ description, Hard
-      pre-selected ink border
-- [ ] Timer Barlow w700 24px, red under 10:00; palette 30×26 radius 5 cells
-- [ ] Assist bar: dashed `.asbtn` chips + `Help / <mode> mode` label
-- [ ] Results: setpill-styled rows + bars, review rows match web density
+### P6 — Exam ✅ 2026-07-11
+- [x] Start: left-aligned soft mode cards, Hard carries the ink border
+- [x] Timer Barlow w700 24px red under 10:00; palette 30×26 radius 5 with
+      pick-wash answered / ink-ring current / flag-orange flagged
+- [x] Assist bar: HELP/<mode> label + dashed asbtn WebChips
+- [x] Results rows use SetPill
 
-### P7 — Key view
-- [ ] Section headers: uppercase Barlow 17 with set-colored dot + sticky
-      nav chips row
-- [ ] Set panels: 4px left border in set color; member rows as a 3-column
-      table (Q / giveaway wash / variation) with row hover
-- [ ] Cheat-code cards in a 2-col grid ≥760px
+### P7 — Key view ✅ 2026-07-11
+- [x] Section headers uppercase Barlow 17 with set-colored dot
+- [x] Set panel body carries the 4px set-color left border
+- [x] Cheat-code cards flow into a 2-col grid on wide layouts
+- [ ] (deferred) sticky nav chips row + member-row hover — low value in
+      the Flutter shell, revisit if missed
 
 ### Verification per phase
 - Side-by-side: `flutter run -d chrome` next to the hosted app, same

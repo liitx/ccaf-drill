@@ -30,7 +30,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Key room by default.
-    expect(find.text('How to use this tool'), findsOneWidget);
+    expect(find.text('HOW TO USE THIS TOOL'), findsOneWidget);
 
     // Drill room: toolbar + Q1 card.
     await tester.tap(find.text('DRILL'));
@@ -42,18 +42,18 @@ void main() {
     // Expand Q1 → reveal → verdict badge appears.
     await tester.tap(find.text('Q1').first);
     await tester.pumpAndSettle();
-    expect(find.text('Reveal answer'), findsOneWidget);
-    await tester.ensureVisible(find.text('Reveal answer'));
+    expect(find.text('REVEAL ANSWER'), findsOneWidget);
+    await tester.ensureVisible(find.text('REVEAL ANSWER'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Reveal answer'));
+    await tester.tap(find.text('REVEAL ANSWER'));
     await tester.pumpAndSettle();
     expect(find.text('✓ PICK'), findsOneWidget);
-    expect(find.text('Hide answer'), findsOneWidget);
+    expect(find.text('HIDE ANSWER'), findsOneWidget);
 
     // Exam room: start screen with the three modes.
     await tester.tap(find.text('EXAM'));
     await tester.pumpAndSettle();
-    expect(find.text('Easy'), findsOneWidget);
-    expect(find.text('Hard — 1:1'), findsOneWidget);
+    expect(find.text('EASY'), findsOneWidget);
+    expect(find.text('HARD — 1:1'), findsOneWidget);
   });
 }

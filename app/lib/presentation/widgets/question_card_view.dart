@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:ccaf_drill/application/drill_cubit.dart';
 import 'package:ccaf_drill/application/tts_cubit.dart';
-import 'package:ccaf_drill/domain/confidence_tier.dart';
 import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/domain/verdict.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
+import 'package:ccaf_drill/presentation/widgets/badges.dart';
 import 'package:ccaf_drill/presentation/widgets/choice_tile.dart';
+import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -154,21 +155,8 @@ class _Header extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text('Q${question.number}', style: context.display(17)),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: set.colorDim.withValues(alpha: .18),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      set.displayName,
-                      style: context.display(11).copyWith(color: set.colorDim),
-                    ),
-                  ),
-                  _TierBadge(tier: question.tier),
+                  SetPill(set: set),
+                  TierBadge(tier: question.tier),
                   Icon(
                     expanded ? Icons.expand_less : Icons.expand_more,
                     size: 18,
@@ -180,28 +168,6 @@ class _Header extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _TierBadge extends StatelessWidget {
-  const _TierBadge({required this.tier});
-
-  final ConfidenceTier tier;
-
-  @override
-  Widget build(BuildContext context) {
-    final p = context.palette;
-    return Tooltip(
-      message: tier.tooltip,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-        decoration: BoxDecoration(
-          border: Border.all(color: p.line),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Text(tier.label, style: context.display(9)),
-      ),
     );
   }
 }
@@ -310,13 +276,19 @@ class _Body extends StatelessWidget {
                   ttsTarget?.letter == choice.letter,
             ),
           if (!forceRevealed)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: FilledButton(
-                  onPressed: () => context.read<DrillCubit>().toggleRevealed(n),
-                  child: Text(revealed ? 'Hide answer' : 'Reveal answer'),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: WebChip(
+                label: revealed ? 'Hide answer' : 'Reveal answer',
+                selected: !revealed,
+                expand: true,
+                fontSize: 15,
+                radius: 8,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 6,
                 ),
+                onTap: () => context.read<DrillCubit>().toggleRevealed(n),
               ),
             ),
           if (revealed) _AfterReveal(question: question),
@@ -349,8 +321,9 @@ class QuestionStemHeader extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 10),
+      // No own background — the parent card paints it; a square fill here
+      // pokes through the rounded corners.
       decoration: BoxDecoration(
-        color: p.card,
         border: Border(bottom: BorderSide(color: p.line)),
       ),
       child: Column(
@@ -372,17 +345,7 @@ class QuestionStemHeader extends StatelessWidget {
               const SizedBox(width: 8),
               Text('Q$n', style: context.display(15)),
               const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: set.colorDim.withValues(alpha: .18),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  set.displayName,
-                  style: context.display(10).copyWith(color: set.colorDim),
-                ),
-              ),
+              SetPill(set: set, fontSize: 10.5),
             ],
           ),
           const SizedBox(height: 6),

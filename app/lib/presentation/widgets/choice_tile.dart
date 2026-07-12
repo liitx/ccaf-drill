@@ -3,6 +3,7 @@ import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/domain/verdict.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
 import 'package:ccaf_drill/presentation/theme/drill_palette.dart';
+import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -112,20 +113,37 @@ class ChoiceTile extends StatelessWidget {
               ],
               const Spacer(),
               if (!forceAssists) ...[
-                _MiniToggle(
+                // .plainbtn minis: 1px dashed idle, solid pick outline on.
+                WebChip(
                   label: '◦ plain',
-                  on: drill.choicePlainShown.contains(key),
+                  dashed: !drill.choicePlainShown.contains(key),
+                  accent: drill.choicePlainShown.contains(key) ? p.pick : null,
                   enabled: !revealed,
+                  fontSize: 11,
+                  radius: 5,
+                  borderWidth: 1,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   onTap: () => context.read<DrillCubit>().toggleChoicePlain(
                     question.number,
                     choice.letter,
                   ),
                 ),
                 const SizedBox(width: 4),
-                _MiniToggle(
+                WebChip(
                   label: '⌁ gist',
-                  on: showGist,
+                  dashed: !showGist,
+                  accent: showGist ? p.pick : null,
                   enabled: !revealed,
+                  fontSize: 11,
+                  radius: 5,
+                  borderWidth: 1,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   onTap: () => context.read<DrillCubit>().toggleChoiceGist(
                     question.number,
                     choice.letter,
@@ -179,43 +197,6 @@ class ChoiceTile extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _MiniToggle extends StatelessWidget {
-  const _MiniToggle({
-    required this.label,
-    required this.on,
-    required this.enabled,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool on;
-  final bool enabled;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final p = context.palette;
-    return InkWell(
-      onTap: enabled ? onTap : null,
-      borderRadius: BorderRadius.circular(999),
-      child: Opacity(
-        opacity: enabled ? 1 : .4,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-          decoration: BoxDecoration(
-            border: Border.all(color: on ? p.ink : p.dim),
-            borderRadius: BorderRadius.circular(999),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 11, color: on ? p.ink : p.dim),
-          ),
-        ),
       ),
     );
   }

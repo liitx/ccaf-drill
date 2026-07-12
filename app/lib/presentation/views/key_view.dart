@@ -56,7 +56,7 @@ class _GuideSection extends StatelessWidget {
     );
 
     return ExpansionTile(
-      title: Text('How to use this tool', style: context.display(16)),
+      title: Text('HOW TO USE THIS TOOL', style: context.display(17)),
       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       children: [
         bullet('Key', 'this page: cheat codes + one panel per set.'),
@@ -87,41 +87,47 @@ class _CheatCodesSection extends StatelessWidget {
     final p = context.palette;
     return ExpansionTile(
       title: Text(
-        'Cheat codes — the 12 meta-patterns',
-        style: context.display(16),
+        'CHEAT CODES — THE 12 META-PATTERNS',
+        style: context.display(17),
       ),
       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       children: [
-        for (final pattern in PatternCode.values)
-          Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: p.soft,
-              border: Border.all(color: p.line),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${pattern.id} · ${pattern.title}',
-                  style: context.display(13),
+        Wrap(
+          spacing: 10,
+          runSpacing: 2,
+          children: [
+            for (final pattern in PatternCode.values)
+              Container(
+                width: 420,
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: p.soft,
+                  border: Border.all(color: p.line),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  pattern.description,
-                  style: TextStyle(fontSize: 13, color: p.ink),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${pattern.id} · ${pattern.title}',
+                      style: context.display(13),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      pattern.description,
+                      style: TextStyle(fontSize: 13, color: p.ink),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Q ${pattern.memberQuestions.join(' · ')}',
+                      style: TextStyle(fontSize: 12, color: p.dim),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Q ${pattern.memberQuestions.join(' · ')}',
-                  style: TextStyle(fontSize: 12, color: p.dim),
-                ),
-              ],
-            ),
-          ),
+              ),
+          ],
+        ),
       ],
     );
   }
@@ -147,18 +153,35 @@ class _SetPanel extends StatelessWidget {
       ),
     );
 
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final accent = dark ? set.colorDim : set.color;
     return ExpansionTile(
-      leading: CircleAvatar(radius: 6, backgroundColor: set.colorDim),
+      leading: CircleAvatar(radius: 6, backgroundColor: accent),
       title: Text(
-        '${set.displayName} · ${members.length} questions',
-        style: context.display(16),
+        '${set.displayName.toUpperCase()} · ${members.length} QUESTIONS',
+        style: context.display(17),
       ),
       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       children: [
-        block("Fingerprint — you're in this set when you see", set.fingerprint),
-        block('The one rule', set.rule),
-        block('What varies between questions', set.vary),
-        for (final q in members) _MemberRow(question: q),
+        // .keypanel: 4px set-color left border down the whole panel body
+        Container(
+          padding: const EdgeInsets.only(left: 12),
+          decoration: BoxDecoration(
+            border: Border(left: BorderSide(color: accent, width: 4)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              block(
+                "Fingerprint — you're in this set when you see",
+                set.fingerprint,
+              ),
+              block('The one rule', set.rule),
+              block('What varies between questions', set.vary),
+              for (final q in members) _MemberRow(question: q),
+            ],
+          ),
+        ),
       ],
     );
   }
