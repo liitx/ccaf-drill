@@ -5,9 +5,14 @@ import 'package:ccaf_drill/domain/assists.dart';
 import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/domain/storage_key.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// One selectable platform voice: name + exact locale (the locale must be
+/// echoed back to the platform verbatim or the voice is silently ignored).
+typedef VoiceOption = ({String name, String locale});
 
 /// What part of a question a speech segment belongs to, for the
 /// follow-along wash in the UI.
@@ -71,8 +76,8 @@ final class TtsState extends Equatable {
   /// Chosen voice, if any.
   final String? voiceName;
 
-  /// Available voice names (Google US/UK filter applied when present).
-  final List<String> voices;
+  /// Available voices (Google US/UK filter applied when present).
+  final List<VoiceOption> voices;
 
   /// False when the platform has no TTS.
   final bool supported;
@@ -87,7 +92,7 @@ final class TtsState extends Equatable {
     SpeechTarget? Function()? currentTarget,
     double? rate,
     String? Function()? voiceName,
-    List<String>? voices,
+    List<VoiceOption>? voices,
     bool? supported,
   }) => TtsState(
     playingQuestion: playingQuestion != null
@@ -155,18 +160,19 @@ final class TtsCubit extends Cubit<TtsState> {
     for (var attempt = 0; attempt < 4; attempt++) {
       try {
         final raw = await _tts.getVoices;
-        final all = (raw as List<dynamic>? ?? [])
-            .map((v) => (v as Map<Object?, Object?>).cast<String, Object?>())
-            .where((v) => '${v['locale']}'.toLowerCase().startsWith('en'))
-            .map((v) => '${v['name']}')
-            .toSet()
-            .toList();
+        final all = <VoiceOption>[
+          for (final v in (raw as List<dynamic>? ?? []))
+            if ('${(v as Map<Object?, Object?>)['locale']}'
+                .toLowerCase()
+                .startsWith('en'))
+              (name: '${v['name']}', locale: '${v['locale']}'),
+        ];
         final google = all
             .where(
-              (n) => RegExp(
+              (v) => RegExp(
                 '^google (us|uk) english',
                 caseSensitive: false,
-              ).hasMatch(n),
+              ).hasMatch(v.name),
             )
             .toList();
         if (all.isNotEmpty) {
@@ -263,11 +269,7 @@ final class TtsCubit extends Cubit<TtsState> {
       ),
     );
     final segments = script(question, scope, plainShown: plainShown);
-    await _tts.setSpeechRate(_platformRate(state.rate));
-    final voice = state.voiceName;
-    if (voice != null && state.voices.contains(voice)) {
-      await _tts.setVoice({'name': voice, 'locale': 'en-US'});
-    }
+    await _applyRateAndVoice();
     for (final segment in segments) {
       if (id != _playId) return;
       emit(state.copyWith(currentTarget: () => segment.target));
@@ -276,9 +278,29 @@ final class TtsCubit extends Cubit<TtsState> {
     if (id == _playId) await stop();
   }
 
-  /// flutter_tts rates are platform-normalized around 0.5; map the web's
-  /// 1.0× baseline onto it.
-  double _platformRate(double webRate) => 0.5 * webRate;
+  /// Push the current rate + voice to the platform. Rate scales differ:
+  /// web normalizes 1.0 = normal, mobile/desktop normalize 0.5 = normal.
+  Future<void> _applyRateAndVoice() async {
+    await _tts.setSpeechRate(kIsWeb ? state.rate : 0.5 * state.rate);
+    final chosen = state.voices
+        .where((v) => v.name == state.voiceName)
+        .firstOrNull;
+    if (chosen != null) {
+      await _tts.setVoice({'name': chosen.name, 'locale': chosen.locale});
+    }
+  }
+
+  /// Speak a short sample at the current voice + rate (the ▶ test button).
+  Future<void> speakSample() async {
+    if (!state.supported) return;
+    await stop();
+    final id = ++_playId;
+    await _applyRateAndVoice();
+    if (id != _playId) return;
+    await _tts.speak(
+      'This is how the drill will sound at this voice and speed.',
+    );
+  }
 
   /// Stop playback and clear the wash.
   Future<void> stop() async {

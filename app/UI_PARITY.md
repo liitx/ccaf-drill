@@ -39,6 +39,17 @@ table at once.
       `speechSynthesis` voices asynchronously; `TtsCubit` queried once at
       startup. Now: `refreshVoices()` retries ×4 and re-runs every time the
       ⚙ Voice panel opens (`voice_settings_sheet.dart`).
+- [x] **Chosen voice not applied** — `setVoice` was sent a hardcoded
+      `'en-US'` locale; UK voices are `en-GB` so the plugin silently kept
+      the default. Voices now carry `(name, locale)` and echo the exact
+      locale back.
+- [x] **Playback speed inert on web** — rate was scaled ×0.5 (the
+      mobile/desktop plugin convention); web expects 1.0 = normal. Now
+      `kIsWeb ? rate : 0.5 * rate`.
+- [x] **▶ test voice missing** — restored (`TtsCubit.speakSample`).
+- [x] **Full-width bottom sheet on web** — replaced with a compact 320px
+      card dialog (web #ttspanel styling: card bg, hairline border, radius
+      12), anchored right of center on ≥1100px, bottom on narrow.
 
 ## Plan — phases, check off as we land them
 
