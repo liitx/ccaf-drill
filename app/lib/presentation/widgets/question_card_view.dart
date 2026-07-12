@@ -5,6 +5,7 @@ import 'package:ccaf_drill/application/tts_cubit.dart';
 import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/domain/verdict.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
+import 'package:ccaf_drill/presentation/views/spotlight.dart';
 import 'package:ccaf_drill/presentation/widgets/badges.dart';
 import 'package:ccaf_drill/presentation/widgets/choice_tile.dart';
 import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
@@ -76,8 +77,16 @@ class QuestionCardView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Header(question: question, expanded: expanded),
+          KeyedSubtree(
+            key: !forceRevealed && question.number == 1
+                ? SpotlightTargets.cardHeader
+                : null,
+            child: _Header(question: question, expanded: expanded),
+          ),
           Padding(
+            key: !forceRevealed && question.number == 1
+                ? SpotlightTargets.cardChips
+                : null,
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,6 +286,7 @@ class _Body extends StatelessWidget {
             ),
           if (!forceRevealed)
             Padding(
+              key: question.number == 1 ? SpotlightTargets.reveal : null,
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: WebChip(
                 label: revealed ? 'Hide answer' : 'Reveal answer',

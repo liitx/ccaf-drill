@@ -66,15 +66,20 @@ const tourSlides = [
   ),
 ];
 
-/// Shows the tour dialog; marks it done on finish or skip.
-Future<void> showOnboardingTour(BuildContext context) async {
+/// Shows the tour dialog; marks it done on finish or skip. The final
+/// slide's CTA launches the spotlight walkthrough via [onWalkthrough].
+Future<void> showOnboardingTour(
+  BuildContext context, {
+  VoidCallback? onWalkthrough,
+}) async {
   final settings = context.read<SettingsCubit>();
-  await showDialog<void>(
+  final walkthrough = await showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (_) => const _TourDialog(),
   );
   await settings.markTourDone();
+  if ((walkthrough ?? false) && onWalkthrough != null) onWalkthrough();
 }
 
 class _TourDialog extends StatefulWidget {
@@ -128,7 +133,7 @@ class _TourDialogState extends State<_TourDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, false),
           child: const Text('Skip'),
         ),
         if (_index > 0)
@@ -136,12 +141,21 @@ class _TourDialogState extends State<_TourDialog> {
             onPressed: () => setState(() => _index--),
             child: const Text('← Back'),
           ),
-        FilledButton(
-          onPressed: last
-              ? () => Navigator.pop(context)
-              : () => setState(() => _index++),
-          child: Text(last ? 'Done' : 'Next →'),
-        ),
+        if (last)
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Walk me through the screen →'),
+          )
+        else
+          FilledButton(
+            onPressed: () => setState(() => _index++),
+            child: const Text('Next →'),
+          ),
+        if (last)
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Done'),
+          ),
       ],
     );
   }

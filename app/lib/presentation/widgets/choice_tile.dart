@@ -1,8 +1,10 @@
 import 'package:ccaf_drill/application/drill_cubit.dart';
+import 'package:ccaf_drill/domain/answer_letter.dart';
 import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/domain/verdict.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
 import 'package:ccaf_drill/presentation/theme/drill_palette.dart';
+import 'package:ccaf_drill/presentation/views/spotlight.dart';
 import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,6 +86,12 @@ class ChoiceTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            key:
+                !forceAssists &&
+                    question.number == 1 &&
+                    choice.letter == AnswerLetter.a
+                ? SpotlightTargets.choiceHead
+                : null,
             children: [
               Text(choice.letter.display, style: context.display(15)),
               const SizedBox(width: 8),

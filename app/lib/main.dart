@@ -10,6 +10,7 @@ import 'package:ccaf_drill/presentation/views/drill_view.dart';
 import 'package:ccaf_drill/presentation/views/exam_view.dart';
 import 'package:ccaf_drill/presentation/views/key_view.dart';
 import 'package:ccaf_drill/presentation/views/onboarding_tour.dart';
+import 'package:ccaf_drill/presentation/views/spotlight.dart';
 import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,13 +104,21 @@ class _HomeShellState extends State<HomeShell> {
   AppRoom _room = AppRoom.key;
   bool _tourChecked = false;
 
+  void _startWalkthrough() {
+    startSpotlight(
+      context,
+      switchRoom: (index) => setState(() => _room = AppRoom.values[index]),
+      currentRoom: _room.index,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsCubit>().state;
     if (!_tourChecked && settings.loaded && !settings.tourDone) {
       _tourChecked = true;
       WidgetsBinding.instance.addPostFrameCallback(
-        (_) => showOnboardingTour(context),
+        (_) => showOnboardingTour(context, onWalkthrough: _startWalkthrough),
       );
     }
 
@@ -121,6 +130,7 @@ class _HomeShellState extends State<HomeShell> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TabChrome(
                 room: _room,
+                onWalkthrough: _startWalkthrough,
                 onChanged: (room) {
                   context.read<TtsCubit>().stop();
                   setState(() => _room = room);
@@ -145,7 +155,15 @@ class _HomeShellState extends State<HomeShell> {
 /// then the ◐ theme and ? Tour buttons, over a 2px ink rule.
 class TabChrome extends StatelessWidget {
   /// Creates the tab strip.
-  const TabChrome({required this.room, required this.onChanged, super.key});
+  const TabChrome({
+    required this.room,
+    required this.onChanged,
+    required this.onWalkthrough,
+    super.key,
+  });
+
+  /// Launches the spotlight walkthrough (forwarded to the tour CTA).
+  final VoidCallback onWalkthrough;
 
   /// Selected room.
   final AppRoom room;
@@ -168,6 +186,7 @@ class TabChrome extends StatelessWidget {
         children: [
           Expanded(
             child: Wrap(
+              key: SpotlightTargets.tabs,
               spacing: 8,
               runSpacing: 6,
               crossAxisAlignment: WrapCrossAlignment.center,
@@ -190,16 +209,21 @@ class TabChrome extends StatelessWidget {
                   ),
                 ),
                 for (final candidate in AppRoom.values)
-                  WebChip(
-                    label: candidate.label,
-                    selected: room == candidate,
-                    fontSize: 16,
-                    radius: 8,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 6,
+                  KeyedSubtree(
+                    key: candidate == AppRoom.exam
+                        ? SpotlightTargets.examTab
+                        : null,
+                    child: WebChip(
+                      label: candidate.label,
+                      selected: room == candidate,
+                      fontSize: 16,
+                      radius: 8,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
+                      onTap: () => onChanged(candidate),
                     ),
-                    onTap: () => onChanged(candidate),
                   ),
               ],
             ),
@@ -226,7 +250,8 @@ class TabChrome extends StatelessWidget {
             fontSize: 16,
             radius: 8,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            onTap: () => showOnboardingTour(context),
+            onTap: () =>
+                showOnboardingTour(context, onWalkthrough: onWalkthrough),
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:ccaf_drill/domain/narrow_filter.dart';
 import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/domain/topic_set.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
+import 'package:ccaf_drill/presentation/views/spotlight.dart';
 import 'package:ccaf_drill/presentation/widgets/assist_dock.dart';
 import 'package:ccaf_drill/presentation/widgets/question_card_view.dart';
 import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
@@ -206,6 +207,7 @@ class _Toolbar extends StatelessWidget {
         runSpacing: 10,
         children: [
           _Cluster(
+            key: SpotlightTargets.setCluster,
             label: 'Set',
             sublabel: '· pick one topic',
             children: [
@@ -225,6 +227,7 @@ class _Toolbar extends StatelessWidget {
             ],
           ),
           _Cluster(
+            key: SpotlightTargets.narrowCluster,
             label: 'Narrow',
             sublabel: '· stacks on the set',
             children: [
@@ -242,6 +245,7 @@ class _Toolbar extends StatelessWidget {
             ],
           ),
           _Cluster(
+            key: SpotlightTargets.viewCluster,
             label: 'View',
             children: [
               _JoinedSegment(layout: drill.layout),
@@ -272,7 +276,12 @@ class _Toolbar extends StatelessWidget {
 /// One toolbar cluster: uppercase tracking label over a chip row
 /// (.cluster / .cluslab / .clusrow).
 class _Cluster extends StatelessWidget {
-  const _Cluster({required this.label, required this.children, this.sublabel});
+  const _Cluster({
+    required this.label,
+    required this.children,
+    this.sublabel,
+    super.key,
+  });
 
   final String label;
   final String? sublabel;

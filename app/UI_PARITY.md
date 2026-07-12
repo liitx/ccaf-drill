@@ -131,6 +131,16 @@ table at once.
 - [ ] (deferred) sticky nav chips row + member-row hover — low value in
       the Flutter shell, revisit if missed
 
+### P8 — Spotlight walkthrough ✅ 2026-07-11
+- [x] 11-step spotlight: dim barrier with a gold-ringed cutout over live
+      components, list-format tooltips (COMPONENT n / 11), Back/Exit/Next
+- [x] Auto-navigation: Key → Drill, expands Q1, targets toolbar clusters,
+      card header/chips, dock + 🔊 cluster, choice minis, reveal, exam tab;
+      restores the starting room on exit
+- [x] Launched from the tour's final CTA ('Walk me through the screen →')
+      on first visit or via ? Tour
+- [x] Widget test walks all 11 steps end-to-end (spotlight_test.dart)
+
 ### Verification per phase
 - Side-by-side: `flutter run -d chrome` next to the hosted app, same
   viewport; screenshot pairs for Key/Drill(open card+dock)/Exam run/results

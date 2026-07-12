@@ -3,6 +3,7 @@ import 'package:ccaf_drill/application/tts_cubit.dart';
 import 'package:ccaf_drill/domain/assists.dart';
 import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
+import 'package:ccaf_drill/presentation/views/spotlight.dart';
 import 'package:ccaf_drill/presentation/widgets/question_card_view.dart';
 import 'package:ccaf_drill/presentation/widgets/voice_settings_sheet.dart';
 import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
@@ -88,11 +89,14 @@ class AssistDock extends StatelessWidget {
       ),
       if (tts.supported) ...[
         const _DockDivider(),
-        _DockButton(
-          action: AssistAction.speakQuestion,
-          playing: speaking(SpeechScope.question),
-          onTap: () =>
-              context.read<TtsCubit>().play(question, SpeechScope.question),
+        KeyedSubtree(
+          key: SpotlightTargets.dockSpeak,
+          child: _DockButton(
+            action: AssistAction.speakQuestion,
+            playing: speaking(SpeechScope.question),
+            onTap: () =>
+                context.read<TtsCubit>().play(question, SpeechScope.question),
+          ),
         ),
         _DockButton(
           action: AssistAction.speakChoices,
@@ -129,6 +133,7 @@ class AssistDock extends StatelessWidget {
     ];
 
     return Container(
+      key: SpotlightTargets.dock,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: p.card,
