@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ccaf_drill/application/tts_cubit.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
+import 'package:ccaf_drill/presentation/widgets/assist_dock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,7 +14,7 @@ Future<void> showVoiceSettingsSheet(BuildContext context) {
   // Browsers report an empty voice list until late in the page's life —
   // re-query every time the panel opens.
   unawaited(context.read<TtsCubit>().refreshVoices());
-  final wide = MediaQuery.sizeOf(context).width >= 1100;
+  final wide = AssistDock.isRail(MediaQuery.sizeOf(context).width);
   return showDialog<void>(
     context: context,
     barrierColor: Colors.transparent,

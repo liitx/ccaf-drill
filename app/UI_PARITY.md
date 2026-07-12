@@ -86,6 +86,12 @@ table at once.
       pill is a true toggle — one tap target, each click flips the layout;
       `Hide answers` ghost removed (Reveal/Hide lives in the dock), cubit
       method deleted with it
+- [x] **Dock breakpoint divergence:** side rail from 600px up (web keeps
+      the bottom pill until 1100px — it read as "mobile" on desktop
+      windows); pill only at true mobile widths. Voice dialog anchor
+      follows the same predicate
+- [x] Single view: Prev / n / Next bar + card get bottom clearance above
+      the pill (they were hidden underneath)
 - [x] Highlights dot-switch (9px dot, pick-green when on) in VIEW cluster
 - [x] Ghost buttons: dashed `HIDE ANSWERS` / `↺ RESET` + vertical divider
 

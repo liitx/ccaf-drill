@@ -19,7 +19,11 @@ class AssistDock extends StatelessWidget {
   /// The question the dock controls.
   final Question question;
 
-  static const _railBreakpoint = 1100.0;
+  /// Below this the dock is a bottom pill; at or above it, a side rail.
+  /// The web app keeps the pill up to 1100px, but the pill reads as
+  /// "mobile" — user preference (2026-07-11) is the rail on any
+  /// desktop-wide window, pill only at true mobile widths.
+  static const _railBreakpoint = 600.0;
 
   /// Whether the rail layout applies at [width].
   static bool isRail(double width) => width >= _railBreakpoint;

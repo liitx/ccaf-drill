@@ -106,16 +106,26 @@ class _SinglePager extends StatelessWidget {
       });
     }
 
+    final width = MediaQuery.sizeOf(context).width;
+    final rail = AssistDock.isRail(width);
+
     return Column(
       children: [
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            // Right clearance while the rail sits in a tight gutter; bottom
+            // clearance so the card never hides under the pill.
+            padding: EdgeInsets.only(
+              left: 12,
+              right: rail && width < 1160 ? 120 : 12,
+              bottom: rail ? 12 : 96,
+            ),
             child: QuestionCardView(question: question),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8),
+          // The Prev / n / Next bar must stay visible above the bottom pill.
+          padding: EdgeInsets.fromLTRB(8, 8, 8, rail ? 8 : 84),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
