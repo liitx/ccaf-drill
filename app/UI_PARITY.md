@@ -147,6 +147,14 @@ table at once.
       team-marked choice after reveal (web .srcmark, exact --smbg/--smc
       colors)
 
+### P10 — Onboarding polish ✅ 2026-07-11
+- [x] Spotlight ring **glides** between components (RectTween 340ms
+      easeInOutCubic) instead of teleporting; tooltip follows with the
+      same curve and its copy crossfades per step
+- [x] Tooltip height-capped to the viewport with pinned nav buttons
+      (tall targets like the dock rail pushed the buttons off-screen)
+- [x] Test-environment frame-scheduling fix so measurements resolve
+
 ### P8 — Spotlight walkthrough ✅ 2026-07-11
 - [x] 11-step spotlight: dim barrier with a gold-ringed cutout over live
       components, list-format tooltips (COMPONENT n / 11), Back/Exit/Next

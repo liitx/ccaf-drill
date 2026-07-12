@@ -225,15 +225,17 @@ class _SpotlightOverlayState extends State<_SpotlightOverlay> {
   }
 
   void _enter(int index) {
-    setState(() {
-      _index = index;
-      _target = null;
-    });
+    // Keep the previous rect while the next target is prepped + measured —
+    // the ring animates from old to new instead of blinking out.
+    setState(() => _index = index);
     final step = steps[index];
     // Prep (room switches, card expansion) must run outside this build
     // pass; then one more frame so the target exists before measuring.
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (widget.hostContext.mounted) step.prep?.call(widget.hostContext);
+      // endOfFrame only resolves if a frame is scheduled (test pumps rely
+      // on this too).
+      WidgetsBinding.instance.scheduleFrame();
       await WidgetsBinding.instance.endOfFrame;
       final targetContext = step.target.currentContext;
       if (targetContext != null && targetContext.mounted) {
@@ -266,21 +268,34 @@ class _SpotlightOverlayState extends State<_SpotlightOverlay> {
     const tipEstimatedHeight = 240.0;
     final below =
         ring == null || ring.bottom + tipEstimatedHeight < screen.height;
-    final tipTop = ring == null
-        ? screen.height / 2 - tipEstimatedHeight / 2
-        : below
-        ? ring.bottom + 12
-        : (ring.top - tipEstimatedHeight - 12).clamp(12.0, screen.height);
+    final tipTop =
+        (ring == null
+                ? screen.height / 2 - tipEstimatedHeight / 2
+                : below
+                ? ring.bottom + 12
+                : ring.top - tipEstimatedHeight - 12)
+            // Tall targets (the dock rail) push past the viewport otherwise.
+            .clamp(12.0, screen.height - tipEstimatedHeight - 12);
     final tipLeft = ring == null
         ? screen.width / 2 - tipWidth / 2
         : ring.left.clamp(12.0, screen.width - tipWidth - 12);
 
     return Stack(
       children: [
-        // Dimmed barrier with a cutout + ring over the target.
+        // Dimmed barrier with a cutout + ring that glides between targets.
         Positioned.fill(
           child: IgnorePointer(
-            child: CustomPaint(painter: _RingPainter(ring: ring)),
+            // Before the first target is measured there is nothing to
+            // animate — full dim. After that the ring glides.
+            child: ring == null
+                ? const CustomPaint(painter: _RingPainter(ring: null))
+                : TweenAnimationBuilder<Rect?>(
+                    tween: RectTween(begin: ring, end: ring),
+                    duration: const Duration(milliseconds: 340),
+                    curve: Curves.easeInOutCubic,
+                    builder: (_, animatedRing, _) =>
+                        CustomPaint(painter: _RingPainter(ring: animatedRing)),
+                  ),
           ),
         ),
         // Swallow taps outside the tooltip so the tour stays modal.
@@ -290,7 +305,9 @@ class _SpotlightOverlayState extends State<_SpotlightOverlay> {
             onTap: () {},
           ),
         ),
-        Positioned(
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 340),
+          curve: Curves.easeInOutCubic,
           top: tipTop,
           left: tipLeft,
           width: tipWidth,
@@ -299,6 +316,12 @@ class _SpotlightOverlayState extends State<_SpotlightOverlay> {
             borderRadius: BorderRadius.circular(12),
             child: Container(
               padding: const EdgeInsets.all(16),
+              constraints: BoxConstraints(
+                maxHeight: (screen.height - tipTop - 12).clamp(
+                  160.0,
+                  screen.height,
+                ),
+              ),
               decoration: BoxDecoration(
                 border: Border.all(color: p.line),
                 borderRadius: BorderRadius.circular(12),
@@ -310,33 +333,54 @@ class _SpotlightOverlayState extends State<_SpotlightOverlay> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'COMPONENT ${_index + 1} / ${steps.length}',
-                    style: context
-                        .display(10.5)
-                        .copyWith(color: p.dim, letterSpacing: 1.4),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(step.title.toUpperCase(), style: context.display(19)),
-                  const SizedBox(height: 8),
-                  for (final (lead, rest) in step.bullets)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Text.rich(
-                        TextSpan(
-                          style: TextStyle(fontSize: 13.5, color: p.ink),
+                  // Copy scrolls if it must; the nav buttons stay pinned.
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: Column(
+                          key: ValueKey(_index),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextSpan(
-                              text: lead,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
+                            Text(
+                              'COMPONENT ${_index + 1} / ${steps.length}',
+                              style: context
+                                  .display(10.5)
+                                  .copyWith(color: p.dim, letterSpacing: 1.4),
                             ),
-                            TextSpan(text: ' — $rest'),
+                            const SizedBox(height: 4),
+                            Text(
+                              step.title.toUpperCase(),
+                              style: context.display(19),
+                            ),
+                            const SizedBox(height: 8),
+                            for (final (lead, rest) in step.bullets)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text.rich(
+                                  TextSpan(
+                                    style: TextStyle(
+                                      fontSize: 13.5,
+                                      color: p.ink,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: lead,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      TextSpan(text: ' — $rest'),
+                                    ],
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ),
                     ),
+                  ),
                   const SizedBox(height: 10),
                   Wrap(
                     spacing: 8,
