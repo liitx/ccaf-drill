@@ -1,9 +1,9 @@
 # CCA-F Drill — Project Handoff
 
-**For:** Liitx (Aksana) + any future Claude session or Claude Code instance continuing this work.
-**Live site:** https://liitx.github.io/ccaf-drill/ — since 2026-07-11 this is the **Flutter app** (root-level Flutter project, deployed from `main:/docs` via `./deploy.sh`). The original single-file web generator described below was retired; its last intact commit is git tag `web-final`. Sections 3–5 below document the retired generator for history; §2 (the intellectual content) still applies verbatim — the Dart app consumes the same `data/*.json` and pins the same answer key in `test/parity/answer_key_test.dart`.
-**Artifact:** one self-contained HTML file (~490KB), no dependencies, no build step at runtime.
-**Source of truth:** this repo (generator in `src/`, data in `data/`, tests in `tests/`). The old `ccaf-drill-source.zip` container archive is obsolete since the 2026-07-11 modular refactor.
+**For:** Liitx (Aksana) + any future Claude session, model, or agent continuing this work. **Read this file first**, then `.claude/skills/drill-conventions/SKILL.md` (the working rules), then skim `UI_PARITY.md` (design decisions + deliberate divergences).
+**Live site:** https://liitx.github.io/ccaf-drill/ — the **Flutter web app built from this repo** (root-level Flutter project), served by GitHub Pages from `main:/docs`.
+**Source of truth:** this repo. `data/*.json` holds all 60 questions + analysis; `lib/` is the app; `docs/` is the built site (never hand-edit).
+**History:** the project began as a Python-generated single-file web app; it was ported 1:1 to Flutter/Dart and the generator was retired on 2026-07-11. The last commit with the web app intact is git tag **`web-final`** — everything about the old generator, its Playwright suites, and its war stories lives there and in git history. Nothing in the current tree depends on it.
 
 ---
 
@@ -30,7 +30,7 @@ Q1:B Q2:B Q3:A Q4:D Q5:D Q6:C Q7:C Q8:D Q9:C Q10:B Q11:C Q12:D Q13:D Q14:C Q15:A
 - **T — MCP & Tool Design** (3): 25, 46, 54
 
 ### The 12 cheat codes (cross-set elimination rules)
-P1 FIX THE SOURCE · P2 STRUCTURE SURVIVES · P3 HARD RULE→CODE · P4 SUBAGENTS ARE SEALED · P5 GOALS NOT SCRIPTS · P6 SESSION TRIAGE · P7 EXTREMES DIE · P8 MODEL IN THE LOOP · P9 DESCRIPTIONS ARE THE API · P10 RETRY≠NEW INFO · P11 MATCH COST TO SLA · P12 TRUST BUT SEGMENT. (Full text + member questions live in `analysis`/generator data and render in the Key.)
+P1 FIX THE SOURCE · P2 STRUCTURE SURVIVES · P3 HARD RULE→CODE · P4 SUBAGENTS ARE SEALED · P5 GOALS NOT SCRIPTS · P6 SESSION TRIAGE · P7 EXTREMES DIE · P8 MODEL IN THE LOOP · P9 DESCRIPTIONS ARE THE API · P10 RETRY≠NEW INFO · P11 MATCH COST TO SLA · P12 TRUST BUT SEGMENT. (Full text + member questions live in the `PatternCode` enum, lib/domain/pattern_code.dart, and render in the Key.)
 
 ### Disputed 8
 The source doc arrived with 10 answers marked. **8 disagree with the verified pick: Q2, 12, 15, 17, 18, 22, 41, 42** — every disagreement is the same trap (bolt-on patch over structural fix). Q29 and Q35 were marked and agree. These 8 are the highest-yield drill list.
@@ -43,96 +43,76 @@ The source doc arrived with 10 answers marked. **8 disagree with the verified pi
 ### Team-taxonomy comparison (done)
 Converged with the team's own pattern write-up. Their gaps: no batch/eval category; their "structure > prompt" rule wrongly kills few-shot winners (Q8, 9, 15, 19, 34); their "throw out immediately" heuristic misfires on Q49.
 
-## 3. Architecture
+## 3. Architecture (current — Flutter, root-level project)
 
-**Generator (modular, 2026-07-11 refactor):** `python3 build.py` assembles `index.html` from `src/` + `data/`. Never hand-edit the HTML.
+```
+pubspec.yaml, analysis_options.yaml     very_good_analysis + missing_enum_constant_in_switch: error
+lib/domain/        enhanced enums carry the domain: TopicSet (name/colors/fingerprint/rule/vary/links),
+                   Verdict (jsonCode/badge/spokenTag), AnswerLetter, ConfidenceTier, PatternCode (12 cheat
+                   codes), DocLink, AssistAction + SpeechScope (const-Map related), ExamMode (const-Set
+                   assist membership), StorageKey, NarrowFilter, AppRoom + AuthoredContent maps
+                   + entities: Question / Choice / WorkedExample — Question.choices:
+                   Map<AnswerLetter, Choice> is the typed question:choices contract (exactly one
+                   Verdict.pick, enforced by tests)
+lib/data/          AssetQuestionRepository — joins the five data JSONs once, returns an immutable list
+lib/application/   cubits: DrillCubit (filters/assists/flags), ExamCubit (pause-aware timing, palette,
+                   downfall analytics), TtsCubit (three speech scripts, voice+rate persistence,
+                   follow-along targets), SettingsCubit (theme, tour-done behind a `loaded` gate)
+lib/presentation/  theme/DrillPalette (exact tokens from the original design, incl. tier + marked-note
+                   colors) · widgets: WebChip (dashed=available / solid=active / fill=selected),
+                   SetPill, TierBadge, QuestionCardView (+bodyOnly), ChoiceTile, AssistDock (side rail
+                   ≥600px w/ set-colored scope ring, bottom pill on mobile), voice panel ·
+                   views: Key / Drill (pinned QuestionStemHeader in Single) / Exam / tour + 11-step
+                   spotlight walkthrough (ring glides between targets)
+data/*.json        questions, analysis (verdicts/whys/cues/signals), hints, gists, examples — bundled
+                   as Flutter assets directly
+docs/              production web build (--base-href /ccaf-drill/, .nojekyll) — the Pages source
+deploy.sh          flutter build web + restage docs/
+```
 
-- `build.py` — entry point.
-- `src/constants.py` — `ANSWER_LETTERS`, `Verdict` enum (css_class/badge), `Token` enum for template placeholders.
-- `src/assets/domain.js` — **no-bare-strings layer** (2026-07-11): registry classes with static getters (`CardState`, `ChoiceState`, `ControlState`, `ExamState`, `DockAction`, `SpeechScope`, `StorageKey`, `Verdict`, `AnswerLetter`, `Dom`) plus the relationship accessors `QuestionCard`/`AnswerChoice` (the explicit question:answerChoices 1:4 mapping — exam, TTS, Ask-Claude, key expansion all read cards through them). Rules + workflow live in `.claude/skills/drill-conventions/SKILL.md`; grep gate: zero `classList.*('` literals in app.js.
-- `src/models.py` — dataclass structs (`Question`, `Choice`, `Example`, `SetDef`) joining the five data files; every field is classified by use case (`[render]` / `[logic]` / `[tts]` / `[export]`).
-- `src/content.py` — authored knowledge: SETS, KEYS (fingerprint/rule/vary), TIER, DEBATE, QLINKS, LINKS, 12 PATTERNS, verdict labels. Exposed as `SETS_DEFS` structs.
-- `src/render.py` — all Python-side HTML: drill cards, key panels, guide, cheat codes, toolbar pills, JS data payloads. `context()` returns token→string.
-- `src/page.py` — splices rendered fragments into the static assets by plain `str.replace` tokens (`__CARDS__`, `__ANSWERS_JS__`, …). **No f-string page template anymore** — the brace-doubling/escape-bug class (§7.2) is structurally gone.
-- `src/assets/` — `head.html`, `styles.css`, `body.html`, `app.js`, `tail.html`. CSS and JS are real files: edit normally, `node --check src/assets/app.js` directly.
-- `data/` — `questions.json` (60 stems+choices, verbatim), `analysis.json` (verdicts/whys/cues/signals), `hints.json`, `gists.json`, `examples.json`.
+Content enums (`TopicSet`, `PatternCode`, `DocLink`, `AuthoredContent`) were **generated from the retired generator's content module** — zero retranscription; the strings are the originals.
 
-The refactor was verified **byte-identical**: old and new pipelines produced the same `index.html` before the old generator was deleted.
+## 4. Feature inventory (current app)
 
-### Flutter port (`app/`, 2026-07-11)
-1:1 Dart port, enum-first per the claudart Type System Laws. `app/lib/domain/` = enhanced enums (TopicSet/Verdict/AnswerLetter/ConfidenceTier/PatternCode/DocLink/AssistAction+SpeechScope/ExamMode/StorageKey/NarrowFilter/AppRoom) + `Question`/`Choice`/`WorkedExample` entities; `data/` = parse-once `AssetQuestionRepository` over the same `data/*.json` (symlinked as assets); `application/` = drill/exam/tts/settings cubits; `presentation/` = theme from styles.css tokens + Key/Drill/Exam/tour views, dock rail ≥1100px. Content-bearing enums were **generated from src/content.py** (no retranscription). Tests: enum matrices as exhaustive switch expressions, repository invariants (4 choices, one pick), cubit behavior, widget smoke, and `test/parity/web_parity_test.dart` which diffs the answer key against `../index.html`. Audited via a claudart session (handoff archived in `~/dev/dev_tools/claude/ccaf-drill/`); findings applied: AppRoom enum, unmodifiable choices, TTS script tests. Known gap: the 11-step spotlight walkthrough is web-only (Dart ships the 4-slide tour).
+- **Key**: how-to-use guide, 12 cheat-code cards (2-col grid wide), six set panels (4px set-color left border; fingerprint / one rule / variation; member rows expand to a fully-revealed card inline).
+- **Drill**: toolbar v3 (SET / NARROW / VIEW clusters; set-colored pills; combinable Set×Narrow with live "showing N of 60"; All|Single one-tap toggle; Highlights dot-switch; ↺ Reset keeps flags). Cards: cue, signal chips, washed stem (text color never changes — mark invariant), foldable hint box (3 rows) + In-practice (mech pill/lead/snippet), per-choice ◦ plain / ⌁ gist dashed minis, full-width ink Reveal, disputed/agree/debate bands + sources, "◉ marked in your doc" tag on reveal. **Single view pins the question header** while choices scroll. Assist dock: rail from 600px (deliberate divergence — the old app switched at 1100), Q label + set-colored top border + matching card ring, dashed/solid/pulse button states, Reveal ink-filled.
+- **Audio (TTS)**: 🔊 Question / Choices / Why (Why gated behind Reveal, reads pick → tagged wrong choices → in-practice lead → set rule), follow-along wash on the segment being read, ⚙ Voice panel (Google US/UK voices when present with exact-locale matching, 0.8–1.4× speed, ▶ test), settings persisted. Web rate scale differs from mobile (kIsWeb branch).
+- **Exam**: Easy/Medium/Hard (assist sets from `ExamMode`), 120:00 timer (24px, red <10:00), pause freezes both clocks, 30×26 palette (answered wash / flag-orange border / current outline ring — border and ring coexist so flagging updates instantly), auto-submit, results (scaled/1000 vs 720, weakest-first set bars, downfall analysis, 60-row review with expandable revealed cards + YOUR PICK tag).
+- **Onboarding**: 4-slide list-format tour (first visit, ? Tour replays) → "Walk me through the screen →" launches the 11-step spotlight (gold ring glides between live components, auto room switching, restores prior room).
+- **Ask Claude**: clipboard JSON packet, same contract as the original app.
+- Dark default + light theme, 900px content column, exact palette (no Material fromSeed tinting).
 
-## 4. Feature inventory (current state)
+## 5. Testing
 
-### Key view
-Collapsed-by-default sections with sticky colored nav chips: **How to use this tool** (bulleted guide incl. Disputed-8 explanation and dock docs) → **Cheat codes** (Q-number buttons jump to Drill scoped to that question's set) → six set panels (fingerprint / one rule / member table). Table rows expand **inline** (clone of the drill card body in revealed state + "Open in Drill ↗"). No answer column, no show/hide-answers bar (removed by request). No footer (removed by request).
+`flutter analyze` must be zero issues; `flutter test` all green. Suites:
+- `test/domain/enum_matrix_test.dart` — |variants|×|getters| matrices written as **exhaustive switch expressions**: adding an enum variant without a matrix row is a compile error, not a coverage gap.
+- `test/data/` — repository invariants: 60 questions, 4 choices each, exactly one pick, set sizes (10/5/15/13/14/3), the disputed 8, signals present in stems (case-insensitive — Q21's 'before deploying' is capitalized in the stem, a known data quirk).
+- `test/parity/answer_key_test.dart` — the verified 60-answer key from §2, pinned as a literal. **Never weaken this.**
+- `test/application/` — cubit behavior (combinable filters, reset-keeps-flags, exam timing/pause, downfall classification) + the three TTS speech scripts per scope.
+- `test/presentation/` — widget smoke (boot, rooms, expand, reveal) + the full 11-step spotlight walk.
 
-### Drill view
-- **Toolbar v3** (post-UX-research redesign): three labeled clusters — **Set** (single-select chips, ✓-filled in set color) · **Narrow** ("+"-prefixed chips that genuinely COMBINE with the set: Flagged / Disputed 8 / Debate 3, tap again to clear, live "showing N of 60" readout) · **View** (joined segmented ☰All|▭Single, Highlights dot-switch, divider, ghost actions Hide answers / ↺ Reset). Control-type differentiation per Nielsen/HIG/Material: chips=filters, segmented=exclusive modes, switch=state, ghost=one-shot actions.
-- **Floating help dock v4**: at ≥1100px viewports it is a **right-side vertical rail** (92px, vertically centered — the 900px content column leaves a free gutter there, so nothing reflows); below 1100px it stays the bottom-fixed pill, mobile rules unchanged. Buttons: 💡 Hint · 🖍 HL · ⌁ Gists · In practice · 🤖 Ask · 🔊 Question / Choices / Why · Reveal. **Scope binding:** the active card gets `.dock-target` (a box-shadow ring in its set's color) and the rail's top border + Q-label match — dockSync owns both. **Gentle snap** (All view, >560px): a debounced scroll-end handler (`snapToCard`) magnetizes the active card to its `scroll-margin-top` alignment when it settles within 90px; it is JS, NOT CSS scroll-snap (CSS snap containers re-snap on layout change and would fight `keepCardAnchored` — same war as native scroll anchoring). `keepCardAnchored`/`keepAnchored` set an 800ms `SNAPHOLD` so folds never trigger snap drift.
-- **Text-to-speech** (Web Speech API, no deps): 🔊 Question reads the stem, 🔊 Choices reads all four options (uses the plain rephrase for a choice whose ◦ plain is on), 🔊 Why reads the full reveal reasoning — correct letter + its why, each wrong choice tagged close-second/eliminate + its why, the in-practice lead, the set rule. 🔊 Why is `.dead` until revealed (dock) / until the reveal assist is on (exam); hiding the answer stops and re-gates it. Speech is scraped from the card DOM at click time (`speakText`), same pattern as Ask Claude. Utterances are chunked ≤~190 chars (`ttsChunks`) around Chrome's silent long-utterance cutoff; `TTSID` sequencing prevents stale onend callbacks from resurrecting a cancelled queue. Tap again = stop; tab switch, single-view nav, exam nav, reset, and hide-answers all `ttsStop()`. Unsupported browsers: speak buttons hidden at init. Exam: Easy gets all three speak buttons, Medium gets question+choices, Hard none.
-- **TTS v2 (voice/speed/follow-along):** ⚙ Voice in the dock opens a fixed settings panel (`#ttspanel`) — voice `<select>` (**Google US / UK Female / UK Male only** when Chrome exposes them, ranked in that order; falls back to all English voices in browsers/sessions without Google voices — note Playwright-launched Chrome uses a fresh profile and never loads Google network voices, so automated verification of the Google branch uses the exact real voice names in the smoke18 stub) + rate chips 0.8/1/1.2/1.5× + test button; persisted via `safeGet/safeSet` (`ccaf_tts_voice`, `ccaf_tts_rate`). Speech is segment-based (`speakSegs` → `ttsQueueFrom`): each spoken chunk carries its source element + offsets, `normMap` maps whitespace-normalized text back to raw DOM offsets, and on utterance start a **CSS Custom Highlight** (`::highlight(ttsline)`, word-level `ttsword` via `onboundary` where the voice reports it) paints the sentence being read — zero DOM mutation, text color never changes (mark invariant safe); non-Highlight-API browsers get an element-level `.ttsactive` wash. Panel hides with the dock.
-- **No-shift system:** all assist content (hintbox, plains, gists, in-practice) uses animated **fold** (max-height+opacity ~280ms) instead of display toggling, and every toggle/reveal anchors the **active card's top edge** to the same viewport pixel — the text being read never moves; new content unfolds below. `keepCardAnchored` is the primitive; native scroll anchoring is disabled (`overflow-anchor:none`).
-- Per-choice ◦ plain / ⌁ gist mini-toggles remain in each choice. In-Practice sits under the stem, above choices. Reveal shows everything and inerts the assists (dock buttons `.dead`, minis pointer-events:none). Flags (⚑) persist through Reset; everything else resets.
-- **🤖 Ask Claude** (dock): copies instruction + full JSON packet (verbatim question, choices with plain/gist/verdict/why, signals, cue, hint, correct answer, tier, set rule, in-practice). Instruction demands: plain simple language, code lines <45 chars (no horizontal scroll), one line per wrong choice, memory hook, no restating JSON. **No apostrophes in that string** (see gotchas).
-
-### Exam view
-Modes: **Easy** (5 per-question assist toggles incl. reveal) / **Medium** (hint+plain) / **Hard** (1:1, nothing). 120:00 countdown; pause hides the question and freezes both clocks; resume = same question; per-question timing excludes pauses; 60-cell palette (answered/flagged/current); picking a choice smooth-scrolls Next into view, navigation returns to top; auto-submit at 0:00. Results: score %, scaled/1000 vs 720, sets ranked weakest-first with bars + avg time, **downfall analysis** (miss concentration by set + whether wrong picks were close-2nds vs kills + blanks nudge), 60-row review (flags carried in, per-question times, your-pick tag) with expandable detail = drill-body clone + per-set how-to-think.
-
-### Onboarding
-- **4-slide tour** on first visit (safe-storage persisted; degrades gracefully where localStorage is blocked — never crashes): three rooms → study loop → training wheels → badges/colors. Skippable; "? Tour" tab button replays it.
-- Final CTA "Walk me through the screen →" launches the **10-step spotlight**: highlight ring + tooltip over live components (tabs → three toolbar clusters → card header → cue/chips → dock → per-choice minis → Reveal → Exam tab). Auto-navigates views, cleans up after itself, restores prior view on mid-exit, finishes in the Key guide. Mobile: tooltip pinned bottom.
-
-### Theming & mobile
-- Dark default. Palette deliberately muted per user's eyes: `--paper:#0C0E0F`, `--ink:#ADB5AC` (softened twice from near-white — halation), `--stemc:#98A199`, wash `rgba(228,203,92,.17)`. **Highlight = translucent wash; text color NEVER changes** (mark-color invariant, test-enforced across 7 states). Light mode intact; all 84 audited elements pass contrast in both themes.
-- Mobile (≤560px): 44px tap targets (HIG/WCAG 2.5.5), 16px body floor, nav chrome un-stuck (only exam timer bar stays pinned), palette 44×42, dock buttons 44px with horizontal scroll.
-
-## 5. Test infrastructure
-
-Playwright + Chromium, local: `npm install playwright --no-save && npx playwright install chromium`. Run everything: `tests/run.sh`. One file: `node tests/<name>.spec.js`.
-
-`tests/harness.js` is the shared struct: `chromium/devices`, `URL` (built index.html), `A` assert, `run(name, fn)` sequential suite runner, `withServer(fn)` (spawns http.server 8931 for localStorage-origin suites). Each spec file groups the former smoke suites by domain — bodies preserved verbatim in the 2026-07-11 consolidation (360 assertions before = 360 after):
-
-| Spec | Former suites | Covers |
-|---|---|---|
-| core.spec.js (85) | smoke 1/2/9/10/11 | tabs, key rows+sections, flags, filters, theme, guide, Ask-Claude payload, CSP guards |
-| drill.spec.js (49) | smoke 3/6/7/8 | hint flow, no-spoil, dock toggles, per-choice gists, in-practice, anchoring, reset |
-| toolbar.spec.js (27) | smoke 15/5 | toolbar v3 control languages, Set×Narrow, mark-color invariant, exam modes |
-| exam.spec.js (31) | smoke 4 | full exam simulation: timer, pause, palette, submit, analytics, review clones |
-| dock.spec.js (67) | smoke 16/18 | dock lifecycle, pixel-still anchoring, TTS (stubbed speechSynthesis), side rail, scope binding, snap, voice panel |
-| onboarding.spec.js (33) | smoke 13/14 | tour first-visit + persistence (auto http server), spotlight end-to-end (11 steps) |
-| isolation.spec.js (51) | smoke 17 | state-isolation matrix: every toggle changes ONLY its designated state |
-| mobile.spec.js (17) | smoke 12 | iPhone 12 + touch: overflow, sticky overlap, tap/font floors, pinned timer |
-| audits/contrast.js | — | WCAG audit, 80 elements × both themes |
-| audits/mobile_audit.js | — | raw sweep at 320/375/414 |
-| harness.html | — | sandboxed iframe mimicking the claude.ai artifact CSP |
-
-**Testing lessons burned in (keep honoring these):**
-- **Vacuous passes are the #1 failure mode.** Caught ≥3 times: a syntax error killing the whole page script made click-tests "pass" (nothing happened); existence checks passed on invisible elements; a patch script crashing before write left the old file "passing." Rules: assert zero pageerrors in every suite; assert rendered size (`getBoundingClientRect().height > 0`), not existence or computed display; verify a patch actually landed before trusting a green run.
-- Fold-animated elements need ~320–400ms waits before height assertions; they're in-flow, so `offsetParent` no longer distinguishes hidden (use height+opacity).
-- `activeCard()` is viewport-aware — tests must scroll the target card into view before dock actions, like a real user.
-- Smooth-scroll is global; scroll-position assertions need settle-polling or instant-behavior calls.
+Lessons that carried over from the web era: assert **visible content**, not widget existence; watch for test-font (Ahem) layout overflows — rows that fit real fonts can overflow in tests, which is a real resilience signal; `WidgetsBinding.endOfFrame` needs `scheduleFrame()` first or it deadlocks under test pumps.
 
 ## 6. Deployment
 
-- Repo: `liitx/ccaf-drill` (public). Pages from main branch root. Deployed via **Claude Code on Liitx's machine** (her `gh` auth; no tokens in chat — decided deliberately after weighing the trade-off).
-- **Update flow:** drop new `index.html` into the local repo → tell Claude Code: "replace index.html, commit, push" → Pages redeploys in ~1 min. `ccaf-drill-update.zip` always contains just the fresh `index.html`.
-- No GitHub MCP connector exists in the registry (checked); Google Drive/Gmail/Calendar are the only connected tools and can't touch GitHub.
-- liitx.com domain exists but was deliberately not used (owner chose plain Pages; subdomain-CNAME plan documented in chat if ever wanted: `drill.liitx.com CNAME liitx.github.io`).
+- Repo `liitx/ccaf-drill`, public. Pages serves `main:/docs`.
+- Ship = `./deploy.sh` (builds with `--base-href /ccaf-drill/`, restages `docs/` incl. `.nojekyll`) → commit → push. Live in ~1 min. If Pages ever serves a Jekyll-rendered README, its build predates the source flip — force one: `gh api -X POST repos/liitx/ccaf-drill/pages/builds`.
+- **Git identity: commits must be authored `liitx <liitx@users.noreply.github.com>`** — global git config is liitx; only `~/dev/apps/dc-flutter` uses the Toyota identity. Check `git config user.email` before committing; `gh auth status` alone is NOT enough (it controls push credentials, not authorship). This bit us once; history had to be rewritten.
 
-## 7. Gotchas & war stories (each cost real debugging time)
+## 7. Gotchas & war stories (current era)
 
-1. **claude.ai artifact sandbox blocks `javascript:` URLs** — and containers may intercept `<a>` clicks entirely. All in-page navigation now uses `<button>` elements + a delegated document-level click listener on `data-jumpset`/`data-jump`. Guard test enforces zero handler-anchors. The artifact preview ≠ the real browser; harness.html approximates it, but the live site is the final gate.
-2. **String-escaping in the generator**: the page is one giant Python f-string. `\n` must be `\\n`, braces doubled, and one apostrophe (`tool's`) once terminated a JS string and silently killed the entire app script. An invisible **soft-hyphen** (U+00AD) inside a hex color invalidated a CSS custom property (transparent cards). Validate after every build: extract the `<script>` and run `node --check`.
-3. **CSS specificity trap**: `body.dark mark` (0,1,2) beats `.exstem mark` (0,1,1) — caused dark-on-dark text wherever highlight backgrounds were stripped. Root fix: highlights are a translucent wash and mark text is always `color:inherit`. Never reintroduce text-color changes on marks.
-4. **Browser scroll anchoring fights manual compensation** (double-adjustment jumps) — it's disabled globally; `keepCardAnchored`/`keepAnchored` are the only authorities.
-5. **Anchor the reading position, not the clicked control** — animated folds grow content for ~280ms after an instant compensation, so button-anchored reveal drifted 368px. Card-top anchoring is immune to internal growth.
-6. **Clone visibility**: cloned card bodies need the `open` class (`card open revealed hinted` wrapper) or they render at zero height — exam-review details were invisible for several rounds because a test asserted existence instead of size.
-7. Skilljar one-per-screen is an informed assumption, not documented fact.
-8. **Stale focus rings read as phantom "highlights"** on clicked buttons (dark theme makes the default ring look like a state). Fixed: pointer clicks blur buttons (`e.detail > 0` guard preserves keyboard focus), `:focus-visible` provides the accessible keyboard ring. smoke17 asserts `document.activeElement === body` after every click.
+1. **Voice selection must echo the exact locale** — flutter_tts silently keeps the default voice if the locale doesn't match (UK voices are en-GB; a hardcoded en-US made picks no-ops). Voices are `(name, locale)` records.
+2. **TTS rate scales differ per platform**: web 1.0 = normal, mobile/desktop 0.5 = normal (`kIsWeb` branch in `_applyRateAndVoice`).
+3. **Browsers populate speechSynthesis voices late** — `refreshVoices()` retries and re-runs when the ⚙ panel opens; a single startup query races to an empty list.
+4. **Exam palette semantics**: flagged owns the border, current is a separate outline ring (boxShadow). Merging them makes flag-the-current-question look broken.
+5. **SettingsCubit `loaded` gate**: acting on defaults before SharedPreferences resolves re-shows the tour to returning users.
+6. **shared_preferences on web prefixes keys with `flutter.`** — the old app's localStorage values don't carry over (tour shows once post-migration; old flags were session-only anyway).
+7. Deliberate divergences from the original design are recorded in `UI_PARITY.md` — don't "fix" them back: one-tap All/Single toggle, no Hide-answers ghost, 600px rail breakpoint, compact one-row header, pinned Single-view question.
+8. Skilljar one-per-screen is an informed assumption, not documented fact.
+9. The claudart audit session for this repo is archived in `~/dev/dev_tools/claude/ccaf-drill/` (Type System Laws conformance; findings applied).
 
 ## 8. Possible next steps (unrequested, if ever wanted)
-- Persist flags/exam history via localStorage (safe wrappers already exist) now that it lives on Pages.
-- Confirm real exam navigation with a teammate; one-line flip if it's scroll-based.
-- Keyboard shortcuts (1–4 pick, R reveal, arrows navigate) — cheap on the existing structure.
+- Persist flags/exam history via shared_preferences.
+- Keyboard shortcuts (1–4 pick, R reveal, arrows navigate).
 - Spaced-repetition ordering for the Flagged list.
+- iOS/macOS builds are configured and compile; TTS word-level follow-along is richer there via flutter_tts progress callbacks.
