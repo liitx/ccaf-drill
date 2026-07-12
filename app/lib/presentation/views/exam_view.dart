@@ -170,29 +170,9 @@ class _RunScreen extends StatelessWidget {
           ),
         ),
         _Palette(exam: exam),
-        Expanded(
-          // Soft crossfade + slight drift between questions — present but
-          // not distracting.
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 240),
-            switchInCurve: Curves.easeOutCubic,
-            switchOutCurve: Curves.easeIn,
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween(
-                  begin: const Offset(.015, 0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              ),
-            ),
-            child: _QuestionPane(
-              key: ValueKey(question.number),
-              question: question,
-            ),
-          ),
-        ),
+        // Direct question swap — a transition here read as distracting
+        // during timed runs (user feedback 2026-07-11).
+        Expanded(child: _QuestionPane(question: question)),
         Padding(
           padding: const EdgeInsets.all(8),
           child: Row(
@@ -310,7 +290,7 @@ class _Palette extends StatelessWidget {
 }
 
 class _QuestionPane extends StatelessWidget {
-  const _QuestionPane({required this.question, super.key});
+  const _QuestionPane({required this.question});
 
   final Question question;
 
