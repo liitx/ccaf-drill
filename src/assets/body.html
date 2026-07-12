@@ -1,0 +1,192 @@
+</head><body>
+<div class="wrap">
+<header>
+ <h1>CCA-F <em>drill</em> · pattern key + 60Q</h1>
+ <p class="sub">Key = one panel per set: how to recognize it, the one rule, and every member question lined up so the variations are visible. Drill = flag questions, answer in your head, hit one Reveal — verdicts appear inline.</p>
+ <div class="tierkey">
+   <span><span class="tier t1">DOCS-VERIFIED</span>__T1__ answers confirmed against official docs/spec</span>
+   <span><span class="tier t2">GUIDANCE</span>backed by published best practice</span>
+   <span><span class="tier t3">DEBATE</span>__T3__ wording-sensitive — two defensible reads</span>
+ </div>
+</header>
+
+<nav class="tabs">
+ <button class="tab on" data-v="key" onclick="tab(this)">Key</button>
+ <button class="tab" data-v="drill" onclick="tab(this)">Drill</button>
+ <button class="tab" data-v="exam" onclick="tab(this)">Exam</button>
+ <span class="tabnote" id="flagnote">0 flagged</span>
+ <button class="tab" id="themebtn" onclick="theme()" title="Toggle dark mode" style="padding:6px 12px">◐ Dark</button>
+ <button class="tab" id="helpbtn" onclick="tourOpen()" title="How this tool works" style="padding:6px 12px">? Tour</button>
+</nav>
+
+<section class="view on" id="view-key">
+ <div class="keynav" id="keynav">__KEYNAV_CHIPS__</div>
+ __KEY_SECTIONS__
+</section>
+
+<section class="view" id="view-drill">
+ <div class="toolbar">
+  <div class="cluster" id="tg-sets"><span class="cluslab">Set <i>· pick one topic</i></span>
+   <div class="clusrow">
+    <button class="fbtn dark on" data-f="all" onclick="filt(this)">All 60</button>
+    __FILTERBTNS__
+   </div>
+  </div>
+  <div class="cluster" id="tg-focus"><span class="cluslab">Narrow <i>· stacks on the set</i></span>
+   <div class="clusrow">
+    <button class="fbtn dark foc" data-f="flag" onclick="filt(this)">⚑ Flagged</button>
+    <button class="fbtn dark foc" data-f="dis" onclick="filt(this)">⚠ Disputed __N_DISAGREE__</button>
+    <button class="fbtn dark foc" data-f="t3" onclick="filt(this)">⚖ Debate __T3__</button>
+    <span class="showing" id="showing"></span>
+   </div>
+  </div>
+  <div class="cluster" id="tg-view"><span class="cluslab">View</span>
+   <div class="clusrow">
+    <div class="seg" role="group" aria-label="layout">
+      <button class="segbtn on" id="vAll" onclick="dview('all')">☰ All</button>
+      <button class="segbtn" id="vSingle" onclick="dview('single')">▭ Single</button>
+    </div>
+    <button class="switch on" id="hlbtn" onclick="hilite()"><span class="dot"></span>Highlights</button>
+    <span class="vdiv"></span>
+    <button class="ghost" onclick="hideAll()">Hide answers</button>
+    <button class="ghost" onclick="resetDrill()">↺ Reset</button>
+   </div>
+  </div>
+ </div>
+ __CARDS__
+ <div class="dnav" id="dnav" style="display:none">
+   <button class="exnavbtn" onclick="dnav(-1)">← Previous</button>
+   <span class="exq" id="dpos"></span>
+   <button class="exnavbtn" onclick="dnav(1)">Next →</button>
+ </div>
+</section>
+
+<section class="view" id="view-exam">
+ <div id="exam-start">
+   <div class="exintro">
+     <h2 class="codeshead">Exam simulation — 1:1 CCA-F format</h2>
+     <p class="hint2">60 questions · 120 minutes · one question per screen (Skilljar-style) · pause/resume · flag for review. Per-question time is tracked; pauses don't count against the question you're on. Results include set analytics and a downfall analysis.</p>
+     <div class="modes">
+       <button class="modebtn" onclick="exStart('easy')"><b>Easy</b><span>toggle hints, plain words, gists, in-practice, and reveal answer per question</span></button>
+       <button class="modebtn" onclick="exStart('medium')"><b>Medium</b><span>hints + plain-words paraphrasing only</span></button>
+       <button class="modebtn sel" onclick="exStart('hard')"><b>Hard — 1:1</b><span>exactly like the real exam: nothing but the question</span></button>
+     </div>
+   </div>
+ </div>
+ <div id="exam-run" style="display:none">
+   <div class="exbar">
+     <span class="extimer" id="extimer">120:00</span>
+     <button class="expause" id="expausebtn" onclick="exPause()">⏸ Pause</button>
+     <span class="exq" id="exqlabel">Q 1 / 60</span>
+     <button class="exflag" id="exflagbtn" onclick="exFlag()">⚑ Flag</button>
+     <button class="exsubmit" onclick="exSubmit(false)">Submit exam</button>
+   </div>
+   <div class="expalette" id="expalette"></div>
+   <div class="exassist" id="exassist"></div>
+   <div class="exqbox" id="exqbox"></div>
+   <div class="exnav">
+     <button class="exnavbtn" id="exprev" onclick="exNav(-1)">← Previous</button>
+     <button class="exnavbtn" id="exnext" onclick="exNav(1)">Next →</button>
+   </div>
+ </div>
+ <div id="exam-pause" style="display:none">
+   <div class="expausebox">
+     <h2 class="codeshead">Paused</h2>
+     <p class="hint2">Question hidden while paused. The clock — and this question's timer — are stopped. Resuming assumes you're still on the same question.</p>
+     <button class="exstart" onclick="exResume()">▶ Resume</button>
+   </div>
+ </div>
+ <div id="exam-results" style="display:none"></div>
+</section>
+
+<div id="tour" class="tour" style="display:none" role="dialog" aria-label="How this tool works">
+ <div class="tourbox">
+  <button class="tourskip" onclick="tourDone()">Skip ✕</button>
+  <div class="tourstep on" data-s="0">
+    <div class="tourkicker">WELCOME · 30-SECOND TOUR</div>
+    <h2 class="tourh">One tool, three rooms</h2>
+    <div class="tourrooms">
+      <div class="tourroom"><span class="tab on tdemo">Key</span><p><b>Learn</b> the patterns — cheat codes + one panel per topic set.</p></div>
+      <div class="tourroom"><span class="tab tdemo">Drill</span><p><b>Practice</b> all 60 questions with training wheels you control.</p></div>
+      <div class="tourroom"><span class="tab tdemo">Exam</span><p><b>Rehearse</b> — 60 Q / 120 min, exactly like the real thing.</p></div>
+    </div>
+  </div>
+  <div class="tourstep" data-s="1">
+    <div class="tourkicker">THE STUDY LOOP</div>
+    <h2 class="tourh">Four moves, repeat</h2>
+    <ol class="tourol">
+      <li><b>Key:</b> open a set panel — read its fingerprint + one rule.</li>
+      <li><b>Drill</b> that set: try each question, tap <b>Reveal</b> to check.</li>
+      <li><b>⚑ Flag</b> your misses — then drill the Flagged filter.</li>
+      <li><b>Exam</b> when ready — results rank your weakest set for round two.</li>
+    </ol>
+  </div>
+  <div class="tourstep" data-s="2">
+    <div class="tourkicker">TRAINING WHEELS</div>
+    <h2 class="tourh">Stuck? Every question has help buttons</h2>
+    <ul class="tourul">
+      <li><b>💡 Hint</b> — what the question is <i>really</i> asking. Never spoils.</li>
+      <li><b>⌁ Gists</b> — each choice as one line of pseudo-code.</li>
+      <li><b>◦ plain</b> — a choice rephrased in simple words.</li>
+      <li><b>Reveal</b> — the answer + why every other choice loses.</li>
+      <li><b>🤖 Ask Claude</b> — copies the question for a walkthrough in Claude.</li>
+      <li><b>🔊 Listen</b> — hear the question, choices, or full answer reasoning read aloud, with the words highlighted as it reads. Pick voice &amp; speed under ⚙ Voice.</li>
+    </ul>
+    <p class="tournote">In Exam mode, Easy / Medium / Hard decides how many of these exist.</p>
+  </div>
+  <div class="tourstep" data-s="3">
+    <div class="tourkicker">READ THE COLORS</div>
+    <h2 class="tourh">Badges in ten seconds</h2>
+    <ul class="tourul">
+      <li>Colored pills = <b>topic sets</b> — same color everywhere.</li>
+      <li><span class="verdict v-pick" style="display:inline-block">✓ PICK</span> correct · <span class="verdict v-kill" style="display:inline-block">✕ OUT</span> eliminated (struck through).</li>
+      <li><span class="tier t1">DOCS-VERIFIED</span> answer confirmed against official Anthropic docs.</li>
+      <li><b>⚠ Disputed 8</b> — the 8 questions your team's doc had marked wrong. Drill these first.</li>
+    </ul>
+  </div>
+  <div class="tournav">
+    <button class="exnavbtn" id="tprev" onclick="tourGo(-1)">← Back</button>
+    <span class="tourdots" id="tdots"></span>
+    <button class="exnavbtn" id="tnext" onclick="tourGo(1)">Next →</button>
+  </div>
+ </div>
+</div>
+
+<div id="ttspanel" style="display:none" aria-label="Voice settings">
+ <div class="ttsrow"><span class="ttslab">Voice</span><select id="ttsvoice" onchange="ttsSetVoice(this.value)"></select></div>
+ <div class="ttsrow"><span class="ttslab">Speed</span><span>
+  <button class="ratechip" data-r="0.8" onclick="ttsSetRate(this)">0.8×</button><button class="ratechip" data-r="1" onclick="ttsSetRate(this)">1×</button><button class="ratechip" data-r="1.2" onclick="ttsSetRate(this)">1.2×</button><button class="ratechip" data-r="1.4" onclick="ttsSetRate(this)">1.4×</button>
+ </span></div>
+ <button class="ttstest" onclick="ttsTest(this)">▶ test voice</button>
+</div>
+<div id="dock" style="display:none" aria-label="Help tools for the current question">
+ <span class="dockq" id="dockq">Q1</span>
+ <button class="dockbtn" data-k="hint" onclick="dockAssist(this)">💡 Hint</button>
+ <button class="dockbtn" data-k="hl" onclick="dockAssist(this)">🖍 HL</button>
+ <button class="dockbtn" data-k="gist" onclick="dockAssist(this)">⌁ Gists</button>
+ <button class="dockbtn" data-k="ex" onclick="dockAssist(this)">In practice</button>
+ <button class="dockbtn dockclaude" data-k="ask" onclick="dockAssist(this)">🤖 Ask</button>
+ <div class="docksep"></div>
+ <button class="dockbtn dockspk" data-k="spq" onclick="dockAssist(this)" title="Read the question aloud">🔊 Question</button>
+ <button class="dockbtn dockspk" data-k="spc" onclick="dockAssist(this)" title="Read the four choices aloud">🔊 Choices</button>
+ <button class="dockbtn dockspk" data-k="spr" onclick="dockAssist(this)" title="Read the answer reasoning aloud — reveal first">🔊 Why</button>
+ <button class="dockbtn dockspk" data-k="cfg" onclick="dockAssist(this)" title="Voice and playback speed">⚙ Voice</button>
+ <div class="docksep"></div>
+ <button class="dockbtn dockrev" data-k="rev" onclick="dockAssist(this)">Reveal</button>
+</div>
+
+<div id="spot" style="display:none">
+ <div class="spotring" id="spotring"></div>
+ <div class="spottip" id="spottip">
+  <div class="tourkicker" id="spotstep"></div>
+  <h3 class="spott" id="spottitle"></h3>
+  <p class="spotp" id="spottext"></p>
+  <div class="tournav">
+    <button class="exnavbtn" id="sprev" onclick="spotGo(-1)">← Back</button>
+    <button class="tourskip" style="position:static" onclick="spotEnd(false)">Exit</button>
+    <button class="exnavbtn" id="snext" onclick="spotGo(1)">Next →</button>
+  </div>
+ </div>
+</div>
+
+</div>

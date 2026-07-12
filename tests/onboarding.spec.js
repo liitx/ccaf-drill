@@ -1,10 +1,69 @@
-const { chromium, devices } = require('playwright');
-const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; } else console.log('pass:', m); };
-(async () => {
+const { chromium, devices, A, URL, run, withServer } = require('./harness');
+
+run('smoke13 — tour: first-visit, persistence, storage-blocked', () => withServer(async () => {
+
+  const b = await chromium.launch();
+  // 1) desktop, fresh visitor
+  let ctx = await b.newContext();
+  let p = await ctx.newPage({ viewport: { width: 900, height: 800 } });
+  const errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.goto('http://localhost:8931/index.html'); // http origin so localStorage persists
+  await p.waitForTimeout(500);
+  A(await p.evaluate(() => document.getElementById('tour').style.display !== 'none'), 'tour shows on first visit');
+  A(await p.$$eval('.tourstep', e => e.length) === 4, '4 tour steps');
+  A(await p.evaluate(() => getComputedStyle(document.getElementById('tprev')).visibility === 'hidden'), 'Back hidden on step 1');
+  // navigate all steps
+  for (let i = 0; i < 3; i++) await p.click('#tnext');
+  A((await p.textContent('#tnext')).includes('Walk me through'), 'final step CTA');
+  const stepTexts = await p.evaluate(() => [...document.querySelectorAll('.tourstep')].map(s => s.textContent).join(' '));
+  A(stepTexts.includes('Learn') && stepTexts.includes('study loop') || stepTexts.includes('Four moves'), 'covers rooms + loop');
+  A(stepTexts.includes('Hint') && stepTexts.includes('Ask Claude') && stepTexts.includes('Disputed'), 'covers assists + badges + disputed');
+  await p.click('#tnext'); // CTA → spotlight
+  await p.waitForTimeout(400);
+  A(await p.evaluate(() => document.getElementById('tour').style.display === 'none'), 'CTA closes tour');
+  A(await p.evaluate(() => document.getElementById('spot').style.display !== 'none'), 'CTA hands off to the component walkthrough');
+  await p.evaluate(() => spotEnd(true));
+  await p.waitForTimeout(300);
+  // 2) persistence: reload same context → no tour
+  await p.reload(); await p.waitForTimeout(500);
+  A(await p.evaluate(() => document.getElementById('tour').style.display === 'none'), 'tour does not reappear after completion (persisted)');
+  // 3) ? Tour reopens
+  await p.click('#helpbtn');
+  A(await p.evaluate(() => document.getElementById('tour').style.display !== 'none' && document.querySelector('.tourstep.on').dataset.s === '0'), '? Tour reopens at step 1');
+  await p.click('.tourskip');
+  A(await p.evaluate(() => document.getElementById('tour').style.display === 'none'), 'Skip dismisses');
+  await ctx.close();
+  // 4) storage-blocked environment (artifact-sandbox-like): must not crash, tour still usable
+  ctx = await b.newContext();
+  p = await ctx.newPage();
+  await p.addInitScript(() => Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } }));
+  const errs2 = []; p.on('pageerror', e => errs2.push(e.message));
+  await p.goto('http://localhost:8931/index.html'); await p.waitForTimeout(500);
+  A(errs2.length === 0, 'no crash when localStorage is blocked');
+  A(await p.evaluate(() => document.getElementById('tour').style.display !== 'none'), 'tour still shows when storage blocked');
+  await p.click('.tourskip');
+  A(await p.evaluate(() => document.getElementById('tour').style.display === 'none'), 'skip works without storage');
+  await ctx.close();
+  // 5) mobile fit
+  ctx = await b.newContext({ ...devices['iPhone 12'], hasTouch: true });
+  p = await ctx.newPage();
+  await p.goto('http://localhost:8931/index.html'); await p.waitForTimeout(500);
+  const fit = await p.evaluate(() => { const r = document.querySelector('.tourbox').getBoundingClientRect(); return r.width <= window.innerWidth && r.height <= window.innerHeight; });
+  A(fit, 'tour box fits phone viewport');
+  A(await p.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 2), 'no overflow with tour open on phone');
+  await p.tap('#tnext');
+  A(await p.evaluate(() => document.querySelector('.tourstep.on').dataset.s === '1'), 'touch navigation works');
+  await ctx.close();
+  console.log(errs.length ? 'JS ERRORS: ' + errs.join('|') : 'no JS errors');
+  await b.close();
+}));
+
+run('smoke14 — toolbar clusters, spotlight end-to-end', async () => {
+
   const b = await chromium.launch();
   let p = await (await b.newContext()).newPage({ viewport: { width: 1000, height: 800 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message));
-  await p.goto('file:///mnt/user-data/outputs/CCA-F_Drill_Key_and_60Q.html');
+  await p.goto(URL);
   await p.waitForTimeout(500);
 
   // toolbar redesign: three labeled groups
@@ -32,12 +91,12 @@ const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; }
   A(over, 'ring frames the target component');
   // walk all 10 steps, ring must track a visible target each time
   let allTracked = true;
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 10; i++) {
     await p.click('#snext'); await p.waitForTimeout(350);
     const ok = await p.evaluate(() => { const r = document.getElementById('spotring').getBoundingClientRect(); return r.width > 20 && r.height > 10 && r.top > -50 && r.top < window.innerHeight; });
     if (!ok) { allTracked = false; console.log('  step', i + 2, 'ring lost'); }
   }
-  A(allTracked, 'ring tracks all 10 components through view switches');
+  A(allTracked, 'ring tracks all 11 components through view switches');
   A((await p.textContent('#snext')).includes('Finish'), 'last step shows Finish');
   const tipTexts = await p.evaluate(() => SPOT_STEPS.map(s => s.t + ' ' + s.p).join(' '));
   A(tipTexts.includes('Sets') && tipTexts.includes('Flagged') && tipTexts.includes('Single') && tipTexts.includes('Hint') && tipTexts.includes('dock') && tipTexts.includes('plain') && tipTexts.includes('Reveal') && tipTexts.includes('Easy/Medium/Hard'), 'walkthrough covers pills, toggles, per-choice minis, reveal, exam modes');
@@ -59,7 +118,7 @@ const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; }
   const mctx = await b.newContext({ ...devices['iPhone 12'], hasTouch: true });
   const mp = await mctx.newPage();
   await mp.addInitScript(() => { try { localStorage.setItem('ccaf_tour_done','1'); } catch(e){} });
-  await mp.goto('file:///mnt/user-data/outputs/CCA-F_Drill_Key_and_60Q.html');
+  await mp.goto(URL);
   await mp.waitForTimeout(400);
   await mp.evaluate(() => spotStart());
   await mp.waitForTimeout(400);
@@ -70,4 +129,4 @@ const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; }
   await mctx.close();
   console.log(errs.length ? 'JS ERRORS: ' + errs.join(' | ') : 'no JS errors');
   await b.close();
-})();
+});

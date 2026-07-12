@@ -3,7 +3,7 @@
 **For:** Liitx (Aksana) + any future Claude session or Claude Code instance continuing this work.
 **Live site:** https://liitx.github.io/ccaf-drill/ (GitHub Pages, repo `liitx/ccaf-drill`, public, `index.html` at main root)
 **Artifact:** one self-contained HTML file (~490KB), no dependencies, no build step at runtime.
-**Source of truth for regeneration:** `ccaf-drill-source.zip` (generator + data + full test suites). The build container is ephemeral — this zip IS the project.
+**Source of truth:** this repo (generator in `src/`, data in `data/`, tests in `tests/`). The old `ccaf-drill-source.zip` container archive is obsolete since the 2026-07-11 modular refactor.
 
 ---
 
@@ -45,15 +45,19 @@ Converged with the team's own pattern write-up. Their gaps: no batch/eval catego
 
 ## 3. Architecture
 
-**Generator:** `build2.py` (Python) reads five JSON data files and emits the entire single-file app. Never hand-edit the HTML — edit the generator/data and rebuild (`python3 build2.py`).
+**Generator (modular, 2026-07-11 refactor):** `python3 build.py` assembles `index.html` from `src/` + `data/`. Never hand-edit the HTML.
 
-- `questions.json` — all 60 stems + choices, verbatim 1:1 from the docx (programmatically verified: every stem/choice string must appear in the output; content check is part of regression).
-- `analysis.json` — per question: set, winning letter, per-choice verdicts (`pick`/`runner`/`kill`) + why-lines, skim cue, giveaway signal phrases, tier, disputed flag.
-- `hints.json` — per question: "really asking" + "look first" (never spoils) + 240 neutral plain-words rephrases (one per choice).
-- `gists.json` — 240 one-line pseudo-code pattern-fit gists (one per choice).
-- `examples.json` — 60 "In practice" blocks: mechanism label, lead sentence, code/JSON snippet for the winning approach.
+- `build.py` — entry point.
+- `src/constants.py` — `ANSWER_LETTERS`, `Verdict` enum (css_class/badge), `Token` enum for template placeholders.
+- `src/assets/domain.js` — **no-bare-strings layer** (2026-07-11): registry classes with static getters (`CardState`, `ChoiceState`, `ControlState`, `ExamState`, `DockAction`, `SpeechScope`, `StorageKey`, `Verdict`, `AnswerLetter`, `Dom`) plus the relationship accessors `QuestionCard`/`AnswerChoice` (the explicit question:answerChoices 1:4 mapping — exam, TTS, Ask-Claude, key expansion all read cards through them). Rules + workflow live in `.claude/skills/drill-conventions/SKILL.md`; grep gate: zero `classList.*('` literals in app.js.
+- `src/models.py` — dataclass structs (`Question`, `Choice`, `Example`, `SetDef`) joining the five data files; every field is classified by use case (`[render]` / `[logic]` / `[tts]` / `[export]`).
+- `src/content.py` — authored knowledge: SETS, KEYS (fingerprint/rule/vary), TIER, DEBATE, QLINKS, LINKS, 12 PATTERNS, verdict labels. Exposed as `SETS_DEFS` structs.
+- `src/render.py` — all Python-side HTML: drill cards, key panels, guide, cheat codes, toolbar pills, JS data payloads. `context()` returns token→string.
+- `src/page.py` — splices rendered fragments into the static assets by plain `str.replace` tokens (`__CARDS__`, `__ANSWERS_JS__`, …). **No f-string page template anymore** — the brace-doubling/escape-bug class (§7.2) is structurally gone.
+- `src/assets/` — `head.html`, `styles.css`, `body.html`, `app.js`, `tail.html`. CSS and JS are real files: edit normally, `node --check src/assets/app.js` directly.
+- `data/` — `questions.json` (60 stems+choices, verbatim), `analysis.json` (verdicts/whys/cues/signals), `hints.json`, `gists.json`, `examples.json`.
 
-**Output:** `/mnt/user-data/outputs/CCA-F_Drill_Key_and_60Q.html` → deployed as `index.html`.
+The refactor was verified **byte-identical**: old and new pipelines produced the same `index.html` before the old generator was deleted.
 
 ## 4. Feature inventory (current state)
 
@@ -62,7 +66,9 @@ Collapsed-by-default sections with sticky colored nav chips: **How to use this t
 
 ### Drill view
 - **Toolbar v3** (post-UX-research redesign): three labeled clusters — **Set** (single-select chips, ✓-filled in set color) · **Narrow** ("+"-prefixed chips that genuinely COMBINE with the set: Flagged / Disputed 8 / Debate 3, tap again to clear, live "showing N of 60" readout) · **View** (joined segmented ☰All|▭Single, Highlights dot-switch, divider, ghost actions Hide answers / ↺ Reset). Control-type differentiation per Nielsen/HIG/Material: chips=filters, segmented=exclusive modes, switch=state, ghost=one-shot actions.
-- **Floating help dock** (bottom-fixed pill): appears when a question is open, labeled with the question it controls (Q-number), follows scroll (All view) / navigation (Single view). Buttons: 💡 Hint · 🖍 HL · ⌁ Gists · In practice · 🤖 Ask · Reveal. Fixed position = physically cannot shift.
+- **Floating help dock v4**: at ≥1100px viewports it is a **right-side vertical rail** (92px, vertically centered — the 900px content column leaves a free gutter there, so nothing reflows); below 1100px it stays the bottom-fixed pill, mobile rules unchanged. Buttons: 💡 Hint · 🖍 HL · ⌁ Gists · In practice · 🤖 Ask · 🔊 Question / Choices / Why · Reveal. **Scope binding:** the active card gets `.dock-target` (a box-shadow ring in its set's color) and the rail's top border + Q-label match — dockSync owns both. **Gentle snap** (All view, >560px): a debounced scroll-end handler (`snapToCard`) magnetizes the active card to its `scroll-margin-top` alignment when it settles within 90px; it is JS, NOT CSS scroll-snap (CSS snap containers re-snap on layout change and would fight `keepCardAnchored` — same war as native scroll anchoring). `keepCardAnchored`/`keepAnchored` set an 800ms `SNAPHOLD` so folds never trigger snap drift.
+- **Text-to-speech** (Web Speech API, no deps): 🔊 Question reads the stem, 🔊 Choices reads all four options (uses the plain rephrase for a choice whose ◦ plain is on), 🔊 Why reads the full reveal reasoning — correct letter + its why, each wrong choice tagged close-second/eliminate + its why, the in-practice lead, the set rule. 🔊 Why is `.dead` until revealed (dock) / until the reveal assist is on (exam); hiding the answer stops and re-gates it. Speech is scraped from the card DOM at click time (`speakText`), same pattern as Ask Claude. Utterances are chunked ≤~190 chars (`ttsChunks`) around Chrome's silent long-utterance cutoff; `TTSID` sequencing prevents stale onend callbacks from resurrecting a cancelled queue. Tap again = stop; tab switch, single-view nav, exam nav, reset, and hide-answers all `ttsStop()`. Unsupported browsers: speak buttons hidden at init. Exam: Easy gets all three speak buttons, Medium gets question+choices, Hard none.
+- **TTS v2 (voice/speed/follow-along):** ⚙ Voice in the dock opens a fixed settings panel (`#ttspanel`) — voice `<select>` (**Google US / UK Female / UK Male only** when Chrome exposes them, ranked in that order; falls back to all English voices in browsers/sessions without Google voices — note Playwright-launched Chrome uses a fresh profile and never loads Google network voices, so automated verification of the Google branch uses the exact real voice names in the smoke18 stub) + rate chips 0.8/1/1.2/1.5× + test button; persisted via `safeGet/safeSet` (`ccaf_tts_voice`, `ccaf_tts_rate`). Speech is segment-based (`speakSegs` → `ttsQueueFrom`): each spoken chunk carries its source element + offsets, `normMap` maps whitespace-normalized text back to raw DOM offsets, and on utterance start a **CSS Custom Highlight** (`::highlight(ttsline)`, word-level `ttsword` via `onboundary` where the voice reports it) paints the sentence being read — zero DOM mutation, text color never changes (mark invariant safe); non-Highlight-API browsers get an element-level `.ttsactive` wash. Panel hides with the dock.
 - **No-shift system:** all assist content (hintbox, plains, gists, in-practice) uses animated **fold** (max-height+opacity ~280ms) instead of display toggling, and every toggle/reveal anchors the **active card's top edge** to the same viewport pixel — the text being read never moves; new content unfolds below. `keepCardAnchored` is the primitive; native scroll anchoring is disabled (`overflow-anchor:none`).
 - Per-choice ◦ plain / ⌁ gist mini-toggles remain in each choice. In-Practice sits under the stem, above choices. Reveal shows everything and inerts the assists (dock buttons `.dead`, minis pointer-events:none). Flags (⚑) persist through Reset; everything else resets.
 - **🤖 Ask Claude** (dock): copies instruction + full JSON packet (verbatim question, choices with plain/gist/verdict/why, signals, cue, hint, correct answer, tier, set rule, in-practice). Instruction demands: plain simple language, code lines <45 chars (no horizontal scroll), one line per wrong choice, memory hook, no restating JSON. **No apostrophes in that string** (see gotchas).
@@ -80,30 +86,23 @@ Modes: **Easy** (5 per-question assist toggles incl. reveal) / **Medium** (hint+
 
 ## 5. Test infrastructure
 
-All in `/home/claude` in the container; **archived in `ccaf-drill-source.zip`**. Playwright + Chromium. Run: `node smokeN.js`. Every suite pre-seeds `localStorage.ccaf_tour_done='1'` via `addInitScript` (or the tour overlay intercepts clicks).
+Playwright + Chromium, local: `npm install playwright --no-save && npx playwright install chromium`. Run everything: `tests/run.sh`. One file: `node tests/<name>.spec.js`.
 
-| Suite | Covers |
-|---|---|
-| smoke.js (33) | Core: tabs, key rows, flags, filters (combinable-aware), jump positioning, mobile overflow |
-| smoke2.js | Key tables, highlight wash, theme toggle |
-| smoke3.js (12) | Hint flow (dock-based), no-spoil guarantees, 240 plains/60 hintboxes |
-| smoke4.js (31) | Full exam simulation: timer, pause timing, palette, flags, submit, analytics, review clones (rect-height assertions) |
-| smoke5.js (12) | **Mark-color invariant** (7 states × themes), scoped toggles, exam modes |
-| smoke6.js (10) | Drill toggles via dock, exam scroll behavior (pick→Next, nav→top) |
-| smoke7.js (13) | Per-choice gists, dock button sizing, reveal-shows-everything, dead-while-revealed |
-| smoke8.js (14) | In-Practice position, scroll-jump regressions, single/all views, reset, card-top anchoring for reveal |
-| smoke9.js | Key sections, guide content, inline row expansion (rendered-size checks) |
-| smoke10.js (20) | Guide bullets, set-scoped cheat links, Ask Claude payload (clipboard read, JSON parse, field presence, instruction contract) |
-| smoke11.js (10) | **CSP guards**: zero `javascript:` hrefs / inline-handler anchors, chip color consistency, sticky-clearance |
-| smoke12.js (17) | Mobile (iPhone 12 + touch): overflow, sticky overlap, 40px/28px tap floors, 16px font floor, pinned timer |
-| smoke13.js (17) | Tour: first-visit, persistence (needs http server: `cd outputs && cp <app> index.html && python3 -m http.server 8931`), storage-blocked resilience, mobile fit |
-| smoke14.js (16) | Toolbar clusters, spotlight end-to-end (ring tracking through all 10 steps), cleanup, mid-exit restore |
-| smoke15.js (15) | Toolbar v3 control languages, **combinable Set×Narrow** (M∩Disputed = {2,12,18,41}), switch state, reset |
-| smoke16.js (22) | **Dock**: lifecycle, pixel-still card anchoring through all toggles, fold animation, state sync, scroll tracking, Ask-from-dock |
-| smoke17.js (51) | **State-isolation matrix**: every component toggle (dock ×5, per-choice ×2, in-card reveal, toolbar chips/switch, exam assists ×5) asserts ONLY its designated state changes — fingerprint diff over card classes, mark backgrounds, chips, dock states, filters — plus reversibility, neighbor-card immunity, exam-stem stays highlight-free, and no lingering button focus |
-| contrast.js | WCAG audit, 84 elements × both themes |
-| mobile_audit.js | Raw sweep at 320/375/414: overflow culprits, sticky overlap, tiny taps |
-| harness.html | Sandboxed iframe (`allow-scripts` only) mimicking the claude.ai artifact CSP — use for anything click/navigation related |
+`tests/harness.js` is the shared struct: `chromium/devices`, `URL` (built index.html), `A` assert, `run(name, fn)` sequential suite runner, `withServer(fn)` (spawns http.server 8931 for localStorage-origin suites). Each spec file groups the former smoke suites by domain — bodies preserved verbatim in the 2026-07-11 consolidation (360 assertions before = 360 after):
+
+| Spec | Former suites | Covers |
+|---|---|---|
+| core.spec.js (85) | smoke 1/2/9/10/11 | tabs, key rows+sections, flags, filters, theme, guide, Ask-Claude payload, CSP guards |
+| drill.spec.js (49) | smoke 3/6/7/8 | hint flow, no-spoil, dock toggles, per-choice gists, in-practice, anchoring, reset |
+| toolbar.spec.js (27) | smoke 15/5 | toolbar v3 control languages, Set×Narrow, mark-color invariant, exam modes |
+| exam.spec.js (31) | smoke 4 | full exam simulation: timer, pause, palette, submit, analytics, review clones |
+| dock.spec.js (67) | smoke 16/18 | dock lifecycle, pixel-still anchoring, TTS (stubbed speechSynthesis), side rail, scope binding, snap, voice panel |
+| onboarding.spec.js (33) | smoke 13/14 | tour first-visit + persistence (auto http server), spotlight end-to-end (11 steps) |
+| isolation.spec.js (51) | smoke 17 | state-isolation matrix: every toggle changes ONLY its designated state |
+| mobile.spec.js (17) | smoke 12 | iPhone 12 + touch: overflow, sticky overlap, tap/font floors, pinned timer |
+| audits/contrast.js | — | WCAG audit, 80 elements × both themes |
+| audits/mobile_audit.js | — | raw sweep at 320/375/414 |
+| harness.html | — | sandboxed iframe mimicking the claude.ai artifact CSP |
 
 **Testing lessons burned in (keep honoring these):**
 - **Vacuous passes are the #1 failure mode.** Caught ≥3 times: a syntax error killing the whole page script made click-tests "pass" (nothing happened); existence checks passed on invisible elements; a patch script crashing before write left the old file "passing." Rules: assert zero pageerrors in every suite; assert rendered size (`getBoundingClientRect().height > 0`), not existence or computed display; verify a patch actually landed before trusting a green run.

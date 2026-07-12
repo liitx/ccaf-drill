@@ -1,12 +1,13 @@
-const { chromium, devices } = require('playwright');
-const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; } else console.log('pass:', m); };
-(async () => {
+const { chromium, devices, A, URL, run, withServer } = require('./harness');
+
+run('smoke12 — mobile iPhone 12: overflow, taps, fonts, timer', async () => {
+
   const b = await chromium.launch();
   const ctx = await b.newContext({ ...devices['iPhone 12'], hasTouch: true }); // 390x844, touch
   const p = await ctx.newPage();
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.addInitScript(() => { try { localStorage.setItem('ccaf_tour_done','1'); } catch(e){} });
-  await p.goto('file:///mnt/user-data/outputs/CCA-F_Drill_Key_and_60Q.html');
+  await p.goto(URL);
   await p.waitForTimeout(500);
 
   const noOverflow = async label => A(await p.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 2), 'no horizontal overflow: ' + label);
@@ -91,4 +92,4 @@ const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; }
   await noOverflow('exam results + detail');
   console.log(errs.length ? 'JS ERRORS: ' + errs.join(' | ') : 'no JS errors');
   await b.close();
-})();
+});

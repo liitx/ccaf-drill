@@ -1,12 +1,13 @@
+const { chromium, devices, A, URL, run, withServer } = require('./harness');
+
 // STATE-ISOLATION MATRIX: every component toggle must change ONLY its designated state.
-const { chromium } = require('playwright');
-const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; } else console.log('pass:', m); };
-(async () => {
+run('smoke17 — state-isolation matrix', async () => {
+
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 1000, height: 800 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.addInitScript(() => { try { localStorage.setItem('ccaf_tour_done','1'); } catch(e){} });
-  await p.goto('file:///mnt/user-data/outputs/CCA-F_Drill_Key_and_60Q.html');
+  await p.goto(URL);
   await p.waitForTimeout(400);
   await p.click('.tab[data-v="drill"]');
 
@@ -91,4 +92,4 @@ const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; }
   await p.evaluate(() => clearInterval(EX.tick));
   console.log(errs.length ? 'JS ERRORS: ' + errs.join(' | ') : 'no JS errors');
   await b.close();
-})();
+});

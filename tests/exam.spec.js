@@ -1,11 +1,11 @@
-const { chromium } = require('playwright');
-const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; } else console.log('pass:', m); };
-(async () => {
+const { chromium, devices, A, URL, run, withServer } = require('./harness');
+
+run('smoke4 — full exam simulation: timer, palette, results', async () => {
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 900, height: 950 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.addInitScript(() => { try { localStorage.setItem('ccaf_tour_done','1'); } catch(e){} });
-  await p.goto('file:///mnt/user-data/outputs/CCA-F_Drill_Key_and_60Q.html');
+  await p.goto(URL);
   await p.waitForTimeout(400);
   await p.clock ? null : null;
 
@@ -84,4 +84,4 @@ const A = (c, m) => { if (!c) { console.log('FAIL:', m); process.exitCode = 1; }
   A(await p.evaluate(() => document.querySelector('#resq31 .resdetail .verdict') !== null && getComputedStyle(document.querySelector('#resq31 .resdetail .choice[data-v="pick"] .verdict')).display !== 'none'), 'verdicts revealed in review clone');
   console.log(errs.length ? 'JS ERRORS: ' + errs.join(' | ') : 'no JS errors');
   await b.close();
-})();
+});

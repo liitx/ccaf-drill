@@ -6,7 +6,7 @@ const ratio = (a,b) => { const l1=lum(a),l2=lum(b); return (Math.max(l1,l2)+.05)
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 1000, height: 900 } });
   await p.addInitScript(() => { try { localStorage.setItem('ccaf_tour_done','1'); } catch(e){} });
-  await p.goto('file:///mnt/user-data/outputs/CCA-F_Drill_Key_and_60Q.html');
+  await p.goto('file:///Users/aksana.buster/dev/apps/vgv/ccaf-drill/index.html');
   await p.waitForTimeout(500);
   let bad = 0;
   for (const mode of ['dark','light']) {

@@ -251,6 +251,8 @@ button.kexplink{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;ma
 .modebtn span{font-size:12px;color:var(--dim)}
 .modebtn.sel,.modebtn:hover{border-color:var(--ink)}
 .exassist{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.asbtn.dead{pointer-events:none;opacity:.4}
+.asbtn.playing{animation:spkpulse 1.1s ease-in-out infinite}
 .asbtn{font-family:var(--disp);font-size:12px;letter-spacing:.6px;text-transform:uppercase;border:1px dashed var(--dim);color:var(--dim);background:none;border-radius:6px;padding:3px 10px;cursor:pointer}
 .asbtn.on{border-style:solid;color:var(--ink);border-color:var(--ink)}
 .exhintbox,.exexpl{display:none;border:1px dashed var(--line);border-radius:9px;background:var(--soft);padding:9px 11px;margin:10px 0;font-size:13px}
@@ -330,16 +332,40 @@ button.kexplink{font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;ma
 @media (max-width:560px){ .tourh{font-size:20px} .tourbox{padding:18px 14px 12px} }
 #dock{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:40;display:flex;gap:6px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px;box-shadow:0 12px 34px rgba(0,0,0,.5);max-width:calc(100vw - 16px);overflow-x:auto;-webkit-overflow-scrolling:touch}
 .dockq{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--ink);padding:0 4px;white-space:nowrap}
-.dockbtn{flex:0 0 auto;border:1.5px dashed var(--dim);color:var(--dim);background:none;border-radius:999px;padding:5px 12px;font-family:var(--disp);font-size:12px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.dockbtn{flex:0 0 auto;border:1.5px dashed var(--dim);color:var(--dim);background:none;border-radius:999px;padding:5px 12px;font-family:var(--disp);font-size:12px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap;min-height:32px;display:inline-flex;align-items:center;justify-content:center}
 .dockbtn.on{border-style:solid;color:var(--ink);border-color:var(--ink)}
 .dockbtn.dead{pointer-events:none;opacity:.4;border-style:solid}
 .dockclaude{border-style:solid;border-color:var(--t1bd);color:var(--t1c);background:var(--t1bg)}
 .dockrev{border:1.5px solid var(--ink);background:var(--ink);color:var(--paper)}
 body.dockon #view-drill{padding-bottom:96px}
 @media (max-width:560px){ #dock{bottom:10px;padding:8px 10px} .dockbtn{min-height:44px;display:inline-flex;align-items:center} }
+.dockbtn.playing{border-style:solid;border-color:var(--scd,var(--ink));color:var(--ink);animation:spkpulse 1.1s ease-in-out infinite}
+#ttspanel{position:fixed;z-index:41;left:50%;transform:translateX(-50%);bottom:64px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:0 12px 34px rgba(0,0,0,.5);max-width:calc(100vw - 24px)}
+@media (min-width:1100px){ #ttspanel{left:auto;right:114px;bottom:auto;top:50%;transform:translateY(-50%)} }
+.ttsrow{display:flex;align-items:center;gap:8px;margin:6px 0}
+.ttslab{font-family:var(--disp);font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim);min-width:40px}
+#ttsvoice{background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12.5px;max-width:230px}
+.ratechip{border:1.5px dashed var(--dim);color:var(--dim);background:none;border-radius:999px;padding:4px 10px;font-family:var(--disp);font-size:11px;cursor:pointer;margin-right:4px}
+.ratechip.on{border-style:solid;color:var(--ink);border-color:var(--ink)}
+.ttstest{border:1.5px solid var(--line);background:var(--soft);color:var(--ink);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;margin-top:2px}
+.ttsactive{background:rgba(107,150,255,.07);border-radius:4px}
+::highlight(ttsline){background-color:rgba(107,150,255,.25)}
+::highlight(ttsword){background-color:rgba(107,150,255,.45)}
+@keyframes spkpulse{0%,100%{opacity:1}50%{opacity:.55}}
+.docksep{flex:0 0 auto;align-self:stretch;background:var(--line);width:1px;margin:0 2px}
+.card.dock-target{box-shadow:0 0 0 1.5px var(--scd,var(--line))}
+@media (min-width:1100px){
+ #dock{left:auto;right:12px;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;align-items:stretch;gap:5px;border-radius:14px;padding:8px;width:92px;max-width:none;max-height:calc(100vh - 24px);overflow-y:auto;overflow-x:hidden;border-top:3px solid var(--scd,var(--line))}
+ .dockq{text-align:center;padding:2px 2px 6px;border-bottom:1px solid var(--line)}
+ .dockbtn{padding:7px 4px;text-align:center;white-space:normal;line-height:1.25;font-size:11px}
+ .docksep{height:1px;width:auto;align-self:auto;margin:2px 4px}
+ body.dockon #view-drill{padding-bottom:0}
+}
 #spot{position:fixed;inset:0;z-index:60;pointer-events:none}
 .spotring{position:absolute;border:2px solid var(--mark);border-radius:10px;box-shadow:0 0 0 9999px rgba(6,8,8,.66);transition:all .25s ease;pointer-events:none}
 .spottip{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 14px 10px;max-width:340px;pointer-events:auto;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.spotul{list-style:none;margin:6px 0 2px;padding:0}
+.spotul li{margin:5px 0;font-size:13.5px;line-height:1.4}
 .spott{font-family:var(--disp);font-size:17px;letter-spacing:.5px;text-transform:uppercase;margin:2px 0 6px}
 .spotp{font-size:13.5px;margin:0}
 .spottip .tournav{margin-top:10px;padding-top:8px}
@@ -378,13 +404,14 @@ body.dockon #view-drill{padding-bottom:96px}
   <li><b>↺ Reset</b> — clean Drill state (keeps your flags).</li>
  </ul></div>
  <div class="kblock"><div class="klab">The floating help dock (Drill + Exam Easy)</div><ul class="kul">
-  <li>Open a question and the <b>dock appears at the bottom</b> — it controls whichever question you're on (watch the Q number).</li>
+  <li>Open a question and the <b>dock appears at the side</b> (bottom on smaller screens) — it controls whichever question you're on: watch the Q number, and the matching colored outline on the card itself.</li>
   <li><b>💡 Hint</b> — what's really being asked + where to look first. Never spoils.</li>
   <li><b>🖍 Highlights</b> — the yellow giveaway wash, per question or all.</li>
   <li><b>⌁ Gists</b> — each choice as one-line pseudo-code; per choice (⌁ gist) or per card.</li>
   <li><b>In practice</b> — the winning mechanism + real snippet (nudges toward the answer).</li>
   <li><b>◦ plain</b> — one choice's simple rephrase.</li>
   <li><b>Reveal</b> — everything: verdicts, whys, bands. Assist toggles go inert while revealed.</li>
+  <li><b>🔊 Question / Choices / Why</b> — reads it aloud. "Why" speaks the full reasoning (correct pick, each wrong choice, the set rule) and unlocks after Reveal. Tap again to stop.</li>
  </ul></div>
  <div class="kblock"><div class="klab">Badges: confidence tiers</div><ul class="kul">
   <li><span class="tier t1">DOCS-VERIFIED</span> confirmed against official Anthropic docs / MCP spec (11 Qs, sources linked).</li>
@@ -828,7 +855,7 @@ body.dockon #view-drill{padding-bottom:96px}
    </div>
   </div>
  </div>
- <article class="card" data-set="E" data-n="1" data-dis="0" data-tier="2">
+ <article class="card" data-set="E" data-n="1" data-dis="0" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -881,7 +908,7 @@ body.dockon #view-drill{padding-bottom:96px}
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="M" data-n="2" data-dis="1" data-tier="1">
+</article><article class="card" data-set="M" data-n="2" data-dis="1" data-tier="1" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -931,7 +958,7 @@ body.dockon #view-drill{padding-bottom:96px}
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="disband">⚠ Your doc marked <b>D</b> — verified read says <b>B</b>.</div><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/subagents" target="_blank" rel="noopener">Agent SDK · Subagents (isolation, Task/Agent tool)</a></div></div>
  </div>
-</article><article class="card" data-set="M" data-n="3" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="3" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -981,7 +1008,7 @@ body.dockon #view-drill{padding-bottom:96px}
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="4" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="4" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1031,7 +1058,7 @@ body.dockon #view-drill{padding-bottom:96px}
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="E" data-n="5" data-dis="0" data-tier="1">
+</article><article class="card" data-set="E" data-n="5" data-dis="0" data-tier="1" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1084,7 +1111,7 @@ tool_choice={&quot;type&quot;: &quot;auto&quot;}</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/implement-tool-use" target="_blank" rel="noopener">Tool use · tool_choice modes</a></div></div>
  </div>
-</article><article class="card" data-set="S" data-n="6" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="6" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1134,7 +1161,7 @@ tool_choice={&quot;type&quot;: &quot;auto&quot;}</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="C" data-n="7" data-dis="0" data-tier="1">
+</article><article class="card" data-set="C" data-n="7" data-dis="0" data-tier="1" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1185,7 +1212,7 @@ claude --resume &lt;session&gt; --fork-session   # branch B: strategy 2</pre></d
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/sessions" target="_blank" rel="noopener">Agent SDK · Sessions (continue / resume / fork)</a></div></div>
  </div>
-</article><article class="card" data-set="E" data-n="8" data-dis="0" data-tier="2">
+</article><article class="card" data-set="E" data-n="8" data-dis="0" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1235,7 +1262,7 @@ claude --resume &lt;session&gt; --fork-session   # branch B: strategy 2</pre></d
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="E" data-n="9" data-dis="0" data-tier="2">
+</article><article class="card" data-set="E" data-n="9" data-dis="0" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1286,7 +1313,7 @@ Output: {&quot;skills&quot;: [&quot;React&quot;, &quot;Vue&quot;]}   # split, ex
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="E" data-n="10" data-dis="0" data-tier="2">
+</article><article class="card" data-set="E" data-n="10" data-dis="0" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1337,7 +1364,7 @@ NOT:      contact_phone lives in a doc the model was never given — no retry co
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="C" data-n="11" data-dis="0" data-tier="2">
+</article><article class="card" data-set="C" data-n="11" data-dis="0" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1387,7 +1414,7 @@ NOT:      contact_phone lives in a doc the model was never given — no retry co
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="M" data-n="12" data-dis="1" data-tier="2">
+</article><article class="card" data-set="M" data-n="12" data-dis="1" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1439,7 +1466,7 @@ summarize(text, max_words) → {&quot;summary&quot;: str}</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="disband">⚠ Your doc marked <b>C</b> — verified read says <b>D</b>.</div></div>
  </div>
-</article><article class="card" data-set="M" data-n="13" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="13" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1491,7 +1518,7 @@ summarize(text, max_words) → {&quot;summary&quot;: str}</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="C" data-n="14" data-dis="0" data-tier="1">
+</article><article class="card" data-set="C" data-n="14" data-dis="0" data-tier="1" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1541,7 +1568,7 @@ summarize(text, max_words) → {&quot;summary&quot;: str}</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/sessions" target="_blank" rel="noopener">Agent SDK · Sessions (continue / resume / fork)</a></div></div>
  </div>
-</article><article class="card" data-set="E" data-n="15" data-dis="1" data-tier="2">
+</article><article class="card" data-set="E" data-n="15" data-dis="1" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1593,7 +1620,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="disband">⚠ Your doc marked <b>B</b> — verified read says <b>A</b>.</div></div>
  </div>
-</article><article class="card" data-set="C" data-n="16" data-dis="0" data-tier="2">
+</article><article class="card" data-set="C" data-n="16" data-dis="0" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1644,7 +1671,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/sessions" target="_blank" rel="noopener">Agent SDK · Sessions (continue / resume / fork)</a></div></div>
  </div>
-</article><article class="card" data-set="C" data-n="17" data-dis="1" data-tier="2">
+</article><article class="card" data-set="C" data-n="17" data-dis="1" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1695,7 +1722,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="disband">⚠ Your doc marked <b>A</b> — verified read says <b>C</b>.</div><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/sessions" target="_blank" rel="noopener">Agent SDK · Sessions (continue / resume / fork)</a></div></div>
  </div>
-</article><article class="card" data-set="M" data-n="18" data-dis="1" data-tier="3">
+</article><article class="card" data-set="M" data-n="18" data-dis="1" data-tier="3" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1746,7 +1773,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="disband">⚠ Your doc marked <b>B</b> — verified read says <b>C</b>.</div><div class="debband">⚖ C vs B is wording-sensitive: &#x27;balance fidelity with efficiency&#x27; favors structured checkpoint reports, but a stem stressing zero loss would favor the full log.</div></div>
  </div>
-</article><article class="card" data-set="E" data-n="19" data-dis="0" data-tier="2">
+</article><article class="card" data-set="E" data-n="19" data-dis="0" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1796,7 +1823,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="M" data-n="20" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="20" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1846,7 +1873,7 @@ Example C: methodology inside the intro → filled JSON</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="V" data-n="21" data-dis="0" data-tier="2">
+</article><article class="card" data-set="V" data-n="21" data-dis="0" data-tier="2" style="--sc:#8A5A00;--scd:#D9A94B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1898,7 +1925,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="22" data-dis="1" data-tier="2">
+</article><article class="card" data-set="S" data-n="22" data-dis="1" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -1951,7 +1978,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="disband">⚠ Your doc marked <b>B</b> — verified read says <b>D</b>.</div></div>
  </div>
-</article><article class="card" data-set="M" data-n="23" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="23" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2001,7 +2028,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="24" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="24" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2052,7 +2079,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools" target="_blank" rel="noopener">MCP spec · Tools &amp; isError pattern</a> · <a href="https://alpic.ai/blog/better-mcp-tool-call-error-responses-ai-recover-gracefully" target="_blank" rel="noopener">MCP error responses that help the model recover</a></div></div>
  </div>
-</article><article class="card" data-set="T" data-n="25" data-dis="0" data-tier="2">
+</article><article class="card" data-set="T" data-n="25" data-dis="0" data-tier="2" style="--sc:#96385E;--scd:#DE8FB4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2102,7 +2129,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="M" data-n="26" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="26" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2152,7 +2179,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="C" data-n="27" data-dis="0" data-tier="2">
+</article><article class="card" data-set="C" data-n="27" data-dis="0" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2202,7 +2229,7 @@ handwritten forms:     71.0%  ✗  ← 97% overall hid this</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="V" data-n="28" data-dis="0" data-tier="3">
+</article><article class="card" data-set="V" data-n="28" data-dis="0" data-tier="3" style="--sc:#8A5A00;--scd:#D9A94B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2253,7 +2280,7 @@ worst case: doc lands 00:01 → 06:00 batch → +24h → done hour 30  (= 30h SL
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="debband">⚖ B (6h) sits exactly at the 30h boundary with zero margin; docs note processing can slow under load, which argues for C&#x27;s 4h buffer at 99.9%. &#x27;Meets the SLA&#x27; → B. &#x27;Most reliably meets&#x27; → C.</div><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">Batch processing · 24h window, 50%, custom_id</a></div></div>
  </div>
-</article><article class="card" data-set="M" data-n="29" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="29" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2303,7 +2330,7 @@ worst case: doc lands 00:01 → 06:00 batch → +24h → done hour 30  (= 30h SL
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="agreeband">✓ Your doc marked <b>B</b> — matches.</div></div>
  </div>
-</article><article class="card" data-set="M" data-n="30" data-dis="0" data-tier="1">
+</article><article class="card" data-set="M" data-n="30" data-dis="0" data-tier="1" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2354,7 +2381,7 @@ worst case: doc lands 00:01 → 06:00 batch → +24h → done hour 30  (= 30h SL
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/subagents" target="_blank" rel="noopener">Agent SDK · Subagents (isolation, Task/Agent tool)</a> · <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Claude Code · Subagents</a></div></div>
  </div>
-</article><article class="card" data-set="C" data-n="31" data-dis="0" data-tier="2">
+</article><article class="card" data-set="C" data-n="31" data-dis="0" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2404,7 +2431,7 @@ worst case: doc lands 00:01 → 06:00 batch → +24h → done hour 30  (= 30h SL
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="32" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="32" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2455,7 +2482,7 @@ drop: warehouse codes, carrier internals, promo metadata…</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="33" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="33" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2506,7 +2533,7 @@ drop: warehouse codes, carrier internals, promo metadata…</pre></div></div>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="E" data-n="34" data-dis="0" data-tier="2">
+</article><article class="card" data-set="E" data-n="34" data-dis="0" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2557,7 +2584,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="M" data-n="35" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="35" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2609,7 +2636,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="agreeband">✓ Your doc marked <b>D</b> — matches.</div></div>
  </div>
-</article><article class="card" data-set="C" data-n="36" data-dis="0" data-tier="2">
+</article><article class="card" data-set="C" data-n="36" data-dis="0" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2660,7 +2687,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="37" data-dis="0" data-tier="1">
+</article><article class="card" data-set="S" data-n="37" data-dis="0" data-tier="1" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2711,7 +2738,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/sessions" target="_blank" rel="noopener">Agent SDK · Sessions (continue / resume / fork)</a></div></div>
  </div>
-</article><article class="card" data-set="C" data-n="38" data-dis="0" data-tier="2">
+</article><article class="card" data-set="C" data-n="38" data-dis="0" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2762,7 +2789,7 @@ Output: {&quot;materials&quot;: [{&quot;name&quot;:&quot;cotton&quot;,&quot;pct&
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="C" data-n="39" data-dis="0" data-tier="1">
+</article><article class="card" data-set="C" data-n="39" data-dis="0" data-tier="1" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2813,7 +2840,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/sessions" target="_blank" rel="noopener">Agent SDK · Sessions (continue / resume / fork)</a></div></div>
  </div>
-</article><article class="card" data-set="E" data-n="40" data-dis="0" data-tier="2">
+</article><article class="card" data-set="E" data-n="40" data-dis="0" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2864,7 +2891,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="M" data-n="41" data-dis="1" data-tier="2">
+</article><article class="card" data-set="M" data-n="41" data-dis="1" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2917,7 +2944,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="disband">⚠ Your doc marked <b>B</b> — verified read says <b>D</b>.</div></div>
  </div>
-</article><article class="card" data-set="S" data-n="42" data-dis="1" data-tier="2">
+</article><article class="card" data-set="S" data-n="42" data-dis="1" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -2968,7 +2995,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="disband">⚠ Your doc marked <b>B</b> — verified read says <b>D</b>.</div><div class="srcs">Sources: <a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools" target="_blank" rel="noopener">MCP spec · Tools &amp; isError pattern</a> · <a href="https://alpic.ai/blog/better-mcp-tool-call-error-responses-ai-recover-gracefully" target="_blank" rel="noopener">MCP error responses that help the model recover</a></div></div>
  </div>
-</article><article class="card" data-set="M" data-n="43" data-dis="0" data-tier="1">
+</article><article class="card" data-set="M" data-n="43" data-dis="0" data-tier="1" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3018,7 +3045,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/agent-sdk/subagents" target="_blank" rel="noopener">Agent SDK · Subagents (isolation, Task/Agent tool)</a></div></div>
  </div>
-</article><article class="card" data-set="M" data-n="44" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="44" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3070,7 +3097,7 @@ claude --resume perf-analysis --fork-session   # B: full rewrite</pre></div></di
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Claude Code · Subagents</a></div></div>
  </div>
-</article><article class="card" data-set="M" data-n="45" data-dis="0" data-tier="2">
+</article><article class="card" data-set="M" data-n="45" data-dis="0" data-tier="2" style="--sc:#5A4FB5;--scd:#A79BF0">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3121,7 +3148,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="T" data-n="46" data-dis="0" data-tier="2">
+</article><article class="card" data-set="T" data-n="46" data-dis="0" data-tier="2" style="--sc:#96385E;--scd:#DE8FB4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3171,7 +3198,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="47" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="47" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3223,7 +3250,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="48" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="48" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3276,7 +3303,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="49" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="49" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3327,7 +3354,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="50" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="50" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3377,7 +3404,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="C" data-n="51" data-dis="0" data-tier="2">
+</article><article class="card" data-set="C" data-n="51" data-dis="0" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3427,7 +3454,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="C" data-n="52" data-dis="0" data-tier="2">
+</article><article class="card" data-set="C" data-n="52" data-dis="0" data-tier="2" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3479,7 +3506,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="S" data-n="53" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="53" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3529,7 +3556,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="T" data-n="54" data-dis="0" data-tier="1">
+</article><article class="card" data-set="T" data-n="54" data-dis="0" data-tier="1" style="--sc:#96385E;--scd:#DE8FB4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3581,7 +3608,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools" target="_blank" rel="noopener">MCP spec · Tools &amp; isError pattern</a></div></div>
  </div>
-</article><article class="card" data-set="V" data-n="55" data-dis="0" data-tier="1">
+</article><article class="card" data-set="V" data-n="55" data-dis="0" data-tier="1" style="--sc:#8A5A00;--scd:#D9A94B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3632,7 +3659,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">Batch processing · 24h window, 50%, custom_id</a></div></div>
  </div>
-</article><article class="card" data-set="C" data-n="56" data-dis="0" data-tier="3">
+</article><article class="card" data-set="C" data-n="56" data-dis="0" data-tier="3" style="--sc:#B04A2F;--scd:#E58B6B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3682,7 +3709,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="debband">⚖ A (trace entry points) vs C (parallel subagents per service). Auth is one cross-service flow, favoring A — but at 800+ files C is defensible. Watch the stem&#x27;s emphasis.</div></div>
  </div>
-</article><article class="card" data-set="S" data-n="57" data-dis="0" data-tier="2">
+</article><article class="card" data-set="S" data-n="57" data-dis="0" data-tier="2" style="--sc:#1F6FA8;--scd:#74B6E4">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3733,7 +3760,7 @@ coordinator: responds from own context. Zero Task calls, zero token transfer.</p
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="V" data-n="58" data-dis="0" data-tier="1">
+</article><article class="card" data-set="V" data-n="58" data-dis="0" data-tier="1" style="--sc:#8A5A00;--scd:#D9A94B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3784,7 +3811,7 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"><div class="srcs">Sources: <a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing" target="_blank" rel="noopener">Batch processing · 24h window, 50%, custom_id</a></div></div>
  </div>
-</article><article class="card" data-set="E" data-n="59" data-dis="0" data-tier="2">
+</article><article class="card" data-set="E" data-n="59" data-dis="0" data-tier="2" style="--sc:#2E7D6B;--scd:#5BC4A8">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3835,7 +3862,7 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
    <div class="revealrow"><button class="reveal" onclick="rev(this)">Reveal answer</button></div>
    <div class="afterreveal"></div>
  </div>
-</article><article class="card" data-set="V" data-n="60" data-dis="0" data-tier="2">
+</article><article class="card" data-set="V" data-n="60" data-dis="0" data-tier="2" style="--sc:#8A5A00;--scd:#D9A94B">
  <div class="cardhead">
    <button class="flag" onclick="flag(this)" title="Flag to drill later">⚑</button>
    <button class="headbtn" onclick="tog(this)">
@@ -3963,6 +3990,7 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
       <li><b>◦ plain</b> — a choice rephrased in simple words.</li>
       <li><b>Reveal</b> — the answer + why every other choice loses.</li>
       <li><b>🤖 Ask Claude</b> — copies the question for a walkthrough in Claude.</li>
+      <li><b>🔊 Listen</b> — hear the question, choices, or full answer reasoning read aloud, with the words highlighted as it reads. Pick voice &amp; speed under ⚙ Voice.</li>
     </ul>
     <p class="tournote">In Exam mode, Easy / Medium / Hard decides how many of these exist.</p>
   </div>
@@ -3984,6 +4012,13 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
  </div>
 </div>
 
+<div id="ttspanel" style="display:none" aria-label="Voice settings">
+ <div class="ttsrow"><span class="ttslab">Voice</span><select id="ttsvoice" onchange="ttsSetVoice(this.value)"></select></div>
+ <div class="ttsrow"><span class="ttslab">Speed</span><span>
+  <button class="ratechip" data-r="0.8" onclick="ttsSetRate(this)">0.8×</button><button class="ratechip" data-r="1" onclick="ttsSetRate(this)">1×</button><button class="ratechip" data-r="1.2" onclick="ttsSetRate(this)">1.2×</button><button class="ratechip" data-r="1.4" onclick="ttsSetRate(this)">1.4×</button>
+ </span></div>
+ <button class="ttstest" onclick="ttsTest(this)">▶ test voice</button>
+</div>
 <div id="dock" style="display:none" aria-label="Help tools for the current question">
  <span class="dockq" id="dockq">Q1</span>
  <button class="dockbtn" data-k="hint" onclick="dockAssist(this)">💡 Hint</button>
@@ -3991,6 +4026,12 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
  <button class="dockbtn" data-k="gist" onclick="dockAssist(this)">⌁ Gists</button>
  <button class="dockbtn" data-k="ex" onclick="dockAssist(this)">In practice</button>
  <button class="dockbtn dockclaude" data-k="ask" onclick="dockAssist(this)">🤖 Ask</button>
+ <div class="docksep"></div>
+ <button class="dockbtn dockspk" data-k="spq" onclick="dockAssist(this)" title="Read the question aloud">🔊 Question</button>
+ <button class="dockbtn dockspk" data-k="spc" onclick="dockAssist(this)" title="Read the four choices aloud">🔊 Choices</button>
+ <button class="dockbtn dockspk" data-k="spr" onclick="dockAssist(this)" title="Read the answer reasoning aloud — reveal first">🔊 Why</button>
+ <button class="dockbtn dockspk" data-k="cfg" onclick="dockAssist(this)" title="Voice and playback speed">⚙ Voice</button>
+ <div class="docksep"></div>
  <button class="dockbtn dockrev" data-k="rev" onclick="dockAssist(this)">Reveal</button>
 </div>
 
@@ -4009,30 +4050,241 @@ else:                            nightly_batch.add(...)     # 50% discount</pre>
 </div>
 
 </div>
-<script>
+<script>/* ============================================================================
+ * Domain layer — every string the runtime uses, and the accessor classes that
+ * preserve the question : answerChoices relationship.
+ *
+ * Rules (see .claude/skills/drill-conventions):
+ *   - No bare strings at call sites: state classes, action keys, storage keys,
+ *     scopes, letters, verdicts, and selectors all come from these registries.
+ *   - New string? Add a getter here first, then use it.
+ *   - New DOM access to a card or choice? Go through QuestionCard/AnswerChoice.
+ * ========================================================================== */
+
+/** CSS state classes that live on a question card (<article class="card">). */
+class CardState {
+  /** Card body is expanded. */
+  static get OPEN() { return 'open'; }
+  /** Answer revealed: verdicts, whys, bands visible; assists inert. */
+  static get REVEALED() { return 'revealed'; }
+  /** Hint box unfolded (really-asking / look-first). */
+  static get HINTED() { return 'hinted'; }
+  /** Giveaway-phrase wash suppressed for this card. */
+  static get NO_HIGHLIGHT() { return 'q-nohl'; }
+  /** All four choice gists unfolded. */
+  static get SHOW_GISTS() { return 'q-showgist'; }
+  /** The In-practice block unfolded. */
+  static get SHOW_EXAMPLE() { return 'q-showex'; }
+  /** This card is the one the floating dock controls (scope ring). */
+  static get DOCK_TARGET() { return 'dock-target'; }
+}
+
+/** CSS state classes that live on a single answer choice (.choice). */
+class ChoiceState {
+  /** ◦ plain rephrase unfolded for this choice only. */
+  static get SHOW_PLAIN() { return 'showplain'; }
+  /** ⌁ gist unfolded for this choice only. */
+  static get SHOW_GIST() { return 'showgist'; }
+}
+
+/** CSS state classes on buttons/containers (not tied to one card). */
+class ControlState {
+  /** Generic toggled-on state (chips, switches, dock buttons, tabs, views). */
+  static get ON() { return 'on'; }
+  /** Inert while revealed / gated (pointer-events off, dimmed). */
+  static get DEAD() { return 'dead'; }
+  /** A speak button whose audio is currently playing (pulse animation). */
+  static get PLAYING() { return 'playing'; }
+  /** Selected exam mode button / picked exam choice. */
+  static get SELECTED() { return 'sel'; }
+  /** Element-level wash on whatever the TTS is currently reading. */
+  static get SPEAKING_WASH() { return 'ttsactive'; }
+  /** On <body> while the dock is visible (drill bottom padding). */
+  static get DOCK_VISIBLE() { return 'dockon'; }
+  /** On <body> in dark theme. */
+  static get DARK() { return 'dark'; }
+}
+
+/** Exam-only state classes (timer urgency, palette cells, per-question assists). */
+class ExamState {
+  /** Countdown timer under 10 minutes. */
+  static get TIMER_LOW() { return 'low'; }
+  /** Palette cell: question answered. */
+  static get ANSWERED() { return 'answered'; }
+  /** Palette cell: question flagged. */
+  static get FLAGGED() { return 'flagged'; }
+  /** Palette cell: the question on screen. */
+  static get CURRENT() { return 'cur'; }
+  /** Per-question assist class on the exam question box (as-hint, as-reveal, …). */
+  static assist(k) { return 'as-' + k; }
+}
+
+/** data-k action keys on dock and exam-assist buttons. */
+class DockAction {
+  static get HINT() { return 'hint'; }
+  static get HIGHLIGHTS() { return 'hl'; }
+  static get GISTS() { return 'gist'; }
+  static get EXAMPLE() { return 'ex'; }
+  static get ASK() { return 'ask'; }
+  static get SPEAK_QUESTION() { return 'spq'; }
+  static get SPEAK_CHOICES() { return 'spc'; }
+  static get SPEAK_WHY() { return 'spr'; }
+  static get VOICE_SETTINGS() { return 'cfg'; }
+  static get REVEAL() { return 'rev'; }
+  /** Exam-only assist keys sharing the same data-k mechanism. */
+  static get EXAM_PLAIN() { return 'plain'; }
+  static get EXAM_REVEAL() { return 'reveal'; }
+  /** True when the key is one of the three speak actions. */
+  static isSpeak(k) { return k === this.SPEAK_QUESTION || k === this.SPEAK_CHOICES || k === this.SPEAK_WHY; }
+}
+
+/** What the TTS reads: one scope per speak button. */
+class SpeechScope {
+  /** The verbatim stem. */
+  static get QUESTION() { return 'q'; }
+  /** All four options (plain rephrase when a choice has SHOW_PLAIN on). */
+  static get CHOICES() { return 'ch'; }
+  /** The full reveal walkthrough: pick, each wrong choice, set rule. */
+  static get REVEAL() { return 'rev'; }
+  /** Map a speak DockAction key to its scope. */
+  static forDockAction(k) {
+    if (k === DockAction.SPEAK_QUESTION) return this.QUESTION;
+    if (k === DockAction.SPEAK_CHOICES) return this.CHOICES;
+    return this.REVEAL;
+  }
+}
+
+/** localStorage keys (always accessed through safeGet/safeSet). */
+class StorageKey {
+  /** '1' once the first-visit tour has been completed or skipped. */
+  static get TOUR_DONE() { return 'ccaf_tour_done'; }
+  /** Chosen TTS playback rate ('0.8'…'1.4'). */
+  static get TTS_RATE() { return 'ccaf_tts_rate'; }
+  /** Chosen TTS voice name. */
+  static get TTS_VOICE() { return 'ccaf_tts_voice'; }
+}
+
+/** data-v verdict values on a rendered choice. */
+class Verdict {
+  /** The correct answer. */
+  static get PICK() { return 'pick'; }
+  /** Close 2nd — plausible but loses. */
+  static get RUNNER() { return 'runner'; }
+  /** Eliminate. */
+  static get KILL() { return 'kill'; }
+}
+
+/** The four answer letters — the only place they are enumerated. */
+class AnswerLetter {
+  static get ALL() { return ['A', 'B', 'C', 'D']; }
+}
+
+/** Element ids the runtime touches, as lazy getters (resolved per access). */
+class Dom {
+  static byId(id) { return document.getElementById(id); }
+  static get dock() { return this.byId('dock'); }
+  static get dockLabel() { return this.byId('dockq'); }
+  static get voicePanel() { return this.byId('ttspanel'); }
+  static get voiceSelect() { return this.byId('ttsvoice'); }
+  static get drillView() { return this.byId('view-drill'); }
+  static get examQuestionBox() { return this.byId('exqbox'); }
+  static get examAssistBar() { return this.byId('exassist'); }
+  static get examRunScreen() { return this.byId('exam-run'); }
+  static get examStartScreen() { return this.byId('exam-start'); }
+  static get examResultsScreen() { return this.byId('exam-results'); }
+  static get examPauseOverlay() { return this.byId('exam-pause'); }
+  static get tourOverlay() { return this.byId('tour'); }
+  static get spotlightOverlay() { return this.byId('spot'); }
+  static get highlightsSwitch() { return this.byId('hlbtn'); }
+}
+
+/**
+ * Read-model over one rendered question card — the authoritative handle on the
+ * question : answerChoices relationship. All 60 cards are rendered once in the
+ * drill view; the exam, key expansion, TTS, and Ask-Claude all read through
+ * this class instead of hand-building selectors.
+ */
+class QuestionCard {
+  /** @param {Element} el the <article class="card"> element */
+  constructor(el) { this.el = el; }
+
+  /** CSS selector for a card by number, optionally scoped to a descendant. */
+  static selector(n, descendant) { return '.card[data-n="' + n + '"]' + (descendant ? ' ' + descendant : ''); }
+  /** Look a card up by its question number (1–60). */
+  static byNumber(n) { return new QuestionCard(document.querySelector(QuestionCard.selector(n))); }
+  /** Wrap the card that contains an arbitrary descendant element. */
+  static containing(el) { return new QuestionCard(el.closest('.card')); }
+
+  /** Question number, as a number. */
+  get number() { return parseInt(this.el.dataset.n, 10); }
+  /** Set key (E/V/M/C/S/T). */
+  get setKey() { return this.el.dataset.set; }
+  /** Correct letter, from the build-time QMETA payload. */
+  get winningLetter() { return QMETA[this.number].w; }
+  /** The verbatim stem element. */
+  get stemEl() { return this.el.querySelector('.stem'); }
+  /** The In-practice lead-sentence element (may be null). */
+  get exampleLeadEl() { return this.el.querySelector('.explead'); }
+  /** Whether the answer is currently revealed. */
+  get isRevealed() { return this.el.classList.contains(CardState.REVEALED); }
+
+  /** One AnswerChoice by letter — the question:answerChoice edge. */
+  choice(letter) { return new AnswerChoice(this.el.querySelector(AnswerChoice.selector(letter)), letter); }
+  /** All four choices in letter order — the 1:4 mapping. */
+  get choices() { return AnswerLetter.ALL.map(L => this.choice(L)); }
+  /** The choice carrying the correct answer. */
+  get winningChoice() { return this.choice(this.winningLetter); }
+}
+
+/** Read-model over one answer choice inside a QuestionCard. */
+class AnswerChoice {
+  /** @param {Element} el the .choice element @param {string} letter A–D */
+  constructor(el, letter) { this.el = el; this.letter = letter; }
+
+  /** CSS selector for a choice by letter (relative to its card). */
+  static selector(letter) { return '.choice[data-l="' + letter + '"]'; }
+
+  /** Verdict for this choice (Verdict.PICK/RUNNER/KILL). */
+  get verdict() { return this.el.dataset.v; }
+  /** Verbatim option text element. */
+  get textEl() { return this.el.querySelector('.ctext'); }
+  /** ◦ plain rephrase element. */
+  get plainEl() { return this.el.querySelector('.cplain'); }
+  /** ⌁ gist element. */
+  get gistEl() { return this.el.querySelector('.gist'); }
+  /** Reveal reasoning element (spoken by 🔊 Why). */
+  get whyEl() { return this.el.querySelector('.cwhy'); }
+  /** Whether the plain rephrase is currently unfolded. */
+  get isPlainShown() { return this.el.classList.contains(ChoiceState.SHOW_PLAIN); }
+}
+
+
 const ANS = {"1": "B", "2": "B", "3": "A", "4": "D", "5": "D", "6": "C", "7": "C", "8": "D", "9": "C", "10": "B", "11": "C", "12": "D", "13": "D", "14": "C", "15": "A", "16": "D", "17": "C", "18": "C", "19": "D", "20": "A", "21": "C", "22": "D", "23": "C", "24": "A", "25": "B", "26": "C", "27": "B", "28": "B", "29": "B", "30": "D", "31": "B", "32": "B", "33": "C", "34": "D", "35": "D", "36": "C", "37": "C", "38": "B", "39": "A", "40": "D", "41": "D", "42": "D", "43": "A", "44": "C", "45": "B", "46": "D", "47": "C", "48": "C", "49": "D", "50": "C", "51": "C", "52": "B", "53": "C", "54": "A", "55": "B", "56": "A", "57": "D", "58": "A", "59": "C", "60": "D"};
 function theme(){
- const d = document.body.classList.toggle('dark');
+ const d = document.body.classList.toggle(ControlState.DARK);
  document.getElementById('themebtn').textContent = d ? '◑ Light' : '◐ Dark';
 }
 theme(); // dark by default; button switches to light
+if (!window.speechSynthesis) document.querySelectorAll('.dockspk, .docksep').forEach(b => { b.style.display = 'none'; });
 function tab(btn){
- document.querySelectorAll('.tab[data-v]').forEach(b=>b.classList.remove('on'));
- btn.classList.add('on');
- document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
- document.getElementById('view-'+btn.dataset.v).classList.add('on');
+ ttsStop();
+ document.querySelectorAll('.tab[data-v]').forEach(b=>b.classList.remove(ControlState.ON));
+ btn.classList.add(ControlState.ON);
+ document.querySelectorAll('.view').forEach(v=>v.classList.remove(ControlState.ON));
+ document.getElementById('view-'+btn.dataset.v).classList.add(ControlState.ON);
  dockSync();
 }
 let LASTQ = null;
 function keepCardAnchored(c, fn){
+ SNAPHOLD = Date.now() + 800;
  const t = c.getBoundingClientRect().top;
  fn();
  const d = c.getBoundingClientRect().top - t;
  if (d) window.scrollBy({top: d, left: 0, behavior: 'instant'});
 }
 function activeCard(){
- if (!document.getElementById('view-drill').classList.contains('on')) return null;
- const cards = [...document.querySelectorAll('#view-drill .card')].filter(c => c.style.display !== 'none' && c.classList.contains('open'));
+ if (!document.getElementById('view-drill').classList.contains(ControlState.ON)) return null;
+ const cards = [...document.querySelectorAll('#view-drill .card')].filter(c => c.style.display !== 'none' && c.classList.contains(CardState.OPEN));
  if (!cards.length) return null;
  if (DMODE === 'single') return cards[0];
  if (LASTQ) { const c = cards.find(x => x.dataset.n === String(LASTQ)); if (c) { const r = c.getBoundingClientRect(); if (r.bottom > 60 && r.top < window.innerHeight) return c; } }
@@ -4044,17 +4296,21 @@ function activeCard(){
 function dockSync(){
  const dock = document.getElementById('dock');
  const c = activeCard();
- if (!c) { dock.style.display = 'none'; document.body.classList.remove('dockon'); return; }
+ if (!c) { dock.style.display = 'none'; document.body.classList.remove(ControlState.DOCK_VISIBLE); document.querySelectorAll('.card.' + CardState.DOCK_TARGET).forEach(x => x.classList.remove(CardState.DOCK_TARGET)); ttsHidePanel(); return; }
  dock.style.display = 'flex';
- document.body.classList.add('dockon');
+ document.body.classList.add(ControlState.DOCK_VISIBLE);
  document.getElementById('dockq').textContent = 'Q' + c.dataset.n;
- const revealed = c.classList.contains('revealed');
- const st = { hint: c.classList.contains('hinted'), hl: !c.classList.contains('q-nohl'), gist: c.classList.contains('q-showgist'), ex: c.classList.contains('q-showex') };
+ document.querySelectorAll('.card.' + CardState.DOCK_TARGET).forEach(x => { if (x !== c) x.classList.remove(CardState.DOCK_TARGET); });
+ c.classList.add(CardState.DOCK_TARGET);
+ dock.style.setProperty('--scd', c.style.getPropertyValue('--scd'));
+ const revealed = c.classList.contains(CardState.REVEALED);
+ const st = { [DockAction.HINT]: c.classList.contains(CardState.HINTED), [DockAction.HIGHLIGHTS]: !c.classList.contains(CardState.NO_HIGHLIGHT), [DockAction.GISTS]: c.classList.contains(CardState.SHOW_GISTS), [DockAction.EXAMPLE]: c.classList.contains(CardState.SHOW_EXAMPLE) };
  dock.querySelectorAll('.dockbtn').forEach(b => {
    const k = b.dataset.k;
-   if (k in st) b.classList.toggle('on', st[k]);
-   if (['hint','gist','ex'].includes(k)) b.classList.toggle('dead', revealed);
-   if (k === 'rev') b.textContent = revealed ? 'Hide' : 'Reveal';
+   if (k in st) b.classList.toggle(ControlState.ON, st[k]);
+   if ([DockAction.HINT, DockAction.GISTS, DockAction.EXAMPLE].includes(k)) b.classList.toggle(ControlState.DEAD, revealed);
+   if (k === DockAction.SPEAK_WHY) b.classList.toggle(ControlState.DEAD, !revealed);
+   if (k === DockAction.REVEAL) b.textContent = revealed ? 'Hide' : 'Reveal';
  });
 }
 function dockAssist(b){
@@ -4062,15 +4318,18 @@ function dockAssist(b){
  if (!c) return;
  LASTQ = c.dataset.n;
  const k = b.dataset.k;
- if (k === 'ask') { askClaude(b, parseInt(c.dataset.n, 10)); return; }
+ if (k === DockAction.ASK) { askClaude(b, parseInt(c.dataset.n, 10)); return; }
+ if (k === DockAction.VOICE_SETTINGS) { ttsTogglePanel(b); return; }
+ if (DockAction.isSpeak(k)) { ttsPlay(speakSegs(c, SpeechScope.forDockAction(k)), b); return; }
  keepCardAnchored(c, () => {
-   if (k === 'hint') c.classList.toggle('hinted');
-   else if (k === 'hl') c.classList.toggle('q-nohl');
-   else if (k === 'gist') c.classList.toggle('q-showgist');
-   else if (k === 'ex') c.classList.toggle('q-showex');
-   else if (k === 'rev') {
-     c.classList.toggle('revealed');
-     c.querySelector('.reveal').textContent = c.classList.contains('revealed') ? 'Hide answer' : 'Reveal answer';
+   if (k === DockAction.HINT) c.classList.toggle(CardState.HINTED);
+   else if (k === DockAction.HIGHLIGHTS) c.classList.toggle(CardState.NO_HIGHLIGHT);
+   else if (k === DockAction.GISTS) c.classList.toggle(CardState.SHOW_GISTS);
+   else if (k === DockAction.EXAMPLE) c.classList.toggle(CardState.SHOW_EXAMPLE);
+   else if (k === DockAction.REVEAL) {
+     c.classList.toggle(CardState.REVEALED);
+     c.querySelector('.reveal').textContent = c.classList.contains(CardState.REVEALED) ? 'Hide answer' : 'Reveal answer';
+     if (!c.classList.contains(CardState.REVEALED)) ttsStop();
    }
  });
  dockSync();
@@ -4079,56 +4338,263 @@ let dockScrollTick = false;
 window.addEventListener('scroll', () => {
  if (dockScrollTick) return;
  dockScrollTick = true;
- requestAnimationFrame(() => { dockScrollTick = false; if (document.getElementById('view-drill').classList.contains('on')) dockSync(); });
+ requestAnimationFrame(() => { dockScrollTick = false; if (document.getElementById('view-drill').classList.contains(ControlState.ON)) dockSync(); });
 }, {passive: true});
+// ---------- text-to-speech ----------
+let TTSID = 0, TTSON = false, TTSQ = [], TTSBTN = null;
+let TTSRATE = Math.min(1.4, parseFloat(safeGet(StorageKey.TTS_RATE) || '1') || 1);
+let TTSVOICE = safeGet(StorageKey.TTS_VOICE) || '';
+const HLAPI = !!(window.Highlight && window.CSS && CSS.highlights);
+function ttsClearHL(){
+ if (HLAPI) { CSS.highlights.delete('ttsline'); CSS.highlights.delete('ttsword'); }
+ document.querySelectorAll('.ttsactive').forEach(e => e.classList.remove(ControlState.SPEAKING_WASH));
+}
+function ttsStop(){
+ TTSID++; TTSON = false; TTSQ = [];
+ if (window.speechSynthesis) speechSynthesis.cancel();
+ if (TTSBTN) TTSBTN.classList.remove(ControlState.PLAYING);
+ TTSBTN = null;
+ ttsClearHL();
+}
+function normMap(raw){
+ let text = '', ws = true;
+ const map = [];
+ for (let i = 0; i < raw.length; i++) {
+   const ch = raw[i];
+   if (/\s/.test(ch)) { if (!ws && text.length) { text += ' '; map.push(i); } ws = true; }
+   else { text += ch; map.push(i); ws = false; }
+ }
+ while (text.length && text[text.length - 1] === ' ') { text = text.slice(0, -1); map.pop(); }
+ return { text: text, map: map };
+}
+function segChunks(text){
+ const re = /[^.!?]+[.!?]+[”")\]]?\s*|[^.!?]+$/g;
+ const sents = [];
+ let m;
+ while ((m = re.exec(text))) sents.push([m.index, m.index + m[0].length]);
+ if (!sents.length) return [[0, text.length]];
+ const out = [];
+ let s = sents[0][0], e = sents[0][1];
+ for (let i = 1; i < sents.length; i++) {
+   if ((sents[i][1] - s) > 190) { out.push([s, e]); s = sents[i][0]; }
+   e = sents[i][1];
+ }
+ out.push([s, e]);
+ return out;
+}
+function ttsRange(el, s, e){
+ try {
+   const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+   let pos = 0, node, haveStart = false;
+   const r = document.createRange();
+   while ((node = w.nextNode())) {
+     const len = node.textContent.length;
+     if (!haveStart && s < pos + len) { r.setStart(node, Math.max(0, s - pos)); haveStart = true; }
+     if (haveStart && e <= pos + len) { r.setEnd(node, e - pos); return r; }
+     pos += len;
+   }
+   if (haveStart) { r.setEndAfter(el.lastChild || el); return r; }
+ } catch(err) {}
+ return null;
+}
+function ttsMark(item){
+ ttsClearHL();
+ if (!item.el) return;
+ item.el.classList.add(ControlState.SPEAKING_WASH);
+ if (HLAPI && item.s != null) {
+   const r = ttsRange(item.el, item.map[item.s], item.map[item.e - 1] + 1);
+   if (r) CSS.highlights.set('ttsline', new Highlight(r));
+ }
+}
+function ttsWord(item, ci, clen){
+ if (!HLAPI || !item.el || item.s == null) return;
+ const a = item.s + ci;
+ if (a >= item.e) return;
+ let blen = clen || 0;
+ if (!blen) { const rest = item.norm.slice(a); const sp = rest.search(/\s/); blen = sp < 0 ? rest.length : sp; }
+ const bEnd = Math.min(a + blen, item.e);
+ if (bEnd <= a) return;
+ const r = ttsRange(item.el, item.map[a], item.map[bEnd - 1] + 1);
+ if (r) CSS.highlights.set('ttsword', new Highlight(r));
+}
+function ttsQueueFrom(segs){
+ const q = [];
+ for (const seg of segs) {
+   if (seg.text != null) {
+     const nm0 = normMap(seg.text);
+     for (const se of segChunks(nm0.text)) q.push({ text: nm0.text.slice(se[0], se[1]).trim(), el: seg.el || null });
+     continue;
+   }
+   const nm = normMap(seg.el.textContent);
+   if (!nm.text) continue;
+   for (const se of segChunks(nm.text)) {
+     q.push({ text: nm.text.slice(se[0], se[1]).trim(), el: seg.el, norm: nm.text, map: nm.map, s: se[0], e: se[1] });
+   }
+ }
+ return q.filter(it => it.text);
+}
+function ttsVoices(){
+ if (!window.speechSynthesis || !speechSynthesis.getVoices) return [];
+ const en = speechSynthesis.getVoices().filter(v => v.lang && v.lang.replace('_', '-').slice(0, 2).toLowerCase() === 'en');
+ const goog = en.filter(v => /^google (us|uk) english/i.test(v.name));
+ return goog.length ? goog : en;
+}
+function ttsRank(v){
+ const s = (v.name + ' ' + (v.voiceURI || '')).toLowerCase();
+ if (s.startsWith('google us english')) return 100;
+ if (s.startsWith('google uk english female')) return 90;
+ if (s.startsWith('google uk english male')) return 80;
+ let r = 0;
+ const prefs = [['natural', 40], ['neural', 40], ['premium', 30], ['enhanced', 25], ['siri', 20], ['samantha', 12], ['ava', 12], ['allison', 10], ['zoe', 10]];
+ for (const pr of prefs) if (s.includes(pr[0])) r += pr[1];
+ if (v.localService) r += 2;
+ if (v.default) r += 1;
+ return r;
+}
+function ttsVoice(){
+ const vs = ttsVoices();
+ if (!vs.length) return null;
+ if (TTSVOICE) { const m = vs.find(v => v.name === TTSVOICE); if (m) return m; }
+ return vs.slice().sort((a, b) => ttsRank(b) - ttsRank(a))[0];
+}
+function ttsPlay(segs, btn){
+ if (!window.speechSynthesis) return;
+ if (btn === TTSBTN && TTSON) { ttsStop(); return; }
+ ttsStop();
+ const id = TTSID;
+ TTSON = true; TTSBTN = btn; btn.classList.add(ControlState.PLAYING);
+ TTSQ = ttsQueueFrom(segs);
+ ttsNext(id);
+}
+function ttsNext(id){
+ if (id !== TTSID || !TTSON) return;
+ if (!TTSQ.length) { ttsStop(); return; }
+ const item = TTSQ.shift();
+ const u = new SpeechSynthesisUtterance(item.text);
+ u.rate = TTSRATE;
+ const v = ttsVoice();
+ if (v) u.voice = v;
+ u.onstart = () => { if (id === TTSID) ttsMark(item); };
+ u.onboundary = ev => { if (id === TTSID && ev.name === 'word') ttsWord(item, ev.charIndex, ev.charLength); };
+ u.onend = () => ttsNext(id);
+ u.onerror = () => { if (id === TTSID) ttsStop(); };
+ speechSynthesis.speak(u);
+}
+function speakSegs(cardEl, scope){
+ const card = new QuestionCard(cardEl);
+ const segs = [];
+ const push = (pre, el) => { if (pre) segs.push({ text: pre, el: el || null }); if (el) segs.push({ el: el }); };
+ if (scope === SpeechScope.QUESTION) { push('Question ' + card.number + '.', card.stemEl); return segs; }
+ if (scope === SpeechScope.CHOICES) {
+   for (const choice of card.choices) push('Option ' + choice.letter + '.', choice.isPlainShown ? choice.plainEl : choice.textEl);
+   return segs;
+ }
+ const win = card.winningLetter;
+ push('Question ' + card.number + '. Correct answer: ' + win + '.', card.winningChoice.whyEl);
+ for (const choice of card.choices) {
+   if (choice.letter === win) continue;
+   const tag = choice.verdict === Verdict.RUNNER ? 'close second' : 'eliminate';
+   push('Option ' + choice.letter + ', ' + tag + '.', choice.whyEl);
+ }
+ if (card.exampleLeadEl) push('In practice.', card.exampleLeadEl);
+ const rule = SETMETA[card.setKey].rule;
+ if (rule) segs.push({ text: 'The set rule: ' + rule, el: null });
+ return segs;
+}
+function ttsPanelSync(){
+ const sel = document.getElementById('ttsvoice');
+ const vs = ttsVoices().slice().sort((a, b) => ttsRank(b) - ttsRank(a));
+ const cur = ttsVoice();
+ sel.innerHTML = vs.map(v => '<option value="' + v.name.replace(/"/g, '&quot;') + '"' + (cur && v.name === cur.name ? ' selected' : '') + '>' + v.name + '</option>').join('');
+ document.querySelectorAll('#ttspanel .ratechip').forEach(b => b.classList.toggle(ControlState.ON, parseFloat(b.dataset.r) === TTSRATE));
+}
+function ttsTogglePanel(b){
+ const p = document.getElementById('ttspanel');
+ const show = p.style.display === 'none';
+ p.style.display = show ? 'block' : 'none';
+ const cfg = document.querySelector('#dock [data-k="cfg"]');
+ if (cfg) cfg.classList.toggle(ControlState.ON, show);
+ if (show) ttsPanelSync();
+}
+function ttsHidePanel(){
+ document.getElementById('ttspanel').style.display = 'none';
+ const cfg = document.querySelector('#dock [data-k="cfg"]');
+ if (cfg) cfg.classList.remove(ControlState.ON);
+}
+function ttsSetVoice(name){ TTSVOICE = name; safeSet(StorageKey.TTS_VOICE, name); }
+function ttsSetRate(b){ TTSRATE = parseFloat(b.dataset.r); safeSet(StorageKey.TTS_RATE, String(TTSRATE)); ttsPanelSync(); }
+function ttsTest(b){ ttsPlay([{ text: 'This is how the drill will sound at this voice and speed.', el: null }], b); }
+if (window.speechSynthesis && typeof speechSynthesis.addEventListener === 'function') speechSynthesis.addEventListener('voiceschanged', () => { if (document.getElementById('ttspanel').style.display !== 'none') ttsPanelSync(); });
+
+// ---------- gentle snap: after scrolling settles, magnetize the active card to the dock ----------
+let SNAPT = null, SNAPHOLD = 0, SNAPPING = false;
+window.addEventListener('scroll', () => {
+ if (SNAPPING) return;
+ clearTimeout(SNAPT);
+ SNAPT = setTimeout(snapToCard, 170);
+}, {passive: true});
+function snapToCard(){
+ if (Date.now() < SNAPHOLD || window.innerWidth < 561 || DMODE !== 'all') return;
+ if (!document.getElementById('view-drill').classList.contains(ControlState.ON)) return;
+ const c = activeCard();
+ if (!c) return;
+ const off = c.getBoundingClientRect().top - parseFloat(getComputedStyle(c).scrollMarginTop || '0');
+ if (Math.abs(off) > 4 && Math.abs(off) < 90) {
+   SNAPPING = true;
+   window.scrollBy({top: off, behavior: 'smooth'});
+   setTimeout(() => { SNAPPING = false; }, 600);
+ }
+}
 function keepAnchored(el, fn){
+ SNAPHOLD = Date.now() + 800;
  const t = el.getBoundingClientRect().top;
  fn();
  const d = el.getBoundingClientRect().top - t;
  if (d) window.scrollBy({top: d, left: 0, behavior: 'instant'});
 }
 function listTop(){ document.querySelector('#view-drill .toolbar').scrollIntoView({behavior:'instant', block:'start'}); window.scrollBy({top:-80, behavior:'instant'}); }
-function tog(b){const c=b.closest('.card'); c.classList.toggle('open'); LASTQ=c.dataset.n; dockSync();}
+function tog(b){const c=b.closest('.card'); c.classList.toggle(CardState.OPEN); LASTQ=c.dataset.n; dockSync();}
 function rev(b){
  const c = b.closest('.card');
  keepCardAnchored(c, () => {
-   c.classList.toggle('revealed');
-   b.textContent = c.classList.contains('revealed') ? 'Hide answer' : 'Reveal answer';
+   c.classList.toggle(CardState.REVEALED);
+   b.textContent = c.classList.contains(CardState.REVEALED) ? 'Hide answer' : 'Reveal answer';
+   if (!c.classList.contains(CardState.REVEALED)) ttsStop();
  });
  LASTQ = c.dataset.n;
  dockSync();}
-function hint(b){ keepAnchored(b, () => { b.classList.toggle('on'); b.closest('.card').classList.toggle('hinted'); }); }
-function cplain(b){ keepAnchored(b, () => b.closest('.choice').classList.toggle('showplain')); }
-function cgist(b){ keepAnchored(b, () => b.closest('.choice').classList.toggle('showgist')); }
-function qtog(b,cls){ keepAnchored(b, () => { b.classList.toggle('on'); b.closest('.card').classList.toggle(cls); }); }
+function hint(b){ keepAnchored(b, () => { b.classList.toggle(ControlState.ON); b.closest('.card').classList.toggle(CardState.HINTED); }); }
+function cplain(b){ keepAnchored(b, () => b.closest('.choice').classList.toggle(ChoiceState.SHOW_PLAIN)); }
+function cgist(b){ keepAnchored(b, () => b.closest('.choice').classList.toggle(ChoiceState.SHOW_GIST)); }
+function qtog(b,cls){ keepAnchored(b, () => { b.classList.toggle(ControlState.ON); b.closest('.card').classList.toggle(cls); }); }
 function qhl(b){
  keepAnchored(b, () => {
    const c = b.closest('.card');
-   const off = c.classList.toggle('q-nohl');
+   const off = c.classList.toggle(CardState.NO_HIGHLIGHT);
    b.textContent = '🖍 Highlights: ' + (off ? 'off' : 'on');
  });
 }
 function hilite(){
  const btn = document.getElementById('hlbtn');
- const turnOff = btn.classList.contains('on');
- btn.classList.toggle('on', !turnOff);
+ const turnOff = btn.classList.contains(ControlState.ON);
+ btn.classList.toggle(ControlState.ON, !turnOff);
  document.querySelectorAll('#view-drill .card').forEach(c => {
-   c.classList.toggle('q-nohl', turnOff);
+   c.classList.toggle(CardState.NO_HIGHLIGHT, turnOff);
    const b = c.querySelector('.hintrow button:nth-child(2)');
    if (b) b.textContent = '🖍 Highlights: ' + (turnOff ? 'off' : 'on');
  });
 }
-function hideAll(){document.querySelectorAll('.card.revealed').forEach(c=>{c.classList.remove('revealed');c.querySelector('.reveal').textContent='Reveal answer';}); listTop();}
+function hideAll(){ttsStop();document.querySelectorAll('.card.' + CardState.REVEALED).forEach(c=>{c.classList.remove(CardState.REVEALED);c.querySelector('.reveal').textContent='Reveal answer';}); listTop();}
 function flag(b){
- b.classList.toggle('on');
- const n = document.querySelectorAll('.flag.on').length;
+ b.classList.toggle(ControlState.ON);
+ const n = document.querySelectorAll('.flag.' + ControlState.ON).length;
  document.getElementById('flagnote').textContent = n + ' flagged';
 }
 let CURF = 'all', CURFOC = null, DMODE = 'all', DIDX = 0;
 function matchesF(c){
  const setOk = CURF === 'all' || c.dataset.set === CURF;
  let focOk = true;
- if (CURFOC === 'flag') focOk = c.querySelector('.flag').classList.contains('on');
+ if (CURFOC === 'flag') focOk = c.querySelector('.flag').classList.contains(ControlState.ON);
  else if (CURFOC === 'dis') focOk = c.dataset.dis === '1';
  else if (CURFOC === 't3') focOk = c.dataset.tier === '3';
  return setOk && focOk;
@@ -4142,7 +4608,7 @@ function applyDrill(){ requestAnimationFrame(dockSync);
  } else {
    DIDX = Math.min(DIDX, Math.max(0, matched.length - 1));
    cards.forEach(c => c.style.display = 'none');
-   if (matched.length) { const cur = matched[DIDX]; cur.style.display = ''; cur.classList.add('open'); }
+   if (matched.length) { const cur = matched[DIDX]; cur.style.display = ''; cur.classList.add(CardState.OPEN); }
    const nav = document.getElementById('dnav');
    nav.style.display = matched.length ? 'flex' : 'none';
    document.getElementById('dpos').textContent = matched.length ? `${DIDX+1} / ${matched.length}${(CURF!=='all'||CURFOC)?' (filtered)':''}` : '';
@@ -4155,62 +4621,65 @@ function filt(btn){
  if (!f) return;
  if (['flag','dis','t3'].includes(f)) {
    CURFOC = (CURFOC === f) ? null : f;
-   document.querySelectorAll('.fbtn.foc').forEach(b => b.classList.toggle('on', b.dataset.f === CURFOC));
+   document.querySelectorAll('.fbtn.foc').forEach(b => b.classList.toggle(ControlState.ON, b.dataset.f === CURFOC));
  } else {
    CURF = f;
-   document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b => b.classList.toggle('on', b.dataset.f === f));
+   document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b => b.classList.toggle(ControlState.ON, b.dataset.f === f));
  }
  DIDX = 0;
  applyDrill(); listTop();
 }
 function dview(m){
  DMODE = m;
- document.getElementById('vAll').classList.toggle('on', m==='all');
- document.getElementById('vSingle').classList.toggle('on', m==='single');
+ document.getElementById('vAll').classList.toggle(ControlState.ON, m==='all');
+ document.getElementById('vSingle').classList.toggle(ControlState.ON, m==='single');
  applyDrill(); listTop();
 }
 function dnav(d){
+ ttsStop();
  const max = [...document.querySelectorAll('#view-drill .card')].filter(c => matchesF(c)).length;
  DIDX = Math.min(max-1, Math.max(0, DIDX + d));
  applyDrill(); listTop();
 }
 function resetDrill(){
+ ttsStop();
  DMODE = 'all';
- document.getElementById('vAll').classList.add('on');
- document.getElementById('vSingle').classList.remove('on');
+ document.getElementById('vAll').classList.add(ControlState.ON);
+ document.getElementById('vSingle').classList.remove(ControlState.ON);
  document.querySelectorAll('#view-drill .card').forEach(c => {
-   c.classList.remove('open','revealed','hinted','q-nohl','q-showgist','q-showex');
-   c.querySelectorAll('.choice').forEach(ch => ch.classList.remove('showplain','showgist'));
-   c.querySelectorAll('.hintbtn.on').forEach(b => b.classList.remove('on'));
+   c.classList.remove(CardState.OPEN,'revealed','hinted','q-nohl','q-showgist','q-showex');
+   c.querySelectorAll('.choice').forEach(ch => ch.classList.remove(ChoiceState.SHOW_PLAIN,'showgist'));
+   c.querySelectorAll('.hintbtn.' + ControlState.ON).forEach(b => b.classList.remove(ControlState.ON));
    const hb = c.querySelector('.hintrow button:nth-child(2)'); if (hb) hb.textContent = '🖍 Highlights: on';
    c.querySelector('.reveal').textContent = 'Reveal answer';
  });
- document.getElementById('hlbtn').classList.add('on');
- document.querySelectorAll('.fbtn[data-f]').forEach(b=>b.classList.remove('on'));
- document.querySelector('.fbtn[data-f="all"]').classList.add('on');
+ document.getElementById('hlbtn').classList.add(ControlState.ON);
+ document.querySelectorAll('.fbtn[data-f]').forEach(b=>b.classList.remove(ControlState.ON));
+ document.querySelector('.fbtn[data-f="all"]').classList.add(ControlState.ON);
  CURF = 'all'; CURFOC = null; DIDX = 0;
  applyDrill(); listTop();
 }
 function askClaude(btn, n){
- const card = document.querySelector('.card[data-n="'+n+'"]');
+ const qc = QuestionCard.byNumber(n);
+ const card = qc.el;
  const t = sel => { const e = card.querySelector(sel); return e ? e.textContent.trim() : null; };
+ const verdictLabels = { [Verdict.PICK]: 'CORRECT', [Verdict.RUNNER]: 'close 2nd — plausible but loses', [Verdict.KILL]: 'eliminate' };
  const choices = {};
- for (const L of ['A','B','C','D']) {
-   const c = card.querySelector('.choice[data-l="'+L+'"]');
-   choices[L] = {
-     text: c.querySelector('.ctext').textContent.trim(),
-     plain_words: c.querySelector('.cplain').textContent.trim(),
-     pattern_gist: c.querySelector('.gist').textContent.trim(),
-     verdict: {pick:'CORRECT', runner:'close 2nd — plausible but loses', kill:'eliminate'}[c.dataset.v],
-     why: c.querySelector('.cwhy').textContent.trim()
+ for (const choice of qc.choices) {
+   choices[choice.letter] = {
+     text: choice.textEl.textContent.trim(),
+     plain_words: choice.plainEl.textContent.trim(),
+     pattern_gist: choice.gistEl.textContent.trim(),
+     verdict: verdictLabels[choice.verdict],
+     why: choice.whyEl.textContent.trim()
    };
  }
  const hintItems = card.querySelectorAll('.hintbox .hintitem p');
  const payload = {
    source: 'CCA-F practice drill (Anthropic Claude Certification – Foundations)',
    question_number: n,
-   pattern_set: SETMETA[QMETA[n].s].name,
-   set_rule: SETMETA[QMETA[n].s].rule,
+   pattern_set: SETMETA[qc.setKey].name,
+   set_rule: SETMETA[qc.setKey].rule,
    confidence_tier: {'1':'verified against official Anthropic docs/spec','2':'follows published Anthropic guidance','3':'debated — two defensible reads'}[card.dataset.tier],
    skim_cue: t('.cue'),
    signal_phrases: [...card.querySelectorAll('.chips .chip')].map(c => c.textContent.trim()),
@@ -4218,7 +4687,7 @@ function askClaude(btn, n){
    really_asking: hintItems[0] ? hintItems[0].textContent.trim() : null,
    look_first: hintItems[1] ? hintItems[1].textContent.trim() : null,
    choices: choices,
-   correct_answer: QMETA[n].w,
+   correct_answer: qc.winningLetter,
    in_practice: { mechanism: t('.mech'), lead: t('.explead'), snippet: t('.snip') }
  };
  const instruction = 'Teach me this one CCA-F practice question. My study tool packed everything you need into the JSON below. Rules: use plain, simple language. Short lines. Examples over explanations. Give me: (1) the pattern in one short sentence. (2) a tiny concrete example for the correct answer - code or JSON, keep every line under 45 characters so nothing scrolls sideways. (3) one line per wrong choice: what makes it tempting, then the simple reason it loses. (4) a one-line memory hook to recall this pattern on the exam. Do not repeat the JSON back. Do not add generic exam advice. Keep the whole reply short - this is a learning aid, not an essay.'
@@ -4240,8 +4709,8 @@ function jumpSet(n){
  const setk = QMETA[n].s;
  document.querySelector('.tab[data-v="drill"]').click();
  CURFOC = null;
- document.querySelectorAll('.fbtn.foc').forEach(b=>b.classList.remove('on'));
- document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b=>b.classList.toggle('on', b.dataset.f===setk));
+ document.querySelectorAll('.fbtn.foc').forEach(b=>b.classList.remove(ControlState.ON));
+ document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b=>b.classList.toggle(ControlState.ON, b.dataset.f===setk));
  CURF = setk;
  if (DMODE === 'single') {
    const matched = [...document.querySelectorAll('#view-drill .card')].filter(c => matchesF(c));
@@ -4249,8 +4718,8 @@ function jumpSet(n){
    applyDrill(); listTop();
  } else {
    applyDrill();
-   const c = document.querySelector('.card[data-n="'+n+'"]');
-   if(c){ c.classList.add('open'); scrollUnderToolbar(c); }
+   const c = QuestionCard.byNumber(n).el;
+   if(c){ c.classList.add(CardState.OPEN); scrollUnderToolbar(c); }
  }
 }
 function scrollUnderToolbar(el){
@@ -4265,14 +4734,14 @@ function scrollUnderToolbar(el){
 function jump(n){
  document.querySelector('.tab[data-v="drill"]').click();
  CURFOC = null;
- document.querySelectorAll('.fbtn.foc').forEach(b=>b.classList.remove('on'));
- document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b=>b.classList.toggle('on', b.dataset.f==='all'));
+ document.querySelectorAll('.fbtn.foc').forEach(b=>b.classList.remove(ControlState.ON));
+ document.querySelectorAll('.fbtn[data-f]:not(.foc)').forEach(b=>b.classList.toggle(ControlState.ON, b.dataset.f==='all'));
  CURF='all';
  if (DMODE === 'single') { DIDX = n - 1; applyDrill(); listTop(); }
  else {
    applyDrill();
-   const c = document.querySelector('.card[data-n="'+n+'"]');
-   if(c){ c.classList.add('open'); scrollUnderToolbar(c); }
+   const c = QuestionCard.byNumber(n).el;
+   if(c){ c.classList.add(CardState.OPEN); scrollUnderToolbar(c); }
  }
 }
 const QMETA = {"1": {"s": "E", "w": "B"}, "2": {"s": "M", "w": "B"}, "3": {"s": "M", "w": "A"}, "4": {"s": "S", "w": "D"}, "5": {"s": "E", "w": "D"}, "6": {"s": "S", "w": "C"}, "7": {"s": "C", "w": "C"}, "8": {"s": "E", "w": "D"}, "9": {"s": "E", "w": "C"}, "10": {"s": "E", "w": "B"}, "11": {"s": "C", "w": "C"}, "12": {"s": "M", "w": "D"}, "13": {"s": "M", "w": "D"}, "14": {"s": "C", "w": "C"}, "15": {"s": "E", "w": "A"}, "16": {"s": "C", "w": "D"}, "17": {"s": "C", "w": "C"}, "18": {"s": "M", "w": "C"}, "19": {"s": "E", "w": "D"}, "20": {"s": "M", "w": "A"}, "21": {"s": "V", "w": "C"}, "22": {"s": "S", "w": "D"}, "23": {"s": "M", "w": "C"}, "24": {"s": "S", "w": "A"}, "25": {"s": "T", "w": "B"}, "26": {"s": "M", "w": "C"}, "27": {"s": "C", "w": "B"}, "28": {"s": "V", "w": "B"}, "29": {"s": "M", "w": "B"}, "30": {"s": "M", "w": "D"}, "31": {"s": "C", "w": "B"}, "32": {"s": "S", "w": "B"}, "33": {"s": "S", "w": "C"}, "34": {"s": "E", "w": "D"}, "35": {"s": "M", "w": "D"}, "36": {"s": "C", "w": "C"}, "37": {"s": "S", "w": "C"}, "38": {"s": "C", "w": "B"}, "39": {"s": "C", "w": "A"}, "40": {"s": "E", "w": "D"}, "41": {"s": "M", "w": "D"}, "42": {"s": "S", "w": "D"}, "43": {"s": "M", "w": "A"}, "44": {"s": "M", "w": "C"}, "45": {"s": "M", "w": "B"}, "46": {"s": "T", "w": "D"}, "47": {"s": "S", "w": "C"}, "48": {"s": "S", "w": "C"}, "49": {"s": "S", "w": "D"}, "50": {"s": "S", "w": "C"}, "51": {"s": "C", "w": "C"}, "52": {"s": "C", "w": "B"}, "53": {"s": "S", "w": "C"}, "54": {"s": "T", "w": "A"}, "55": {"s": "V", "w": "B"}, "56": {"s": "C", "w": "A"}, "57": {"s": "S", "w": "D"}, "58": {"s": "V", "w": "A"}, "59": {"s": "E", "w": "C"}, "60": {"s": "V", "w": "D"}};
@@ -4292,7 +4761,7 @@ function startTick(){
     EX.remaining--;
     const t = document.getElementById('extimer');
     t.textContent = fmt(EX.remaining);
-    t.classList.toggle('low', EX.remaining <= 600);
+    t.classList.toggle(ExamState.TIMER_LOW, EX.remaining <= 600);
     if(EX.remaining<=0) exSubmit(true);
   },1000);
 }
@@ -4314,26 +4783,23 @@ function buildPalette(){
 function palSync(){
   ORDER.forEach((n,i)=>{
     const p=document.getElementById('pal'+n);
-    p.classList.toggle('answered', n in EX.answers);
-    p.classList.toggle('flagged', EX.flags.has(n));
-    p.classList.toggle('cur', i===EX.cur);
+    p.classList.toggle(ExamState.ANSWERED, n in EX.answers);
+    p.classList.toggle(ExamState.FLAGGED, EX.flags.has(n));
+    p.classList.toggle(ExamState.CURRENT, i===EX.cur);
   });
 }
 function renderExQ(){
   const n = ORDER[EX.cur];
-  const card = document.querySelector('.card[data-n="'+n+'"]');
-  const stem = card.querySelector('.stem').innerHTML;
-  const win = QMETA[n].w;
+  const qc = QuestionCard.byNumber(n);
+  const card = qc.el;
+  const stem = qc.stemEl.innerHTML;
+  const win = qc.winningLetter;
   let ch='';
-  for(const L of ['A','B','C','D']){
-    const cEl = card.querySelector('.choice[data-l="'+L+'"]');
-    const txt = cEl.querySelector('.ctext').textContent;
-    const plain = cEl.querySelector('.cplain').textContent;
-    const gist = cEl.querySelector('.gist').textContent;
-    const why = cEl.querySelector('.cwhy').textContent;
-    ch += `<div class="exchoice ${EX.answers[n]===L?'sel':''} ${L===win?'iscorrect':''}" onclick="exPick('${L}')">
-      <div class="exrow"><span class="exlet">${L}</span><span>${txt}</span></div>
-      <div class="cplain">${plain}</div><code class="gist">${gist}</code><div class="exwhy">${why}</div></div>`;
+  for(const choice of qc.choices){
+    const L = choice.letter;
+    ch += `<div class="exchoice ${EX.answers[n]===L?ControlState.SELECTED:''} ${L===win?'iscorrect':''}" onclick="exPick('${L}')">
+      <div class="exrow"><span class="exlet">${L}</span><span>${choice.textEl.textContent}</span></div>
+      <div class="cplain">${choice.plainEl.textContent}</div><code class="gist">${choice.gistEl.textContent}</code><div class="exwhy">${choice.whyEl.textContent}</div></div>`;
   }
   const hint = card.querySelector('.hintbox');
   const expl = card.querySelector('.expl');
@@ -4342,19 +4808,34 @@ function renderExQ(){
   qbox.className = 'exqbox'; // assist toggles reset per question (exPick restores its own)
   qbox.innerHTML = `<p class="exstem">${stem}</p>${extra}${ch}`;
   // assist bar per mode; toggles reset per question
-  const AS = {easy:[['hint','💡 hint'],['plain','◦ plain words'],['gist','⌁ gists'],['ex','in practice'],['reveal','reveal answer']], medium:[['hint','💡 hint'],['plain','◦ plain words']], hard:[]};
-  const asBtns = (AS[EX.mode]||[]).map(([k,l])=>`<button class="asbtn" data-k="${k}" onclick="exAssist(this)">${l}</button>`).join('');
+  const AS = {
+    easy:[[DockAction.HINT,'💡 hint'],[DockAction.EXAM_PLAIN,'◦ plain words'],[DockAction.GISTS,'⌁ gists'],[DockAction.EXAMPLE,'in practice'],[DockAction.EXAM_REVEAL,'reveal answer'],[DockAction.SPEAK_QUESTION,'🔊 question'],[DockAction.SPEAK_CHOICES,'🔊 choices'],[DockAction.SPEAK_WHY,'🔊 hear why']],
+    medium:[[DockAction.HINT,'💡 hint'],[DockAction.EXAM_PLAIN,'◦ plain words'],[DockAction.SPEAK_QUESTION,'🔊 question'],[DockAction.SPEAK_CHOICES,'🔊 choices']],
+    hard:[]};
+  const asBtns = (AS[EX.mode]||[]).filter(([k])=>window.speechSynthesis || !DockAction.isSpeak(k)).map(([k,l])=>`<button class="asbtn${k===DockAction.SPEAK_WHY?' '+ControlState.DEAD:''}" data-k="${k}" onclick="exAssist(this)">${l}</button>`).join('');
   document.getElementById('exassist').innerHTML = asBtns ? '<span class="tglab">Help<br><i>' + EX.mode + ' mode</i></span>' + asBtns : '';
   document.getElementById('exqlabel').textContent = `Q ${EX.cur+1} / 60`;
-  document.getElementById('exflagbtn').classList.toggle('on', EX.flags.has(n));
+  document.getElementById('exflagbtn').classList.toggle(ControlState.ON, EX.flags.has(n));
   document.getElementById('exprev').disabled = EX.cur===0;
   document.getElementById('exnext').disabled = EX.cur===59;
   palSync();
 }
 function exAssist(b){
   const k=b.dataset.k;
-  b.classList.toggle('on');
-  document.getElementById('exqbox').classList.toggle('as-'+k, b.classList.contains('on'));
+  if (DockAction.isSpeak(k)) {
+    ttsPlay(speakSegs(QuestionCard.byNumber(ORDER[EX.cur]).el, SpeechScope.forDockAction(k)), b);
+    return;
+  }
+  b.classList.toggle(ControlState.ON);
+  document.getElementById('exqbox').classList.toggle(ExamState.assist(k), b.classList.contains(ControlState.ON));
+  if (k===DockAction.EXAM_REVEAL) exSprSync();
+}
+function exSprSync(){
+  const s=document.querySelector('.asbtn[data-k="' + DockAction.SPEAK_WHY + '"]');
+  if (!s) return;
+  const on=document.getElementById('exqbox').classList.contains(ExamState.assist(DockAction.EXAM_REVEAL));
+  s.classList.toggle(ControlState.DEAD, !on);
+  if (!on && TTSBTN===s) ttsStop();
 }
 function exPick(L){
   const box=document.getElementById('exqbox');
@@ -4362,13 +4843,15 @@ function exPick(L){
   EX.answers[ORDER[EX.cur]]=L; renderExQ();
   const nb=document.getElementById('exqbox');
   keep.forEach(c=>nb.classList.add(c));
-  keep.forEach(c=>{const btn=document.querySelector('.asbtn[data-k="'+c.slice(3)+'"]'); if(btn) btn.classList.add('on');});
+  keep.forEach(c=>{const btn=document.querySelector('.asbtn[data-k="'+c.slice(3)+'"]'); if(btn) btn.classList.add(ControlState.ON);});
+  exSprSync();
   document.querySelector('.exnav').scrollIntoView({behavior:'smooth', block:'end'});
 }
 function exFlag(){ const n=ORDER[EX.cur]; EX.flags.has(n)?EX.flags.delete(n):EX.flags.add(n); renderExQ(); }
-function exNav(d){ bankTime(); EX.cur=Math.min(59,Math.max(0,EX.cur+d)); renderExQ(); window.scrollTo({top:0}); }
-function exGoto(i){ bankTime(); EX.cur=i; renderExQ(); window.scrollTo({top:0}); }
+function exNav(d){ ttsStop(); bankTime(); EX.cur=Math.min(59,Math.max(0,EX.cur+d)); renderExQ(); window.scrollTo({top:0}); }
+function exGoto(i){ ttsStop(); bankTime(); EX.cur=i; renderExQ(); window.scrollTo({top:0}); }
 function exSubmit(auto){
+  ttsStop();
   const un = 60-Object.keys(EX.answers).length;
   if(!auto && un>0 && !confirm(un+' unanswered question'+(un>1?'s':'')+'. Submit anyway?')) return;
   bankTime(); clearInterval(EX.tick); EX.running=false;
@@ -4392,8 +4875,8 @@ function renderResults(auto){
   const missAll=[];
   for(const n of ORDER){ if(EX.answers[n]!==QMETA[n].w){ missAll.push(n);
     if(!EX.answers[n]) blanks++;
-    else { const v=document.querySelector('.card[data-n="'+n+'"] .choice[data-l="'+EX.answers[n]+'"]').dataset.v;
-      if(v==='runner') runnerPicks++; else killPicks++; } } }
+    else { const v = QuestionCard.byNumber(n).choice(EX.answers[n]).verdict;
+      if(v===Verdict.RUNNER) runnerPicks++; else killPicks++; } } }
   const worst=ranked.filter(([k,v])=>v.miss.length>0).slice(0,2);
   let downfall='';
   if(missAll.length===0) downfall='<div class="downfall"><b>Clean sheet.</b> Nothing to diagnose — go book the real thing.</div>';
@@ -4443,47 +4926,60 @@ function renderResults(auto){
 }
 function resTog(n){
   const rq=document.getElementById('resq'+n);
-  rq.classList.toggle('open');
+  rq.classList.toggle(CardState.OPEN);
   const d=rq.querySelector('.resdetail');
-  if(rq.classList.contains('open') && !d.dataset.built){
-    const body=document.querySelector('.card[data-n="'+n+'"] .body').cloneNode(true);
+  if(rq.classList.contains(CardState.OPEN) && !d.dataset.built){
+    const body=QuestionCard.byNumber(n).el.querySelector('.body').cloneNode(true);
     body.querySelectorAll('.hintrow,.hintbox,.revealrow').forEach(e=>e.remove());
     const wrap=document.createElement('div');
-    wrap.className='card open revealed hinted';
+    wrap.className=['card', CardState.OPEN, CardState.REVEALED, CardState.HINTED].join(' ');
     wrap.style.border='none'; wrap.style.background='transparent';
     wrap.appendChild(body);
     const you=EX.answers[n];
-    if(you) { const c=wrap.querySelector('.choice[data-l="'+you+'"] .chead'); if(c) c.insertAdjacentHTML('beforeend','<span class="youpick">YOUR PICK</span>'); }
+    if(you) { const c=new QuestionCard(wrap).choice(you).el.querySelector('.chead'); if(c) c.insertAdjacentHTML('beforeend','<span class="youpick">YOUR PICK</span>'); }
     const m=QMETA[n];
     wrap.insertAdjacentHTML('beforeend',`<div class="setexpl" style="--sc:${SETMETA[m.s].c}"><span class="klab">HOW TO THINK — ${SETMETA[m.s].name.toUpperCase()}</span>${SETMETA[m.s].rule}</div>`);
     d.appendChild(wrap); d.dataset.built='1';
   }
 }
 const SPOT_STEPS = [
- {sel:'.tabs', t:'The three rooms', p:'Key = learn the patterns. Drill = practice with help. Exam = the 1:1 rehearsal. ? Tour replays this anytime; the ◐ button flips light/dark.',
+ {sel:'.tabs', t:'The three rooms', p:'Key learn patterns. Drill practice. Exam rehearsal.',
+   h:'<ul class="spotul"><li><b>Key</b> — learn the patterns</li><li><b>Drill</b> — practice with help</li><li><b>Exam</b> — the 1:1 rehearsal</li><li><b>? Tour</b> replays this · <b>◐</b> = light/dark</li></ul>',
    prep:()=>{} },
- {sel:'#tg-sets', t:'Sets — pick a topic', p:'Every question belongs to one of 6 colored sets. Tap a pill to study just that group. The colors match everywhere: Key panels, question cards, exam results.',
+ {sel:'#tg-sets', t:'Sets — pick a topic', p:'6 colored sets, same colors everywhere.',
+   h:'<ul class="spotul"><li><b>6 colored sets</b> — tap a pill, study that group</li><li>Same colors everywhere: Key, cards, exam results</li></ul>',
    prep:()=>{ document.querySelector('.tab[data-v="drill"]').click(); resetDrill(); } },
- {sel:'#tg-focus', t:'Narrow — stacks on your set', p:'These + chips COMBINE with the set above: Extraction + ⚑ Flagged = your flagged Extraction questions. ⚠ Disputed 8 = the ones your team’s doc had wrong — drill these first. Tap again to clear.',
+ {sel:'#tg-focus', t:'Narrow — stacks on your set', p:'Flagged and Disputed chips combine with the set.',
+   h:'<ul class="spotul"><li><b>+ chips stack</b> on the set above</li><li><b>⚑ Flagged</b> — your flagged questions</li><li><b>⚠ Disputed 8</b> — your team marked these wrong. Drill first</li><li>Tap again = clear</li></ul>',
    prep:()=>{} },
- {sel:'#tg-view', t:'View — layout, highlights, actions', p:'The joined ☰ All / ▭ Single control picks the layout. The Highlights switch (green dot = on) controls the giveaway wash everywhere. Past the divider: one-shot actions — Hide answers and ↺ Reset (your flags survive).',
+ {sel:'#tg-view', t:'View — layout + actions', p:'All / Single layout, Highlights switch, Hide answers, Reset.',
+   h:'<ul class="spotul"><li><b>☰ All / ▭ Single</b> — layout</li><li><b>Highlights switch</b> — giveaway wash on/off</li><li><b>Hide answers · ↺ Reset</b> — one-shot. Flags survive</li></ul>',
    prep:()=>{} },
- {sel:'.card[data-n="1"] .cardhead', t:'A question card', p:'⚑ flags it for later. The colored pill = its set. The badge = answer confidence: DOCS-VERIFIED beats GUIDANCE beats DEBATE.',
-   prep:()=>{ document.querySelector('.card[data-n="1"]').classList.add('open'); } },
- {sel:'.card[data-n="1"] .chips', t:'Skim first, read later', p:'The bold line is the one-sentence takeaway. The yellow chips are the exact phrases in the question that give the answer away — spot these and you often skip the wall of text.',
+ {sel:QuestionCard.selector(1, '.cardhead'), t:'A question card', p:'Flag it, see its set, read its confidence badge.',
+   h:'<ul class="spotul"><li><b>⚑</b> — flag for later</li><li><b>Colored pill</b> — its set</li><li><b>Badge</b> — confidence: DOCS-VERIFIED &gt; GUIDANCE &gt; DEBATE</li></ul>',
+   prep:()=>{ QuestionCard.byNumber(1).el.classList.add(CardState.OPEN); } },
+ {sel:QuestionCard.selector(1, '.chips'), t:'Skim first, read later', p:'Bold takeaway + yellow giveaway chips.',
+   h:'<ul class="spotul"><li><b>Bold line</b> — the one-sentence takeaway</li><li><b>Yellow chips</b> — the giveaway phrases</li><li>Spot them = skip the wall of text</li></ul>',
    prep:()=>{} },
- {sel:'#dock', t:'The floating help dock', p:'It follows whichever question you’re on — the Q number shows which. 💡 Hint = what’s really asked (never spoils). 🖍 HL = highlights for this question. ⌁ Gists = choices as one-line code. In practice = the winning mechanism + snippet. 🤖 Ask copies the question for Claude. Reveal = the full answer. It floats, so the page never jumps under your finger.',
+ {sel:'#dock', t:'The floating help dock', p:'Follows your question. Hint, highlights, gists, in practice, Ask Claude.',
+   h:'<ul class="spotul"><li>Follows your question — watch the <b>Q number</b> + card outline</li><li><b>💡 Hint</b> — what is really asked. Never spoils</li><li><b>🖍 HL</b> — highlights · <b>⌁ Gists</b> — choices as code</li><li><b>In practice</b> — winning mechanism + snippet</li><li><b>🤖 Ask</b> — copies the question for Claude</li></ul>',
    prep:()=>{ LASTQ='1'; dockSync(); } },
- {sel:'.card[data-n="1"] .choice[data-l="A"] .chead', t:'Per-choice toggles', p:'Each answer choice has its own ◦ plain (simple-words rephrase) and ⌁ gist (one-line code sketch). Toggle just the one you’re stuck on.',
+ {sel:'#dock [data-k="spq"]', t:'Listen instead of read', p:'Question, Choices, Why read aloud. Voice sets voice and speed. Words highlight as it reads. Tap again to stop.',
+   h:'<ul class="spotul"><li><b>🔊 Question / Choices</b> — reads it aloud</li><li><b>🔊 Why</b> — the full answer, spoken. Unlocks on Reveal</li><li><b>⚙ Voice</b> — pick voice + speed</li><li>Words <b>highlight</b> as it reads. Tap 🔊 again = stop</li></ul>',
+   prep:()=>{ LASTQ='1'; dockSync(); } },
+ {sel:QuestionCard.selector(1, AnswerChoice.selector('A') + ' .chead'), t:'Per-choice toggles', p:'plain words or gist per choice.',
+   h:'<ul class="spotul"><li><b>◦ plain</b> — simple words</li><li><b>⌁ gist</b> — one-line code</li><li>Toggle just the choice you are stuck on</li></ul>',
    prep:()=>{} },
- {sel:'.card[data-n="1"] .reveal', t:'Reveal — the full answer', p:'One tap shows everything: ✓ the pick, ✕ eliminated choices struck through, why each loses, and the in-practice example. The help toggles gray out — they’re already showing.',
+ {sel:QuestionCard.selector(1, '.reveal'), t:'Reveal — the full answer', p:'Pick, eliminations, and why each loses.',
+   h:'<ul class="spotul"><li><b>✓ pick</b> · <b>✕ eliminated</b>, struck through</li><li>Why each choice loses + the in-practice example</li><li>Help toggles gray out — already showing</li></ul>',
    prep:()=>{} },
- {sel:'.tab[data-v="exam"]', t:'When you’re ready: Exam', p:'60 questions, 120 minutes, one per screen — Easy/Medium/Hard controls how many help tools exist. Results rank your weakest set and tell you HOW you miss (close-2nds vs outright kills). That report is your next drill list.',
+ {sel:'.tab[data-v="exam"]', t:'When you are ready: Exam', p:'60 questions, 120 minutes. Easy/Medium/Hard sets the help.',
+   h:'<ul class="spotul"><li><b>60 Q · 120 min</b> · one per screen</li><li><b>Easy/Medium/Hard</b> — how much help exists</li><li>Results rank your <b>weakest set</b> + how you miss</li><li>That report = your next drill list</li></ul>',
    prep:()=>{} },
 ];
 let spotIdx = 0, spotPrevState = null;
 function spotStart(){
- spotPrevState = { view: document.querySelector('.tab.on[data-v]').dataset.v };
+ spotPrevState = { view: document.querySelector('.tab.' + ControlState.ON + '[data-v]').dataset.v };
  spotIdx = 0;
  document.getElementById('spot').style.display = 'block';
  spotShow();
@@ -4503,7 +4999,8 @@ function spotShow(){
    const tip = document.getElementById('spottip');
    document.getElementById('spotstep').textContent = 'COMPONENT ' + (spotIdx + 1) + ' / ' + SPOT_STEPS.length;
    document.getElementById('spottitle').textContent = s.t;
-   document.getElementById('spottext').textContent = s.p;
+   const sp = document.getElementById('spottext');
+   if (s.h) sp.innerHTML = s.h; else sp.textContent = s.p;
    document.getElementById('sprev').style.visibility = spotIdx === 0 ? 'hidden' : 'visible';
    document.getElementById('snext').textContent = spotIdx === SPOT_STEPS.length - 1 ? 'Finish ✓' : 'Next →';
    if (window.innerWidth > 560) {
@@ -4523,8 +5020,8 @@ function spotGo(d){
 function spotEnd(finished){
  document.getElementById('spot').style.display = 'none';
  // restore what the walkthrough touched
- const c1 = document.querySelector('.card[data-n="1"]');
- c1.classList.remove('open','revealed');
+ const c1 = QuestionCard.byNumber(1).el;
+ c1.classList.remove(CardState.OPEN,'revealed');
  c1.querySelector('.reveal').textContent = 'Reveal answer';
  if (finished) { document.querySelector('.tab[data-v="key"]').click(); ksecgo(0); }
  else if (spotPrevState) { document.querySelector('.tab[data-v="' + spotPrevState.view + '"]').click(); }
@@ -4536,7 +5033,7 @@ let tourStep = 0;
 function safeGet(k){ try { return window.localStorage.getItem(k); } catch(e) { return null; } }
 function safeSet(k, v){ try { window.localStorage.setItem(k, v); } catch(e) {} }
 function tourRender(){
- document.querySelectorAll('.tourstep').forEach(s => s.classList.toggle('on', +s.dataset.s === tourStep));
+ document.querySelectorAll('.tourstep').forEach(s => s.classList.toggle(ControlState.ON, +s.dataset.s === tourStep));
  document.getElementById('tdots').innerHTML = Array.from({length: TOUR_STEPS}, (_, i) => '<i class="' + (i === tourStep ? 'on' : '') + '"></i>').join('');
  document.getElementById('tprev').style.visibility = tourStep === 0 ? 'hidden' : 'visible';
  document.getElementById('tnext').textContent = tourStep === TOUR_STEPS - 1 ? 'Walk me through the screen →' : 'Next →';
@@ -4551,12 +5048,12 @@ function tourGo(d){
  tourRender();
 }
 function tourOpen(){ tourStep = 0; tourRender(); document.getElementById('tour').style.display = 'flex'; }
-function tourDone(){ document.getElementById('tour').style.display = 'none'; safeSet('ccaf_tour_done', '1'); }
-function ksec(i){ document.getElementById('ksec'+i).classList.toggle('open'); }
+function tourDone(){ document.getElementById('tour').style.display = 'none'; safeSet(StorageKey.TOUR_DONE, '1'); }
+function ksec(i){ document.getElementById('ksec'+i).classList.toggle(CardState.OPEN); }
 function ksecgo(i){
- document.querySelectorAll('.ksec.open').forEach(s => s.classList.remove('open'));
+ document.querySelectorAll('.ksec.' + CardState.OPEN).forEach(s => s.classList.remove(CardState.OPEN));
  const s = document.getElementById('ksec'+i);
- s.classList.add('open');
+ s.classList.add(CardState.OPEN);
  const nav = document.getElementById('keynav');
  const navSticky = getComputedStyle(nav).position === 'sticky';
  const off = () => navSticky ? nav.getBoundingClientRect().bottom : 0;
@@ -4572,17 +5069,17 @@ function kexp(n){
  if (!open) {
    const d = document.getElementById('kexp'+n);
    if (!d.dataset.built) {
-     const body = document.querySelector('.card[data-n="'+n+'"] .body').cloneNode(true);
+     const body = QuestionCard.byNumber(n).el.querySelector('.body').cloneNode(true);
      body.querySelectorAll('.hintrow,.hintbox,.revealrow').forEach(e=>e.remove());
      const wrap = document.createElement('div');
-     wrap.className = 'card open revealed hinted';
+     wrap.className = ['card', CardState.OPEN, CardState.REVEALED, CardState.HINTED].join(' ');
      wrap.appendChild(body);
      wrap.insertAdjacentHTML('beforeend', '<button class="kexplink qlink" data-jump="'+n+'">Open in Drill ↗</button>');
      d.appendChild(wrap); d.dataset.built = '1';
    }
  }
 }
-if (!safeGet('ccaf_tour_done')) tourOpen();
+if (!safeGet(StorageKey.TOUR_DONE)) tourOpen();
 document.addEventListener('click', function(e){
  const btn = e.target.closest('button');
  if (btn && e.detail > 0) btn.blur(); // pointer clicks only; keyboard activation keeps focus

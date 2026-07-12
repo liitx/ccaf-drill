@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
   const b = await chromium.launch();
   const p = await b.newPage();
   await p.addInitScript(() => { try { localStorage.setItem('ccaf_tour_done','1'); } catch(e){} });
-  await p.goto('file:///mnt/user-data/outputs/CCA-F_Drill_Key_and_60Q.html');
+  await p.goto('file:///Users/aksana.buster/dev/apps/vgv/ccaf-drill/index.html');
   await p.waitForTimeout(400);
   const overflow = async (label) => {
     const o = await p.evaluate(() => {
