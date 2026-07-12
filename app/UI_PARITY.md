@@ -53,18 +53,18 @@ table at once.
 
 ## Plan — phases, check off as we land them
 
-### P1 — Foundation: exact colors + shared primitives (unblocks everything)
-- [ ] Kill `ColorScheme.fromSeed` tinting: build the ColorScheme manually
-      from `DrillPalette` values only
-- [ ] `WebChip` widget: Barlow uppercase, configurable border width/style
-      (solid/dashed), radius 999/8/5 variants, on = fill + `buttonForeground`
-      text — replaces every ChoiceChip/FilterChip/OutlinedButton in chrome
-- [ ] `DashedBorder` painter (dock idle buttons, ◦ plain / ⌁ gist minis,
-      exam asbtns use dashed = available, solid = active — a real semantic
-      in the web design)
-- [ ] Constrain all views to a 900px centered column (`.wrap`)
-- [ ] Density pass: paddings/font sizes from the table above (cue 14, stem
-      13.5, choice padding 8×11 radius 9, etc.)
+### P1 — Foundation: exact colors + shared primitives ✅ 2026-07-11
+- [x] Kill `ColorScheme.fromSeed` tinting: manual ColorScheme from
+      `DrillPalette` only; compact VisualDensity + shrinkWrap targets +
+      NoSplash (app_theme.dart)
+- [x] `WebChip` widget (web_chip.dart): Barlow uppercase, solid/dashed
+      border, radius/size variants, selected = fill + buttonForeground —
+      call sites are swapped per phase P2–P7
+- [x] `DashedBorderPainter` (dashed = available, solid = active semantic)
+- [x] `ContentColumn`: all three views constrained to the 900px `.wrap`
+      column (dock rail stays in the viewport gutter)
+- [x] Density pass: cue 14, stem 13.5, chip 12 w600, choice radius 9 +
+      8×11 padding + 7px gap
 
 ### P2 — Shell: tabs + top bar
 - [ ] Replace AppBar+chips with the web top bar: `.tab` styled buttons

@@ -5,6 +5,7 @@ import 'package:ccaf_drill/domain/topic_set.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
 import 'package:ccaf_drill/presentation/widgets/assist_dock.dart';
 import 'package:ccaf_drill/presentation/widgets/question_card_view.dart';
+import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,15 +31,17 @@ class DrillView extends StatelessWidget {
 
     return Stack(
       children: [
-        Column(
-          children: [
-            _Toolbar(total: questions.length, matching: matching.length),
-            Expanded(
-              child: drill.layout == DrillLayout.all
-                  ? _AllList(matching: matching, railPadding: rail)
-                  : _SinglePager(matching: matching),
-            ),
-          ],
+        ContentColumn(
+          child: Column(
+            children: [
+              _Toolbar(total: questions.length, matching: matching.length),
+              Expanded(
+                child: drill.layout == DrillLayout.all
+                    ? _AllList(matching: matching, railPadding: rail)
+                    : _SinglePager(matching: matching),
+              ),
+            ],
+          ),
         ),
         if (active != null && drill.expanded.contains(active.number))
           rail
@@ -67,9 +70,11 @@ class _AllList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
+    // The 92px rail lives in the viewport gutter outside the 900px column
+    // on wide screens (web parity); only pad when the gutter is too small.
     padding: EdgeInsets.only(
       left: 12,
-      right: railPadding ? 120 : 12,
+      right: railPadding && MediaQuery.sizeOf(context).width < 1160 ? 120 : 12,
       bottom: 96,
     ),
     itemCount: matching.length,

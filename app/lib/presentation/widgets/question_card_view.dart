@@ -47,7 +47,7 @@ class QuestionCardView extends StatelessWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5), // .card 10px gap
       decoration: BoxDecoration(
         color: p.card,
         borderRadius: BorderRadius.circular(12),
@@ -67,9 +67,10 @@ class QuestionCardView extends StatelessWidget {
               children: [
                 Text(
                   question.cue,
+                  // .cue: 14px w700
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    fontSize: 15,
+                    fontSize: 14,
                     color: p.ink,
                   ),
                 ),
@@ -203,7 +204,15 @@ class _SignalChip extends StatelessWidget {
         color: p.highlightWash,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Text(text, style: TextStyle(fontSize: 12.5, color: p.ink)),
+      // .chip: 12px w600 on the highlight wash
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: p.ink,
+        ),
+      ),
     );
   }
 }
@@ -310,7 +319,8 @@ class HighlightedStem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    final base = TextStyle(fontSize: 15, height: 1.45, color: p.stem);
+    // .stem: 13.5px in the stem color
+    final base = TextStyle(fontSize: 13.5, height: 1.45, color: p.stem);
     if (signals.isEmpty) return Text(stem, style: base);
 
     final spans = <TextSpan>[];

@@ -43,6 +43,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Reveal answer'), findsOneWidget);
     await tester.ensureVisible(find.text('Reveal answer'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Reveal answer'));
     await tester.pumpAndSettle();
     expect(find.text('✓ PICK'), findsOneWidget);

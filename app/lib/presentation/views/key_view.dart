@@ -3,6 +3,7 @@ import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/domain/topic_set.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
 import 'package:ccaf_drill/presentation/widgets/question_card_view.dart';
+import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 
 /// The Key room: how-to-use guide, the 12 cheat codes, and one panel per
@@ -16,17 +17,19 @@ class KeyView extends StatelessWidget {
   final List<Question> questions;
 
   @override
-  Widget build(BuildContext context) => ListView(
-    padding: const EdgeInsets.all(12),
-    children: [
-      const _GuideSection(),
-      const _CheatCodesSection(),
-      for (final set in TopicSet.values)
-        _SetPanel(
-          set: set,
-          members: questions.where((q) => q.topicSet == set).toList(),
-        ),
-    ],
+  Widget build(BuildContext context) => ContentColumn(
+    child: ListView(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 90),
+      children: [
+        const _GuideSection(),
+        const _CheatCodesSection(),
+        for (final set in TopicSet.values)
+          _SetPanel(
+            set: set,
+            members: questions.where((q) => q.topicSet == set).toList(),
+          ),
+      ],
+    ),
   );
 }
 

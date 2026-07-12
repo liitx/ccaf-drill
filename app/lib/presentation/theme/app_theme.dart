@@ -12,21 +12,38 @@ abstract final class AppTheme {
   static ThemeData light() => _build(DrillPalette.light, Brightness.light);
 
   static ThemeData _build(DrillPalette p, Brightness brightness) {
+    // Exact palette only — no fromSeed: Material's seeded tonal mixes tint
+    // chips/surfaces away from the web colors (UI_PARITY.md finding #3).
+    final scheme = ColorScheme(
+      brightness: brightness,
+      primary: p.ink,
+      onPrimary: p.buttonForeground,
+      secondary: p.pick,
+      onSecondary: p.buttonForeground,
+      error: p.kill,
+      onError: p.buttonForeground,
+      surface: p.card,
+      onSurface: p.ink,
+      outline: p.line,
+      surfaceContainerHighest: p.soft,
+      onSurfaceVariant: p.dim,
+    );
     final base = ThemeData(
       brightness: brightness,
       scaffoldBackgroundColor: p.paper,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: p.pick,
-        brightness: brightness,
-        surface: p.card,
-      ),
+      colorScheme: scheme,
       dividerColor: p.line,
+      splashFactory: NoSplash.splashFactory,
+      // Web density: compact paddings, no 48px Material inflation
+      visualDensity: VisualDensity.compact,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       useMaterial3: true,
     );
     return base.copyWith(
       textTheme: GoogleFonts.publicSansTextTheme(
         base.textTheme,
       ).apply(bodyColor: p.ink, displayColor: p.ink),
+      dialogTheme: base.dialogTheme.copyWith(backgroundColor: p.card),
       extensions: [p],
     );
   }

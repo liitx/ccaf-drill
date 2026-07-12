@@ -5,6 +5,7 @@ import 'package:ccaf_drill/domain/exam_mode.dart';
 import 'package:ccaf_drill/domain/question.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
 import 'package:ccaf_drill/presentation/widgets/question_card_view.dart';
+import 'package:ccaf_drill/presentation/widgets/web_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,11 +19,13 @@ class ExamView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final phase = context.watch<ExamCubit>().state.phase;
-    return switch (phase) {
-      ExamPhase.notStarted => const _StartScreen(),
-      ExamPhase.running || ExamPhase.paused => const _RunScreen(),
-      ExamPhase.finished => const _ResultsScreen(),
-    };
+    return ContentColumn(
+      child: switch (phase) {
+        ExamPhase.notStarted => const _StartScreen(),
+        ExamPhase.running || ExamPhase.paused => const _RunScreen(),
+        ExamPhase.finished => const _ResultsScreen(),
+      },
+    );
   }
 }
 

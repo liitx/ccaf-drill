@@ -65,8 +65,9 @@ class ChoiceTile extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
+      // .choice: radius 9, padding 8x11, 7px gap
+      margin: const EdgeInsets.only(bottom: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
       decoration: BoxDecoration(
         color: beingRead
             ? p.link.withValues(alpha: .10)
@@ -76,7 +77,7 @@ class ChoiceTile extends StatelessWidget {
         border: Border.all(
           color: revealed ? _verdictColor(p).withValues(alpha: .5) : p.line,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(9),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +138,7 @@ class ChoiceTile extends StatelessWidget {
           Text(
             choice.text,
             style: TextStyle(
-              fontSize: 14.5,
+              fontSize: 13.5,
               height: 1.4,
               color: struck ? p.killText : p.ink,
               decoration: struck ? TextDecoration.lineThrough : null,
