@@ -35162,7 +35162,7 @@ s=1
 break}g=t.j
 f=B.bi
 s=3
-return A.I(p.a.MU("assets/data/questions.json"),$async$k8)
+return A.I(p.a.MU("data/questions.json"),$async$k8)
 case 3:o=g.a(f.e6(b))
 s=4
 return A.I(p.kE("analysis.json"),$async$k8)
@@ -35193,7 +35193,7 @@ var $async$kE=A.P(function(b,c){if(b===1)return A.L(c,r)
 while(true)switch(s){case 0:o=t.a
 n=B.bi
 s=3
-return A.I(p.a.MU("assets/data/"+a),$async$kE)
+return A.I(p.a.MU("data/"+a),$async$kE)
 case 3:q=o.a(n.e6(c))
 s=1
 break

@@ -21,7 +21,7 @@ final class AssetQuestionRepository implements QuestionRepository {
   final AssetBundle _bundle;
   List<Question>? _cache;
 
-  static const _dir = 'assets/data';
+  static const _dir = 'data';
 
   @override
   Future<List<Question>> loadQuestions() async {

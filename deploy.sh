@@ -3,8 +3,8 @@
 set -e
 cd "$(dirname "$0")"
 flutter build web --release --base-href /ccaf-drill/
-rm -rf ../docs
-mkdir ../docs
-cp -R build/web/* ../docs/
-touch ../docs/.nojekyll
+rm -rf docs
+mkdir docs
+cp -R build/web/* docs/
+touch docs/.nojekyll
 echo "docs/ staged — commit and push to deploy"

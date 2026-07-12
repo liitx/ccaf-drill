@@ -28,9 +28,9 @@ Study tool for the Anthropic **CCA-F exam** (Claude Certification Associate – 
 - 4-slide first-visit tour + a 10-step **spotlight walkthrough** over the live UI (replay via "? Tour")
 - Dark theme default, WCAG-audited contrast in both themes, mobile-friendly (44px targets)
 
-## The app (`app/`)
+## The app
 
-**This Flutter/Dart app IS the hosted site** — the original single-file web
+**This repo is the Flutter/Dart app, and the app IS the hosted site** — the original single-file web
 generator was retired on 2026-07-11 (recoverable at git tag `web-final`).
 Built enum-first:
 
@@ -40,13 +40,12 @@ Built enum-first:
 - Tests: enum matrices as compiler-checked exhaustive switches, cubit tests, widget smoke + spotlight walkthrough, and an answer-key gate pinned to the verified key from HANDOFF §2
 
 ```
-cd app
 flutter test          # matrices + invariants + answer-key gate + smoke
 flutter run -d chrome # or -d macos
 ./deploy.sh           # build + stage docs/ (the GitHub Pages source)
 ```
 
-Deploying = run `app/deploy.sh`, commit `docs/`, push. Pages serves
+Deploying = run `./deploy.sh`, commit `docs/`, push. Pages serves
 `main:/docs`. Question content lives in `data/*.json`.
 
 Audited via a [claudart](https://github.com/liitx/claudart) session against its Type System Laws (enum-first, const maps, const sets, parse-once, matrix tests); all findings applied.

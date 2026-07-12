@@ -1,27 +1,27 @@
 ---
 name: drill-conventions
-description: Conventions for any change to the ccaf-drill codebase. Read BEFORE editing app/, data/, or docs/ — covers the enum-first rule, the question:choices contract, the build/test/deploy workflow, and the naming standards. Triggers on any feature, fix, or refactor in this repo.
+description: Conventions for any change to the ccaf-drill codebase. Read BEFORE editing lib/, data/, test/, or docs/ — covers the enum-first rule, the question:choices contract, the build/test/deploy workflow, and the naming standards. Triggers on any feature, fix, or refactor in this repo.
 ---
 
 # ccaf-drill conventions (Flutter era)
 
-The Flutter app in `app/` IS the product and the hosted site. The original
+This repo IS the Flutter app (root-level pubspec) and the hosted site. The original
 web generator was retired 2026-07-11 (git tag `web-final` has it intact).
 
 ## Architecture
 
 ```
-app/lib/domain/       enhanced enums (TopicSet, Verdict, AnswerLetter,
+lib/domain/       enhanced enums (TopicSet, Verdict, AnswerLetter,
                       ConfidenceTier, PatternCode, DocLink, AssistAction+
                       SpeechScope, ExamMode, StorageKey, NarrowFilter,
                       AppRoom) + Question/Choice/WorkedExample entities
-app/lib/data/         AssetQuestionRepository — parse once, immutable
-app/lib/application/  cubits: drill, exam, tts, settings
-app/lib/presentation/ theme (DrillPalette tokens), views, WebChip/SetPill/
+lib/data/         AssetQuestionRepository — parse once, immutable
+lib/application/  cubits: drill, exam, tts, settings
+lib/presentation/ theme (DrillPalette tokens), views, WebChip/SetPill/
                       TierBadge primitives, spotlight walkthrough
 data/*.json           the 60 questions + analysis/hints/gists/examples
 docs/                 built site (GitHub Pages source) — never hand-edit
-app/deploy.sh         flutter build web + restage docs/
+deploy.sh         flutter build web + restage docs/
 HANDOFF.md            history, verified answer key, war stories
 ```
 
@@ -49,7 +49,6 @@ HANDOFF.md            history, verified answer key, war stories
 ## Workflow (every change)
 
 ```
-cd app
 flutter analyze        # zero issues, always
 flutter test           # all green, always
 ./deploy.sh            # only when shipping: rebuilds docs/

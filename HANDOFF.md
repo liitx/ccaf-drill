@@ -1,7 +1,7 @@
 # CCA-F Drill — Project Handoff
 
 **For:** Liitx (Aksana) + any future Claude session or Claude Code instance continuing this work.
-**Live site:** https://liitx.github.io/ccaf-drill/ — since 2026-07-11 this is the **Flutter app** (`app/`, deployed from `main:/docs` via `app/deploy.sh`). The original single-file web generator described below was retired; its last intact commit is git tag `web-final`. Sections 3–5 below document the retired generator for history; §2 (the intellectual content) still applies verbatim — the Dart app consumes the same `data/*.json` and pins the same answer key in `app/test/parity/answer_key_test.dart`.
+**Live site:** https://liitx.github.io/ccaf-drill/ — since 2026-07-11 this is the **Flutter app** (root-level Flutter project, deployed from `main:/docs` via `./deploy.sh`). The original single-file web generator described below was retired; its last intact commit is git tag `web-final`. Sections 3–5 below document the retired generator for history; §2 (the intellectual content) still applies verbatim — the Dart app consumes the same `data/*.json` and pins the same answer key in `test/parity/answer_key_test.dart`.
 **Artifact:** one self-contained HTML file (~490KB), no dependencies, no build step at runtime.
 **Source of truth:** this repo (generator in `src/`, data in `data/`, tests in `tests/`). The old `ccaf-drill-source.zip` container archive is obsolete since the 2026-07-11 modular refactor.
 
