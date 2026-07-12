@@ -59,6 +59,9 @@ Converged with the team's own pattern write-up. Their gaps: no batch/eval catego
 
 The refactor was verified **byte-identical**: old and new pipelines produced the same `index.html` before the old generator was deleted.
 
+### Flutter port (`app/`, 2026-07-11)
+1:1 Dart port, enum-first per the claudart Type System Laws. `app/lib/domain/` = enhanced enums (TopicSet/Verdict/AnswerLetter/ConfidenceTier/PatternCode/DocLink/AssistAction+SpeechScope/ExamMode/StorageKey/NarrowFilter/AppRoom) + `Question`/`Choice`/`WorkedExample` entities; `data/` = parse-once `AssetQuestionRepository` over the same `data/*.json` (symlinked as assets); `application/` = drill/exam/tts/settings cubits; `presentation/` = theme from styles.css tokens + Key/Drill/Exam/tour views, dock rail ≥1100px. Content-bearing enums were **generated from src/content.py** (no retranscription). Tests: enum matrices as exhaustive switch expressions, repository invariants (4 choices, one pick), cubit behavior, widget smoke, and `test/parity/web_parity_test.dart` which diffs the answer key against `../index.html`. Audited via a claudart session (handoff archived in `~/dev/dev_tools/claude/ccaf-drill/`); findings applied: AppRoom enum, unmodifiable choices, TTS script tests. Known gap: the 11-step spotlight walkthrough is web-only (Dart ships the 4-slide tour).
+
 ## 4. Feature inventory (current state)
 
 ### Key view

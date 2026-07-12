@@ -41,4 +41,21 @@ tests/run.sh                     # full Playwright suite (360 assertions)
 - `data/` — the 60 questions and their analysis/hints/gists/examples as JSON
 - `tests/` — 8 domain spec suites on a shared harness, plus contrast/mobile audits
 
+## Flutter app (`app/`)
+
+A 1:1 Dart/Flutter port of the drill (macOS / iOS / web), built enum-first:
+
+- **Enhanced enums** carry the domain: `TopicSet` (colors, fingerprint, rule), `Verdict`, `AnswerLetter`, `ConfidenceTier`, `PatternCode` (the 12 cheat codes), `DocLink`, `AssistAction`/`SpeechScope` (const-map related), `ExamMode` (const-set assist membership), `StorageKey` (same keys as the web app)
+- `Question.choices: Map<AnswerLetter, Choice>` — the question:answerChoices contract in the type system; repository tests prove 60 questions × 4 choices × exactly one pick
+- flutter_bloc cubits (drill / exam / TTS / settings), `flutter_tts` audio with the same three speech scripts, shared theme tokens from `styles.css`
+- Tests: enum matrices as compiler-checked exhaustive switches, cubit tests, widget smoke, and a parity gate that reads the answer key out of the deployed `index.html`
+
+```
+cd app
+flutter test          # matrices + invariants + parity + smoke
+flutter run -d macos  # or -d chrome
+```
+
+Audited via a [claudart](https://github.com/liitx/claudart) session against its Type System Laws (enum-first, const maps, const sets, parse-once, matrix tests); all findings applied.
+
 See `HANDOFF.md` for full project history, the verified answer key, and the war stories. Contribution conventions live in `.claude/skills/drill-conventions/SKILL.md`.
