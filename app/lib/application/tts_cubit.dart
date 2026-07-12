@@ -139,30 +139,45 @@ final class TtsCubit extends Cubit<TtsState> {
       final prefs = await SharedPreferences.getInstance();
       final rate = prefs.getDouble(StorageKey.ttsRate.key) ?? 1.0;
       final voice = prefs.getString(StorageKey.ttsVoice.key);
-      final raw = await _tts.getVoices;
-      final all = (raw as List<dynamic>? ?? [])
-          .map((v) => (v as Map<Object?, Object?>).cast<String, Object?>())
-          .where((v) => '${v['locale']}'.toLowerCase().startsWith('en'))
-          .map((v) => '${v['name']}')
-          .toList();
-      final google = all
-          .where(
-            (n) => RegExp(
-              '^google (us|uk) english',
-              caseSensitive: false,
-            ).hasMatch(n),
-          )
-          .toList();
-      emit(
-        state.copyWith(
-          rate: rate.clamp(0.8, 1.4),
-          voiceName: () => voice,
-          voices: google.isNotEmpty ? google : all,
-        ),
-      );
+      emit(state.copyWith(rate: rate.clamp(0.8, 1.4), voiceName: () => voice));
       await _tts.awaitSpeakCompletion(true);
+      await refreshVoices();
     } on Exception {
       emit(state.copyWith(supported: false));
+    }
+  }
+
+  /// Query the platform voice list. Browsers populate speechSynthesis
+  /// voices asynchronously (the web app has the same voiceschanged dance),
+  /// so this retries briefly and is called again whenever the voice panel
+  /// opens.
+  Future<void> refreshVoices() async {
+    for (var attempt = 0; attempt < 4; attempt++) {
+      try {
+        final raw = await _tts.getVoices;
+        final all = (raw as List<dynamic>? ?? [])
+            .map((v) => (v as Map<Object?, Object?>).cast<String, Object?>())
+            .where((v) => '${v['locale']}'.toLowerCase().startsWith('en'))
+            .map((v) => '${v['name']}')
+            .toSet()
+            .toList();
+        final google = all
+            .where(
+              (n) => RegExp(
+                '^google (us|uk) english',
+                caseSensitive: false,
+              ).hasMatch(n),
+            )
+            .toList();
+        if (all.isNotEmpty) {
+          emit(state.copyWith(voices: google.isNotEmpty ? google : all));
+          return;
+        }
+      } on Exception {
+        emit(state.copyWith(supported: false));
+        return;
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 250));
     }
   }
 

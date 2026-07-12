@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ccaf_drill/application/tts_cubit.dart';
 import 'package:ccaf_drill/presentation/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -5,14 +7,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Opens the ⚙ Voice panel: voice picker + speed chips + test button.
 /// Mirrors the web #ttspanel.
-Future<void> showVoiceSettingsSheet(BuildContext context) =>
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (sheetContext) => BlocProvider.value(
-        value: context.read<TtsCubit>(),
-        child: const _VoiceSettings(),
-      ),
-    );
+Future<void> showVoiceSettingsSheet(BuildContext context) {
+  // Browsers report an empty voice list until late in the page's life —
+  // re-query every time the panel opens.
+  unawaited(context.read<TtsCubit>().refreshVoices());
+  return showModalBottomSheet<void>(
+    context: context,
+    builder: (sheetContext) => BlocProvider.value(
+      value: context.read<TtsCubit>(),
+      child: const _VoiceSettings(),
+    ),
+  );
+}
 
 class _VoiceSettings extends StatelessWidget {
   const _VoiceSettings();
