@@ -28,33 +28,26 @@ Study tool for the Anthropic **CCA-F exam** (Claude Certification Associate – 
 - 4-slide first-visit tour + a 10-step **spotlight walkthrough** over the live UI (replay via "? Tour")
 - Dark theme default, WCAG-audited contrast in both themes, mobile-friendly (44px targets)
 
-## Development
+## The app (`app/`)
 
-```
-python3 build.py                 # regenerate index.html from src/ + data/
-node --check src/assets/app.js   # validate runtime JS
-tests/run.sh                     # full Playwright suite (360 assertions)
-```
-
-- `src/` — modular generator: dataclass structs (`models.py`), authored content (`content.py`), HTML renderers (`render.py`), token-splicing assembly (`page.py`), and real CSS/JS assets (`assets/`)
-- `src/assets/domain.js` — no-bare-strings registries + `QuestionCard`/`AnswerChoice` accessors (the question:answerChoices contract)
-- `data/` — the 60 questions and their analysis/hints/gists/examples as JSON
-- `tests/` — 8 domain spec suites on a shared harness, plus contrast/mobile audits
-
-## Flutter app (`app/`)
-
-A 1:1 Dart/Flutter port of the drill (macOS / iOS / web), built enum-first:
+**This Flutter/Dart app IS the hosted site** — the original single-file web
+generator was retired on 2026-07-11 (recoverable at git tag `web-final`).
+Built enum-first:
 
 - **Enhanced enums** carry the domain: `TopicSet` (colors, fingerprint, rule), `Verdict`, `AnswerLetter`, `ConfidenceTier`, `PatternCode` (the 12 cheat codes), `DocLink`, `AssistAction`/`SpeechScope` (const-map related), `ExamMode` (const-set assist membership), `StorageKey` (same keys as the web app)
 - `Question.choices: Map<AnswerLetter, Choice>` — the question:answerChoices contract in the type system; repository tests prove 60 questions × 4 choices × exactly one pick
 - flutter_bloc cubits (drill / exam / TTS / settings), `flutter_tts` audio with the same three speech scripts, shared theme tokens from `styles.css`
-- Tests: enum matrices as compiler-checked exhaustive switches, cubit tests, widget smoke, and a parity gate that reads the answer key out of the deployed `index.html`
+- Tests: enum matrices as compiler-checked exhaustive switches, cubit tests, widget smoke + spotlight walkthrough, and an answer-key gate pinned to the verified key from HANDOFF §2
 
 ```
 cd app
-flutter test          # matrices + invariants + parity + smoke
-flutter run -d macos  # or -d chrome
+flutter test          # matrices + invariants + answer-key gate + smoke
+flutter run -d chrome # or -d macos
+./deploy.sh           # build + stage docs/ (the GitHub Pages source)
 ```
+
+Deploying = run `app/deploy.sh`, commit `docs/`, push. Pages serves
+`main:/docs`. Question content lives in `data/*.json`.
 
 Audited via a [claudart](https://github.com/liitx/claudart) session against its Type System Laws (enum-first, const maps, const sets, parse-once, matrix tests); all findings applied.
 
